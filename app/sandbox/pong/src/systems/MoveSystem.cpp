@@ -18,11 +18,11 @@
 void MoveSystem::on_key_down(const KeyDown& key_down) noexcept {
 	switch (key_down.keycode) {
 		case GLFW_KEY_W:
-			player_movement = Player::MoveDirection::SOUTH;
+			player_movement = Player::MoveDirection::NORTH;
 			break;
 
 		case GLFW_KEY_S:
-			player_movement = Player::MoveDirection::NORTH;
+			player_movement = Player::MoveDirection::SOUTH;
 			break;
 	}
 }
@@ -43,9 +43,9 @@ void MoveSystem::update(const double time, entt::registry& registry) {
 			plr.movement = player_movement;
 
 			if (plr.movement == Player::MoveDirection::NORTH) {
-				pos.m_y -= PADDLE_SPEED * time;
-			} else if (plr.movement == Player::MoveDirection::SOUTH) {
 				pos.m_y += PADDLE_SPEED * time;
+			} else if (plr.movement == Player::MoveDirection::SOUTH) {
+				pos.m_y -= PADDLE_SPEED * time;
 			}
 
 			// Lock to screen.

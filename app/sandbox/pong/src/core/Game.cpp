@@ -154,21 +154,7 @@ void Game::update(const double time) {
 void Game::render() {
 	std::fill(texture.begin(), texture.end(), 0.1);
 
-	auto sprite_view = registry.view<Sprite, Position>();
-	sprite_view.each([&](Sprite &sprite, Position &position) {
-		auto row_end = position.m_y + sprite.radius + sprite.height;
-		auto col_end = position.m_x + sprite.radius + sprite.width;
-		if (row_end > height) row_end = height;
-		if (col_end > width) col_end = width;
-		for (auto y = (uint32_t) position.m_y; y < row_end; y++) {
-			for (auto x = (uint32_t)position.m_x; x < col_end; x++) {
-				size_t location = (x + y * width) * 3;
-				texture.at(location + 0) = sprite.color.r;
-				texture.at(location + 1) = sprite.color.g;
-				texture.at(location + 2) = sprite.color.b;
-			}
-		}
-	});
+	render_system.render(registry, width, height, texture);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, &texture.at(0));
 
