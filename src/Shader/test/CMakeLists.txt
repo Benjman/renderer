@@ -14,12 +14,11 @@ add_executable(ShaderTests
 	./src/VaoTest.cpp)
 
 target_link_libraries(ShaderTests
-	${LIBS}
+	${GL_LIBS}
 
 	GTest::GTest
 	GTest::Main
 
-	Shader
-	System)
+	Shader)
 
 add_test(ShaderTests ShaderTests)

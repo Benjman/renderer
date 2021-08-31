@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.18)
 project(Shader)
 
+find_package(GTest REQUIRED)
+
 add_library(Shader
 	STATIC
 	./src/Shader.cpp
@@ -10,8 +12,7 @@ add_library(Shader
 	./src/VertexAttribute.cpp
 	)
 
-target_link_libraries(Shader PRIVATE ${LIBS} ${GL_LIBS} System)
-
 target_include_directories(Shader PUBLIC ./include)
+target_link_libraries(Shader PUBLIC GL)
 
 add_subdirectory(test)

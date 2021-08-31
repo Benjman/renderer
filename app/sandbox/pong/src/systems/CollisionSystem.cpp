@@ -1,4 +1,5 @@
 #include <entt/entt.hpp>
+#include <iostream>
 
 #include "../components/Ball.h"
 #include "../components/Position.h"
@@ -8,8 +9,7 @@
 
 #include <glm/vec4.hpp>
 
-void CollisionSystem::update(const double time, CollisionHolder& holder)
-{
+void CollisionSystem::update(const double time, CollisionHolder& holder) {
 	// We use a collision holder instead of something like a Dynamic Tree /BVH / Quad Tree which is out of scope for this.
 	auto& ball           = holder.registry->get<Ball>(holder.ball);
 	const auto& ball_pos = holder.registry->get<Position>(holder.ball);
@@ -22,12 +22,9 @@ void CollisionSystem::update(const double time, CollisionHolder& holder)
 	const auto& player_spr = holder.registry->get<Sprite>(holder.player);
 
 	// If the ball is currently immune we can count down the ticks and return.
-	if (ball.bounce_immune_ticks > 0)
-	{
+	if (ball.bounce_immune_ticks > 0) {
 		ball.bounce_immune_ticks--;
-	}
-	else
-	{
+	} else {
 		// Ball bounding box.
 		const glm::vec4 ball_bb(
 				ball_pos.m_x - ball_spr.radius,
@@ -55,10 +52,12 @@ void CollisionSystem::update(const double time, CollisionHolder& holder)
 				&& player_bb.y + player_bb.w > ball_bb.y) {
 
 			// Reverse ball, "bouncing" it.
-			ball.vel_x *= -1;
+			ball.vel_x *= -1.;
 
 			// Set bounce immunity for a few ticks to prevent ball from getting stuck inside the paddle.
 			ball.bounce_immune_ticks = 5;
+
+			std::cout << "Bal vel: " << ball.vel_x << std::endl;
 		}
 
 		if (ai_bb.x < ball_bb.x + ball_bb.z
@@ -66,10 +65,12 @@ void CollisionSystem::update(const double time, CollisionHolder& holder)
 				&& ai_bb.y < ball_bb.y + ball_bb.w
 				&& ai_bb.y + ai_bb.w > ball_bb.y) {
 			// Reverse ball, "bouncing" it.
-			ball.vel_x *= -1;
+			ball.vel_x *= -1.;
 
 			// Set bounce immunity for a few ticks to prevent ball from getting stuck inside the paddle.
 			ball.bounce_immune_ticks = 5;
+
+			std::cout << "Bal vel: " << ball.vel_x << std::endl;
 		}
 	}
 }

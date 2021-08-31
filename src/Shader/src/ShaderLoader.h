@@ -3,7 +3,7 @@
 
 #include <Shader/Shader.h>
 
-#include <glad/glad.h>
+#include <gl.h>
 
 #include <cstring>
 #include <iostream> // TODO remove after logging is implemented

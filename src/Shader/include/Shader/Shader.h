@@ -1,8 +1,9 @@
 #ifndef SHADER_SHADER_H
 #define SHADER_SHADER_H
 
-#include <cstring>
 #include <gl.h>
+
+#include <cstring>
 
 class Vao;
 

@@ -14,7 +14,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 # set GL_LIBS
-set(GL_LIBS ${GL_LIBS} glad glfw3)
+set(GL_LIBS ${GL_LIBS} glad glfw)
 if (UNIX AND NOT APPLE)
 	find_package(X11 REQUIRED)
 	find_package(Threads REQUIRED)
@@ -36,6 +36,7 @@ set(LIBS ${LIBS} spdlog::spdlog Threads::Threads)
 # ==========
 
 
-add_subdirectory(./src/System)
+add_subdirectory(./src/GL)
 add_subdirectory(./src/Shader)
+add_subdirectory(./src/Core)
 add_subdirectory(./app)

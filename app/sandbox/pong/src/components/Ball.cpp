@@ -2,7 +2,7 @@
 #include "../Random.hpp"
 
 Ball::Ball(const double vel_x, const double vel_y) noexcept
-: initial_vel_x(vel_x), initial_vel_y(vel_y), bounce_immune_ticks {0} {
+: initial_vel_x(vel_x), initial_vel_y(vel_y), bounce_immune_ticks {0}, vel_x(vel_x), vel_y(vel_y) {
 	switch (random(0, 3)) {
 		case 0:
 			this->vel_x = initial_vel_x;

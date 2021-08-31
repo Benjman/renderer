@@ -3,31 +3,30 @@
 #include <vector>
 
 #include <gl.h>
-#include <glfw.h>
 
 #include "logging.h"
 #include "SimplexNoise.h"
 
 const char *vertShader =	"#version 330 core\n"
-							"layout (location = 0) in vec3 in_pos;"
-							"layout (location = 1) in vec2 in_texCoord;"
-							"out vec2 pass_texCoord;"
-							"void main() {"
-							"    pass_texCoord = in_texCoord;"
-							"    gl_Position = vec4(in_pos, 1.0);"
-							"}\0";
+"layout (location = 0) in vec3 in_pos;"
+"layout (location = 1) in vec2 in_texCoord;"
+"out vec2 pass_texCoord;"
+"void main() {"
+"    pass_texCoord = in_texCoord;"
+"    gl_Position = vec4(in_pos, 1.0);"
+"}\0";
 const char *fragShader =	"#version 330 core\n"
-							"in vec2 pass_texCoord;"
-							"out vec4 out_color;"
-							"uniform sampler2D u_tex;"
-							"void main() {"
-							"    out_color = texture(u_tex, pass_texCoord);"
-							"}\0";
+"in vec2 pass_texCoord;"
+"out vec4 out_color;"
+"uniform sampler2D u_tex;"
+"void main() {"
+"    out_color = texture(u_tex, pass_texCoord);"
+"}\0";
 
 const GLfloat vertices[] = {
 	// positions
-	 1.f,  1.f, 0.f,
-	 1.f, -1.f, 0.f,
+	1.f,  1.f, 0.f,
+	1.f, -1.f, 0.f,
 	-1.f, -1.f, 0.f,
 	-1.f,  1.f, 0.f,
 
@@ -51,6 +50,8 @@ struct Color {
 	explicit Color(float_t v) : Color(v, v, v) {}
 	Color(float_t r, float_t g, float_t b) : r(r), g(g), b(b) {}
 };
+
+GLFWwindow *window = nullptr;
 
 float_t scale     = 100.f;
 float_t lacunarity    = 1.99f;
@@ -98,7 +99,7 @@ void fillBuffer(std::vector<GLfloat> *texData, float_t time) {
 
 int main(const int argc, const char *argv[]) {
 	spdlog::set_level(spdlog::level::trace);
-	initializeGlfw("Testing", 800, 800);
+	window = initializeGlfw("Testing", 800, 800);
 
 	Shader shader = Shader::createShader(vertShader, fragShader);
 	shader.use();
@@ -114,19 +115,19 @@ int main(const int argc, const char *argv[]) {
 	glBindTexture(GL_TEXTURE_2D, texId);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	std::vector<GLfloat> texData(TEX_SIZE * TEX_SIZE * 3);
 
 	double_t renderInterval = 1.f / 60,
-			nextRender = 0.f;
+			 nextRender = 0.f;
 
 	double_t updateInterval = 1.f / 30,
-			nextUpdate = 0.f;
+			 nextUpdate = 0.f;
 
-	while (!glfwWindowShouldClose(glfwWindow)) {
+	while (!glfwWindowShouldClose(window)) {
 		double_t time = glfwGetTime();
 
 		if (time > nextRender) {
@@ -142,13 +143,16 @@ int main(const int argc, const char *argv[]) {
 			glClear(GL_COLOR_BUFFER_BIT);
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-			glfwSwapBuffers(glfwWindow);
+			glfwSwapBuffers(window);
 			glfwPollEvents();
 
 			// std::cout << std::endl;
 		}
 	}
 
-	std::atexit(destroyGlfw);
+	std::atexit([]() {
+			destroyGlfw(window);
+	});
+
 	return 0;
 }

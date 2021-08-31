@@ -9,8 +9,6 @@
 
 #include "MoveSystem.h"
 
-#define PADDLE_SPEED 30
-
 [[nodiscard]] const double randomize_velocity_dir(const double vel) {
 	return random(0, 1) ? -vel : vel;
 }

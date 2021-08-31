@@ -6,6 +6,7 @@
 #include "../components/Sprite.h"
 
 void RenderSystem::render(entt::registry &registry, int width, int height, std::vector<GLfloat> &texture) {
+	std::fill(texture.begin(), texture.end(), 0.1);
 	auto view = registry.view<Sprite, Position>();
 	view.each([&](const Sprite &sprite, const Position &position) {
 		auto row_end = position.m_y + sprite.radius + sprite.height;

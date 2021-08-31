@@ -15,6 +15,5 @@ add_executable(App
 target_link_libraries(App PRIVATE
 	${LIBS}
 
-	Shader
-	System
-	)
+	Core
+	Shader)

@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "./Player.h"
 
 Player::Player() noexcept : movement(MoveDirection::STOPPED) {
 }
