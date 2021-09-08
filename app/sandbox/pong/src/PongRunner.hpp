@@ -1,8 +1,10 @@
 #ifndef PONG_PONG_H
 #define PONG_PONG_H
 
+#include <Core/Events.h>
 #include <Core/Game.h>
-#include <Core/input//InputEvents.h>
+#include <Core/Texture.h>
+#include <Core/components/Position2D.h>
 #include <Shader.h>
 
 #include "components/All.h"
@@ -46,9 +48,11 @@ const GLuint indices[] = {
 		0, 1, 3,
 };
 
-class Pong : public Game {
+class PongRunner : public Game {
+	Texture texture = Texture(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, GL_RGB, GL_FLOAT);
+
 	public:
-		Pong(GLFWwindow *window, const int width, const int height) : Game(window, width, height), m_texture(std::vector<GLfloat>(width * height * 3)) {
+		PongRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height), m_texture(std::vector<GLfloat>(width * height * 3)) {
 			Shader::createShader(vertShader, fragShader).use();
 			Vao *vao = Vao::createVao();
 			Vbo::createVbo(vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(vertices), vertices);
@@ -56,15 +60,11 @@ class Pong : public Game {
 			VertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0, true);
 			VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *) (12 * sizeof(GLfloat)), true);
 
-			// Generate texture
-			GLuint texId;
-			glGenTextures(1, &texId);
-			glBindTexture(GL_TEXTURE_2D, texId);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			texture.bind();
+			texture.parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+			texture.parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 			// Here, we are creating the entities using EnTT and attaching the relevant components and tags.
 			// We can invoke the constructor of the component or tag in the assign() and attach() methods of the registry.
@@ -75,15 +75,15 @@ class Pong : public Game {
 
 			// Assign component data to entities.
 			m_registry.emplace<Sprite>(player_paddle, 12, 96, glm::vec3(1.));
-			m_registry.emplace<Position>(player_paddle, 20., height - 20.);
+			m_registry.emplace<Position2D>(player_paddle, 20., height - 20.);
 			m_registry.emplace<Player>(player_paddle);
 
 			m_registry.emplace<Sprite>(ai_paddle, 12, 96, glm::vec3(1.));
-			m_registry.emplace<Position>(ai_paddle, width - 30., 20.);
+			m_registry.emplace<Position2D>(ai_paddle, width - 30., 20.);
 			m_registry.emplace<AI>(ai_paddle, width - 30, 20);
 
 			m_registry.emplace<Sprite>(ball, 8, glm::vec3(1.));
-			m_registry.emplace<Position>(ball, (width / 2.) - 16., (height / 2.) - 16.);
+			m_registry.emplace<Position2D>(ball, (width / 2.) - 16., (height / 2.) - 16.);
 			m_registry.emplace<Ball>(ball, BALL_SPEED, BALL_SPEED);
 
 			// Assign events to systems.
@@ -106,15 +106,8 @@ class Pong : public Game {
 
 		void render() override {
 			render_system.render(m_registry, m_width, m_height, m_texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT, &m_texture.at(0));
-
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-
+			texture.upload(&m_texture.at(0));
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-			glfwSwapBuffers(m_window);
-			glfwPollEvents();
 		}
 
 		void keyEvent(int key, int mode) override {
@@ -124,6 +117,10 @@ class Pong : public Game {
 				m_dispatcher.trigger<KeyUp>(key);
 			}
 		}
+
+		void windowSizeChanged(int width, int height) override {
+		}
+
 
 	private:
 		AISystem ai_system;
