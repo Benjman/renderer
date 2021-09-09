@@ -1,14 +1,20 @@
-#include "RenderSystem.h"
-
 #include <entt/entt.hpp>
+#include <iostream>
 
-#include "../components/Position.h"
+#include <Core/components/Position2D.h>
+#include <Core/Events.h>
+
+#include "RenderSystem.h"
 #include "../components/Sprite.h"
 
-void RenderSystem::render(entt::registry &registry) {
+void RenderSystem::init(entt::dispatcher& dispatcher) {
+	dispatcher.sink<ViewportSizeChange>().connect<&RenderSystem::set_viewport>(this);
+}
+
+void RenderSystem::render(entt::registry &registry, int width, int height) {
 	std::fill(m_texture.begin(), m_texture.end(), 0.25);
-	auto view = registry.view<Sprite, Position>();
-	view.each([&](const Sprite &sprite, const Position &pos) {
+	auto view = registry.view<Sprite, Position2D>();
+	view.each([&](const Sprite &sprite, const Position2D &pos) {
 		int x_start = pos.x;
 		int x_end = x_start + sprite.width + sprite.radius;
 		int y_start = pos.y;
@@ -17,8 +23,8 @@ void RenderSystem::render(entt::registry &registry) {
 		x_end = std::clamp(x_end, 0, width);
 		y_start = std::clamp(y_start, 0, height);
 		y_end = std::clamp(y_end, 0, height);
-		for (auto y = (uint32_t) pos.y; y < y_end; y++) {
-			for (auto x = (uint32_t)pos.x; x < x_end; x++) {
+		for (auto y = pos.y; y < y_end; y++) {
+			for (auto x = pos.x; x < x_end; x++) {
 				size_t location = (x + y * width) * 3;
 				m_texture.at(location + 0) = sprite.color.r;
 				m_texture.at(location + 1) = sprite.color.g;
@@ -31,8 +37,6 @@ void RenderSystem::render(entt::registry &registry) {
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void RenderSystem::setViewport(int width, int height) {
-	this->width = width;
-	this->height = height;
-	m_texture = std::vector<GLfloat>(width * height * 3);
+void RenderSystem::set_viewport(const ViewportSizeChange& data) {
+	this->m_texture = std::vector<GLfloat>(data.width * data.height * 3);
 }

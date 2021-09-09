@@ -9,8 +9,8 @@ class AI final {
 		AI& operator=(AI&&) noexcept;
 
 	public:
-		double m_x;
-		double m_y;
+		double x;
+		double y;
 };
 
 #endif // PONG_AI_H

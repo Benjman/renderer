@@ -2,7 +2,7 @@
 
 #include "../components/AI.h"
 #include "../components/Ball.h"
-#include "../components/Position.h"
+#include <Core/components/Position2D.h>
 
 #include "AISystem.h"
 
@@ -16,18 +16,18 @@ void AISystem::update(const double time, entt::registry &registry) {
 	   */
 
 	// Takes advantage of the fact that there is only 1 AI and 1 Ball.
-	auto ai_view = registry.view<AI, Position>();
-	auto ball_view = registry.view<Ball, Position>();
+	auto ai_view = registry.view<AI, Position2D>();
+	auto ball_view = registry.view<Ball, Position2D>();
 
 	ai_view.each([&](auto &ai, auto &ai_pos) {
-		ai.m_x = ai_pos.m_x;
-		ai.m_y = ai_pos.m_y;
+		ai.x = ai_pos.x;
+		ai.y = ai_pos.y;
 
 		ball_view.each([&](auto &ball, auto &ball_pos) {
-			if (ball_pos.m_y > ai_pos.m_y) {
-				ai_pos.m_y += 5;
-			} else if (ball_pos.m_y < ai_pos.m_y) {
-				ai_pos.m_y -= 5;
+			if (ball_pos.y > ai_pos.y) {
+				ai_pos.y += 5;
+			} else if (ball_pos.y < ai_pos.y) {
+				ai_pos.y -= 5;
 			}
 		});
 	});

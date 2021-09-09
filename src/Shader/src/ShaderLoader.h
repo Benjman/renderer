@@ -5,19 +5,15 @@
 
 #include <gl.h>
 
-#include <cstring>
+#include <string>
 #include <iostream> // TODO remove after logging is implemented
 #include <cassert>
 
 struct ShaderLoader {
 
-	static GLuint loadShader(const char *vert, const char *frag, bool isSource) {
+	static GLuint loadShader(std::string& vert, std::string& frag) {
 		std::string vertBuffer = vert;
 		std::string fragBuffer = frag;
-
-		if (!isSource) {
-			loadSources(vert, &vertBuffer, frag, &fragBuffer);
-		}
 
 		assert(!std::string(vert).empty());
 		assert(!std::string(frag).empty());
@@ -29,17 +25,6 @@ struct ShaderLoader {
 	}
 
 	private:
-	static void loadSources(const char *vertPath, std::string *vertOut, const char *fragPath, std::string *fragOut) {
-		assert(!std::string(vertPath).empty());
-		assert(!std::string(fragPath).empty());
-
-		size_t ignored;
-
-		// TODO
-//		loadResource(vertPath, &vertOut, &ignored);
-//		loadResource(fragPath, &fragOut, &ignored);
-	}
-
 	static GLuint compileShader(GLuint type, std::string &source) {
 		GLuint id;
 		if (!(id = glCreateShader(type)))

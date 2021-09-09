@@ -1,17 +1,17 @@
 #include "AI.h"
 
-AI::AI(const double x, const double y) noexcept : m_x{x}, m_y{y} {
+AI::AI(const double x, const double y) noexcept : x{x}, y{y} {
 }
 
 AI::AI(AI&& ai) noexcept {
-	m_x = ai.m_x;
-	m_y = ai.m_y;
+	x = ai.x;
+	y = ai.y;
 }
 
 AI& AI::operator=(AI &&ai) noexcept {
 	if (this != &ai) {
-		m_x = ai.m_x;
-		m_y = ai.m_y;
+		x = ai.x;
+		y = ai.y;
 	}
 
 	return *this;

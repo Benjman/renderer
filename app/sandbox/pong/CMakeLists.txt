@@ -3,11 +3,10 @@ project(Pong)
 
 add_executable(Pong
 	./main.cpp
-	./src/Pong.hpp
+	./src/PongRunner.hpp
 	./src/components/AI.cpp
 	./src/components/Ball.cpp
 	./src/components/Player.cpp
-	./src/components/Position.cpp
 	./src/components/Sprite.cpp
 	./src/systems/AISystem.cpp
 	./src/systems/CollisionSystem.cpp

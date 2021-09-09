@@ -2,7 +2,8 @@
 #define PONG_MOVESYSTEM_H
 
 #include <entt/fwd.hpp>
-#include <Core/input/InputEvents.h>
+
+#include <Core/Events.h>
 #include "../components/Player.h"
 
 #define PADDLE_SPEED 150

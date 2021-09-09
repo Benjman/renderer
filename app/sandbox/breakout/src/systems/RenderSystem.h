@@ -5,17 +5,19 @@
 #include <vector>
 #include <gl.h>
 
+#include <Core/Events.h>
+
 class RenderSystem final {
 	public:
 		RenderSystem() = default;
 
-		void render(entt::registry &registry);
+		void init(entt::dispatcher& dispatcher);
 
-		void setViewport(int width, int height);
+		void render(entt::registry &registry, int width, int height);
+
+		void set_viewport(const ViewportSizeChange &data);
 
 	private:
-		int width;
-		int height;
 		std::vector<GLfloat> m_texture;
 
 };

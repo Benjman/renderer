@@ -3,7 +3,7 @@
 
 #include <gl.h>
 
-#include <cstring>
+#include <string>
 
 class Vao;
 
@@ -11,8 +11,7 @@ struct Shader {
 public:
   friend class ShaderLoader;
 
-  static Shader createShader(const char *vert, const char *frag,
-                             bool isSource = true);
+  static Shader createShader(std::string& vert, std::string& frag);
 
   void use() const;
 
