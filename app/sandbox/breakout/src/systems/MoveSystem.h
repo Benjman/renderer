@@ -2,7 +2,7 @@
 #define BREAKOUT_MOVESYSTEM_H
 
 #include <entt/fwd.hpp>
-#include <Core/input/InputEvents.h>
+#include <Core/Events.h>
 
 #include "../components/Player.h"
 
@@ -15,12 +15,8 @@ class MoveSystem final {
 		void on_key_down(const KeyDown &key_down) noexcept;
 		void on_key_up(const KeyUp &key_up) noexcept;
 
-		void update(const double time, entt::registry &registry);
+		void update(const double time, entt::registry &registry, int width, int height);
 
-		void setSize(int width, int height);
-
-		int width;
-		int height;
 };
 
 #endif // BREAKOUT_MOVESYSTEM_H

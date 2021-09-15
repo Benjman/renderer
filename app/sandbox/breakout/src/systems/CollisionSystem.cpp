@@ -2,9 +2,10 @@
 #include <entt/entt.hpp>
 #include <glm/vec4.hpp>
 
+#include <Core/components/Position2D.h>
+
 #include "../components/Ball.h"
 #include "../components/Block.h"
-#include "../components/Position.h"
 #include "../components/Sprite.h"
 
 #include "./CollisionSystem.h"
@@ -12,10 +13,10 @@
 void CollisionSystem::update(const double time, CollisionHolder& holder) {
 	// We use a collision holder instead of something like a Dynamic Tree /BVH / Quad Tree which is out of scope for this.
 	auto& ball           = holder.registry->get<Ball>(holder.ball);
-	const auto& ball_pos = holder.registry->get<Position>(holder.ball);
+	const auto& ball_pos = holder.registry->get<Position2D>(holder.ball);
 	const auto& ball_spr = holder.registry->get<Sprite>(holder.ball);
 
-	const auto& player_pos = holder.registry->get<Position>(holder.player);
+	const auto& player_pos = holder.registry->get<Position2D>(holder.player);
 	const auto& player_spr = holder.registry->get<Sprite>(holder.player);
 
 	// If the ball is currently immune we can count down the ticks and return.
@@ -52,8 +53,8 @@ void CollisionSystem::update(const double time, CollisionHolder& holder) {
 		return;
 	}
 
-	auto block_view = holder.registry->view<Position, Sprite>();
-	block_view.each([&](const auto entity, const Position& pos, const Sprite& spr) {
+	auto block_view = holder.registry->view<Position2D, Sprite>();
+	block_view.each([&](const auto entity, const Position2D& pos, const Sprite& spr) {
 		glm::vec4 block_bb(
 				pos.x, pos.y,
 				spr.width, spr.height);

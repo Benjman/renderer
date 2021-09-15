@@ -1,14 +1,13 @@
-#include "./src/Pong.hpp"
+#include "./src/PongRunner.hpp"
 
 #include <iostream>
 
 int main(int argc, char **argv) {
-	const char *title = "Pong";
 	const int width = 640;
 	const int height = 480;
 	try {
-		GLFWwindow *window = initializeGlfw(title, width, height);
-		Pong pong(window, width, height);
+		GLFWwindow *window = initializeGlfw("Pong", width, height);
+		PongRunner pong(window, width, height);
 		return pong.run();
 	} catch (const std::exception &ex) {
 		std::cin.get();

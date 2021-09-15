@@ -1,0 +1,11 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+/**
+ * This file is generated through a cmake Config.h.in
+ */
+
+#define RES_DIR "${CMAKE_SOURCE_DIR}/res/"
+#cmakedefine IS_DEBUG ${CMAKE_BUILD_TYPE}
+
+#endif // CONFIG_H

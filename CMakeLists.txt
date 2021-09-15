@@ -13,8 +13,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+configure_file(${CMAKE_SOURCE_DIR}/cmake/Core/include/Config.h.in ${CMAKE_SOURCE_DIR}/src/Core/src/Config.h)
+
 # set GL_LIBS
-set(GL_LIBS ${GL_LIBS} glad glfw)
+set(GL_LIBS ${GL_LIBS} glad glfw3)
 if (UNIX AND NOT APPLE)
 	find_package(X11 REQUIRED)
 	find_package(Threads REQUIRED)
@@ -29,11 +31,11 @@ endif()
 
 # ========== Libraries
 add_subdirectory(./lib)
+
 find_package(GTest REQUIRED)
 
 find_package(spdlog REQUIRED)
 set(LIBS ${LIBS} spdlog::spdlog Threads::Threads)
-# ==========
 
 
 add_subdirectory(./src/GL)

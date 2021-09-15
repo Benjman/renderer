@@ -1,14 +1,16 @@
+#include "src/BreakoutRunner.hpp"
+
 #include <iostream>
 #include <gl.h>
-#include "src/Breakout.hpp"
+
+#include <Core/File.h>
 
 int main(int argc, char **argv) {
-	const char *title = "Pong";
 	const int width = 640;
 	const int height = 480;
 	try {
-		GLFWwindow *window = initializeGlfw(title, width, height);
-		Breakout runner(window, width, height);
+		GLFWwindow *window = initializeGlfw("Breakout", width, height);
+		BreakoutRunner runner(window, width, height);
 		return runner.run();
 	} catch (const std::exception &ex) {
 		std::cin.get();
@@ -18,4 +20,5 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 }
+
 

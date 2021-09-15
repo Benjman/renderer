@@ -12,6 +12,10 @@ add_library(Shader
 	./src/VertexAttribute.cpp
 	)
 
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+	add_definitions("-DSHADER_DEBUG")
+endif ()
+
 target_include_directories(Shader PUBLIC ./include)
 target_link_libraries(Shader PUBLIC GL)
 

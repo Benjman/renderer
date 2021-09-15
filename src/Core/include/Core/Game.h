@@ -4,9 +4,11 @@
 #include <entt/entt.hpp>
 #include <gl.h>
 
+#include "Events.h"
+
 class Game {
 	public:
-		Game(GLFWwindow *window, const int width, const int height); 
+		Game(GLFWwindow *window, const int width, const int height);
 
 		~Game() noexcept;
 
@@ -14,9 +16,11 @@ class Game {
 
 		virtual void keyEvent(int key, int mode) = 0;
 
+		virtual void windowSizeChanged(int width, int height) = 0;
+
 	protected:
-		const int m_width;
-		const int m_height;
+		int m_width;
+		int m_height;
 		GLFWwindow *m_window;
 		std::vector<GLfloat> m_texture;
 		entt::registry m_registry;
@@ -28,8 +32,9 @@ class Game {
 
 		virtual void render() = 0;
 
-};
+		void doRender();
 
+};
 
 #endif //CORE_GAME_H
 

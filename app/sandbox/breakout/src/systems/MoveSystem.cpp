@@ -2,9 +2,10 @@
 #include <entt/entt.hpp>
 #include <iostream>
 
+#include <Core/components/Position2D.h>
+
 #include "../components/Ball.h"
 #include "../components/Player.h"
-#include "../components/Position.h"
 #include "../components/Sprite.h"
 
 #include "./MoveSystem.h"
@@ -27,9 +28,9 @@ void MoveSystem::on_key_up(const KeyUp& key_up) noexcept {
 
 const int PADDLE_SPEED = 20;
 
-void MoveSystem::update(const double time, entt::registry &registry) {
-	auto ball_view = registry.view<Ball, Position, Sprite>();
-	ball_view.each([&](Ball& ball, Position& pos, Sprite& sprite) {
+void MoveSystem::update(const double time, entt::registry &registry, int width, int height) {
+	auto ball_view = registry.view<Ball, Position2D, Sprite>();
+	ball_view.each([&](Ball& ball, Position2D& pos, Sprite& sprite) {
 		// check for boarder collision
 		if (pos.x + sprite.width + sprite.radius > width
 			|| pos.x < 0) {
@@ -45,8 +46,8 @@ void MoveSystem::update(const double time, entt::registry &registry) {
 		pos.y += ball.vel_y * time;
 	});
 
-	auto player_view = registry.view<Player, Position, Sprite>();
-	player_view.each([&](Player &player, Position& pos, Sprite& sprite) {
+	auto player_view = registry.view<Player, Position2D, Sprite>();
+	player_view.each([&](Player &player, Position2D& pos, Sprite& sprite) {
 		switch (player_movement) {
 			case Player::MoveDirection::WEST:
 				pos.x -= player.velocity * time;
@@ -64,9 +65,4 @@ void MoveSystem::update(const double time, entt::registry &registry) {
 		if (pos.y < 0) pos.y = 0;
 		if (pos.y > height - 100) pos.y = height;
 	});
-}
-
-void MoveSystem::setSize(int width, int height) {
-	this->width = width;
-	this->height = height;
 }
