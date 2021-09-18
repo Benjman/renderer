@@ -40,5 +40,6 @@ set(LIBS ${LIBS} spdlog::spdlog Threads::Threads)
 
 add_subdirectory(./src/GL)
 add_subdirectory(./src/Shader)
+add_subdirectory(./src/Text)
 add_subdirectory(./src/Core)
 add_subdirectory(./app)

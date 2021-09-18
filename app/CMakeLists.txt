@@ -16,4 +16,6 @@ target_link_libraries(App PRIVATE
 	${LIBS}
 
 	Core
-	Shader)
+	Shader
+	Text
+	)

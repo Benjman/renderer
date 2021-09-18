@@ -1,7 +1,13 @@
-#include "include/gl.h"
+#ifndef TEXT_TEST_UTILS_GLFW_HPP
+#define TEXT_TEST_UTILS_GLFW_HPP
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+
 #include <stdexcept>
 
-extern GLFWwindow *initializeGlfw(const char *title, int width, int height, bool headless) {
+extern GLFWwindow* initializeGlfw(const char *title, int width, int height, bool headless) {
 	if (!glfwInit())
 		return nullptr;
 
@@ -37,15 +43,4 @@ extern void destroyGlfw(GLFWwindow *window) {
 	window = nullptr;
 }
 
-extern double_t getRuntimeSeconds() {
-	return glfwGetTime();
-}
-
-extern bool glfwShouldClose(GLFWwindow *window) {
-	return glfwWindowShouldClose(window);
-}
-
-extern void glfwSwapBuffers(const GLFWwindow *window) {
-	glfwSwapBuffers(window);
-}
-
+#endif //#ifndef TEXT_TEST_UTILS_GLFW_HPP

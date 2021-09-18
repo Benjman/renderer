@@ -4,7 +4,6 @@ project(Core)
 add_library(Core STATIC
 	./src/Camera2D.cpp
 	./src/File.cpp
-	./src/Font.cpp
 	./src/Game.cpp
 	./src/Texture.cpp
 	./src/components/Position2D.cpp
