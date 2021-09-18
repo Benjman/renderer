@@ -6,7 +6,12 @@ struct VaoTestFixture : public ShaderTestFixture {
 	protected:
 		void TearDown() override {
 			Vao::unbind();
+			ASSERT_FALSE(glGetError());
 		}
+
+	void SetUp() override {
+		ASSERT_FALSE(glGetError());
+	}
 };
 
 TEST_F(VaoTestFixture, createVao) {

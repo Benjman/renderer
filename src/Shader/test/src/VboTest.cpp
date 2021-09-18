@@ -10,6 +10,7 @@ struct VboTestFixture : public ShaderTestFixture {
 		void SetUp() override {
 			vao = Vao::createVao();
 			vbo = Vbo::createVbo(vao, TARGET, GL_STATIC_DRAW);
+			ASSERT_FALSE(glGetError());
 		}
 
 		void TearDown() override {
@@ -18,6 +19,7 @@ struct VboTestFixture : public ShaderTestFixture {
 			Vbo::unbind(TARGET);
 			delete vbo;
 			delete vao;
+			ASSERT_FALSE(glGetError());
 		}
 
 		Vao *vao = nullptr;

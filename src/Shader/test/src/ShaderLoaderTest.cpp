@@ -16,6 +16,14 @@ struct ShaderLoaderFixture : public ShaderTestFixture {
 								"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 								"}\n\0";
 
+protected:
+	void TearDown() override {
+		ASSERT_FALSE(glGetError());
+	}
+
+	void SetUp() override {
+		ASSERT_FALSE(glGetError());
+	}
 };
 
 TEST_F(ShaderLoaderFixture, doesVertexShaderCompile) {

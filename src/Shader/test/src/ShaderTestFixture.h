@@ -12,10 +12,13 @@ static bool IS_HEADLESS = true;
 static bool IS_HEADLESS = GLFW_HEADLESS;
 #endif
 
+// cout will output errors when testing for shader failure. Undefining SHADER_DEBUG will prevent this.
+#undef SHADER_DEBUG
+
 struct ShaderTestFixture : public ::testing::Test {
 	protected:
 		static void SetUpTestSuite() {
-			m_window = initializeGlfw("", 0, 0, IS_HEADLESS);
+			m_window = initializeGlfw("Shader Tests", 1, 1, IS_HEADLESS);
 		}
 
 		static void TearDownTestSuite() {
