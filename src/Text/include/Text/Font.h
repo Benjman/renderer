@@ -29,6 +29,6 @@ struct Font {
 
 };
 
-extern GLuint load_font(Font& font, u_char* font_buffer);
+extern GLuint load_font(Font& font, const u_char* font_buffer);
 
 #endif // TEXT_FONT_H

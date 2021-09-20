@@ -15,8 +15,11 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 configure_file(${CMAKE_SOURCE_DIR}/cmake/Core/include/Config.h.in ${CMAKE_SOURCE_DIR}/src/Core/src/Config.h)
 
+find_package(GLFW REQUIRED)
+find_package(GTest REQUIRED)
+
 # set GL_LIBS
-set(GL_LIBS ${GL_LIBS} glad glfw3)
+set(GL_LIBS ${GL_LIBS} ${GLFW_LIBRARY} glad)
 if (UNIX AND NOT APPLE)
 	find_package(X11 REQUIRED)
 	find_package(Threads REQUIRED)
@@ -31,8 +34,6 @@ endif()
 
 # ========== Libraries
 add_subdirectory(./lib)
-
-find_package(GTest REQUIRED)
 
 find_package(spdlog REQUIRED)
 set(LIBS ${LIBS} spdlog::spdlog Threads::Threads)

@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.18)
 project(Pong)
 
 add_executable(Pong
@@ -13,5 +12,4 @@ add_executable(Pong
 	./src/systems/MoveSystem.cpp
 	./src/systems/RenderSystem.cpp)
 
-target_link_libraries(Pong PRIVATE ${LIBS} Core Shader)
-target_include_directories(Pong PRIVATE ${ENTT_INCLUDE})
+target_link_libraries(Pong PRIVATE ${LIBS} Core)

@@ -38,10 +38,10 @@ GLFWwindow* Fixture::window = nullptr;
 
 TEST_F(Fixture, build_path) {
 	Font font;
-	load_font(font, Fixture::ttf_buffer);
+	GLuint texture_id = load_font(font, Fixture::ttf_buffer);
 
+	ASSERT_TRUE(texture_id) << "Texture ID not generated";
 	ASSERT_GT(font.fontinfo.numGlyphs, 0) << "Failed to initialize stb_truetype";
-
 	ASSERT_LT(font.ascent, std::numeric_limits<int32_t>::max()) << "Failed to get stbtt_GetFontVMetrics";
 	ASSERT_LT(font.descent, std::numeric_limits<int32_t>::max()) << "Failed to get stbtt_GetFontVMetrics";
 	ASSERT_LT(font.line_gap, std::numeric_limits<int32_t>::max()) << "Failed to get stbtt_GetFontVMetrics";

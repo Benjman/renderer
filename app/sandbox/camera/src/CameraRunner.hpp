@@ -2,10 +2,13 @@
 #define SIMULATION_HPP
 
 #include <Core/Game.h>
+#include <Core/File.h>
+#include <Text/Flags.h>
 
 class CameraRunner : public Game {
 	public:
 		CameraRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height) {
+			File ttf = File::LOAD("/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
 		}
 
 	protected:
@@ -14,7 +17,7 @@ class CameraRunner : public Game {
 
 		void render() override {
 			// render_system.render(m_registry, m_width, m_height, m_texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT, &m_texture.at(0));
+			// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT, &m_texture.at(0));
 
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);

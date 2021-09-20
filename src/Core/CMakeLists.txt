@@ -10,10 +10,17 @@ add_library(Core STATIC
 	./src/components/Position3D.cpp
 	)
 
-target_link_libraries(Core PRIVATE GL Shader)
-target_include_directories(Core PRIVATE
+target_link_libraries(Core
+	PUBLIC
+	Text
+	Shader
+
+	PRIVATE
+	GL)
+
+target_include_directories(Core
+	PUBLIC
 	${ENTT_INCLUDE}
-	${STB_INCLUDE}
 	./include)
 
 target_include_directories(Core PUBLIC ${ENTT_INCLUDE} ./include)

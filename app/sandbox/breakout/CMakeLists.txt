@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.18)
 project(Breakout)
 
 add_executable(Breakout
@@ -10,8 +9,6 @@ add_executable(Breakout
 	./src/components/Sprite.cpp
 	./src/systems/CollisionSystem.cpp
 	./src/systems/MoveSystem.cpp
-	./src/systems/RenderSystem.cpp
-	)
+	./src/systems/RenderSystem.cpp)
 
-target_link_libraries(Breakout PRIVATE ${LIBS} Shader Core)
-target_include_directories(Breakout PRIVATE ${ENTT_INCLUDE})
+target_link_libraries(Breakout PRIVATE ${LIBS} Core)

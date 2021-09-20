@@ -11,10 +11,10 @@
 #include <Text/Font.h>
 #include <iostream> // ghetto logging
 
-GLuint load_font(Font& font, u_char* font_buffer) {
+GLuint load_font(Font& font, const u_char* font_buffer) {
 	if (!stbtt_InitFont(&font.fontinfo, font_buffer, 0))
 		// TODO error handling
-		std::cout << "oh shit couldn't initialize stb_truetype\n";
+		throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
 	font.scale_factor = stbtt_ScaleForPixelHeight(&font.fontinfo, font.line_height);
 
@@ -28,7 +28,7 @@ GLuint load_font(Font& font, u_char* font_buffer) {
 	if (!stbtt_BakeFontBitmap(font_buffer, 0, font.line_height, font.atlas_data,
 				ATLAS_WIDTH, ATLAS_HEIGHT, 32, TEXT_CHAR_COUNT, font.chardata))
 		// TODO error handling
-		std::cout << "oh shit couldn't initialize baked chars\n";
+		throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
 	GLuint texture_id = GL_ZERO;
 
@@ -36,7 +36,7 @@ GLuint load_font(Font& font, u_char* font_buffer) {
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, font.atlas_data);
 
-	// stbi_write_jpg("test.jpg", ATLAS_WIDTH, ATLAS_HEIGHT, 1, font.atlas_data, 100);
+	stbi_write_jpg("test.jpg", ATLAS_WIDTH, ATLAS_HEIGHT, 1, font.atlas_data, 100);
 	return texture_id;
 }
 
