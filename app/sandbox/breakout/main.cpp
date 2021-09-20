@@ -3,8 +3,6 @@
 #include <iostream>
 #include <gl.h>
 
-#include <Core/File.h>
-
 int main(int argc, char **argv) {
 	const int width = 640;
 	const int height = 480;

@@ -21,6 +21,7 @@ target_link_libraries(Core
 target_include_directories(Core
 	PUBLIC
 	${ENTT_INCLUDE}
+	${STB_INCLUDE}
 	./include)
 
 target_include_directories(Core PUBLIC ${ENTT_INCLUDE} ./include)

@@ -34,7 +34,7 @@ const GLuint indices[] = {
 };
 
 class PongRunner : public Game {
-	Texture texture = Texture(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, GL_RGB, GL_FLOAT);
+	Texture texture = Texture(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT);
 
 	public:
 		PongRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height), m_texture(std::vector<GLfloat>(width * height * 3)) {

@@ -11,34 +11,23 @@ class Fixture : public ::testing::Test {
 	protected:
 		static void SetUpTestSuite() {
 			window = initializeGlfw("Text Tests", 1, 1, true);
-
-			FILE* font_file = fopen("/home/ben/src/renderer/res/fonts/DejaVuSans.ttf", "rb");
-			fseek(font_file, 0, SEEK_END);
-			size_t size = ftell(font_file); /* how long is the file ? */
-			fseek(font_file, 0, SEEK_SET); /* reset */
-			fread(ttf_buffer, size, 1, font_file);
-			fclose(font_file);
 		}
 
 		static void TearDownTestSuite() {
-			delete[] ttf_buffer;
-
 			std::atexit([]() {
 				destroyGlfw(window);
 			});
 		}
 
 	private:
-		static u_char* ttf_buffer;
 		static GLFWwindow* window;
 };
 
-u_char* Fixture::ttf_buffer = new u_char[1024 * 1024 * 5]{0};
 GLFWwindow* Fixture::window = nullptr;
 
 TEST_F(Fixture, build_path) {
 	Font font;
-	GLuint texture_id = load_font(font, Fixture::ttf_buffer);
+	GLuint texture_id = load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
 
 	ASSERT_TRUE(texture_id) << "Texture ID not generated";
 	ASSERT_GT(font.fontinfo.numGlyphs, 0) << "Failed to initialize stb_truetype";

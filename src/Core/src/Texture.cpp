@@ -1,13 +1,9 @@
 #include <Core/Texture.h>
 
-Texture::Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLenum format, GLenum type) : Texture(target, mipmapLevel, internalFormat, width, 0, 0, format, type) {
-}
-
-Texture::Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type) : Texture(target, mipmapLevel, internalFormat, width, height, 0, format, type) {
-}
-
-Texture::Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type) : target(target), mipmapLevel(mipmapLevel), internalFormat(internalFormat), width(width), height(height), depth(depth), format(format), type(type) {
-	glGenTextures(1, &id);
+Texture::Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLuint id)
+	: target(target), mipmapLevel(mipmapLevel), internalFormat(internalFormat), width(width), height(height), depth(depth), format(format), type(type) {
+	if (!id)
+		glGenTextures(1, &this->id);
 }
 
 void Texture::bind() {

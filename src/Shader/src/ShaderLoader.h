@@ -11,12 +11,12 @@
 
 struct ShaderLoader {
 
-	static GLuint loadShader(std::string& vert, std::string& frag) {
+	static GLuint loadShader(const char* vert, const char* frag) {
 		std::string vertBuffer = vert;
 		std::string fragBuffer = frag;
 
-		assert(!std::string(vert).empty());
-		assert(!std::string(frag).empty());
+		assert(!vertBuffer.empty());
+		assert(!fragBuffer.empty());
 
 		GLuint vertId = compileShader(GL_VERTEX_SHADER, vertBuffer);
 		GLuint fragId = compileShader(GL_FRAGMENT_SHADER, fragBuffer);
@@ -25,20 +25,20 @@ struct ShaderLoader {
 	}
 
 	private:
-	static GLuint compileShader(GLuint type, std::string &source) {
+	static GLuint compileShader(GLuint type, std::string& source) {
 		GLuint id;
 		if (!(id = glCreateShader(type)))
 			return GL_ZERO;
 
 		const char *src = source.c_str();
-		glShaderSource(id, 1, &src, nullptr);
+		glShaderSource(id, 1,& src, nullptr);
 		glCompileShader(id);
 
 #ifdef SHADER_DEBUG
 		// Error checking
 		int success;
 		char infoLog[1024];
-		glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+		glGetShaderiv(id, GL_COMPILE_STATUS,& success);
 		if (!success) {
 			glGetShaderInfoLog(id, sizeof(infoLog) / sizeof(char), nullptr, infoLog);
 			std::cerr << "Failed to compile shader.\nError from OpenGL: " << infoLog << std::endl;
@@ -62,7 +62,7 @@ struct ShaderLoader {
 #ifdef SHADER_DEBUG
 		int success;
 		char infoLog[1024];
-		glGetProgramiv(id, GL_LINK_STATUS, &success);
+		glGetProgramiv(id, GL_LINK_STATUS,& success);
 		if (!success) {
 			glGetProgramInfoLog(id, sizeof(infoLog) / sizeof(char), nullptr, infoLog);
 			std::cerr << "Failed to link shader.\nError from OpenGL: " << infoLog << std::endl;

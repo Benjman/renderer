@@ -3,15 +3,13 @@
 
 #include <gl.h>
 
-#include <string>
-
 class Vao;
 
 struct Shader {
 public:
   friend class ShaderLoader;
 
-  static Shader createShader(std::string& vert, std::string& frag);
+  static Shader createShader(const char* vert, const char* frag);
 
   void use() const;
 

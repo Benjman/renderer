@@ -2,30 +2,35 @@
 
 #include "Config.h"
 
-#include <string> // std::string
+#include <cstring>
 #include <fstream>
 
-File::File(const char* contents, uint32_t length_bytes)
-	: contents(std::string(contents, length_bytes)), length_bytes(length_bytes) {
+File::File(char* contents, uint32_t length)
+	: contents(new char[length + 1]), length(length) {
+	strncpy(this->contents, contents, length - 1);
 }
 
 File::~File() {
+	delete[] contents;
 }
 
 File File::LOAD(const char* rel_path) {
-	std::string path = RES_DIR;
-	path += rel_path;
-
+	std::string path = find_path(rel_path);
 	std::ifstream stream(path, std::ios::binary | std::ios::ate);
 	if (stream.fail())
 		throw std::runtime_error("Failed to load input stream from path '" + path + "'");
 
-	std::streamsize len = stream.tellg(); // get char count
-	stream.seekg(0, std::ios::beg); // reset stream to head
+	std::streamsize length = stream.tellg();
+	stream.seekg(0, std::ios::beg);
+	char contents[length];
+	stream.read(contents, length);
 
-	char contents[len];
-	stream.read(contents, len);
+	File file(contents, length);
+	return file;
+}
 
-	File file(contents, len);
-	return {file};
+std::string File::find_path(const char* rel_path) {
+	std::string path = RES_DIR;
+	path += rel_path;
+	return path;
 }

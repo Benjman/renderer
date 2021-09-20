@@ -11,8 +11,16 @@
 #include <Text/Font.h>
 #include <iostream> // ghetto logging
 
-GLuint load_font(Font& font, const u_char* font_buffer) {
-	if (!stbtt_InitFont(&font.fontinfo, font_buffer, 0))
+GLuint load_font(Font& font, const char* path) {
+	FILE *file = fopen(path, "rb");
+	if (!file) {
+		std::cerr << "TrueType file at path `" << path << "` not found." << std::endl;
+		return GL_ZERO;
+	}
+	fread(font.font_data, 1, 1024 * 1024 * 5, file);
+	fclose(file);
+
+	if (!stbtt_InitFont(&font.fontinfo, font.font_data, 0))
 		// TODO error handling
 		throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
@@ -25,7 +33,7 @@ GLuint load_font(Font& font, const u_char* font_buffer) {
 	font.descent = roundf((float_t)descent * font.scale_factor);
 	font.line_gap = roundf((float_t)line_gap * font.scale_factor);
 
-	if (!stbtt_BakeFontBitmap(font_buffer, 0, font.line_height, font.atlas_data,
+	if (!stbtt_BakeFontBitmap(font.font_data, 0, font.line_height, font.atlas_data,
 				ATLAS_WIDTH, ATLAS_HEIGHT, 32, TEXT_CHAR_COUNT, font.chardata))
 		// TODO error handling
 		throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
@@ -36,7 +44,7 @@ GLuint load_font(Font& font, const u_char* font_buffer) {
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, font.atlas_data);
 
-	stbi_write_jpg("test.jpg", ATLAS_WIDTH, ATLAS_HEIGHT, 1, font.atlas_data, 100);
+//	stbi_write_jpg("test.jpg", ATLAS_WIDTH, ATLAS_HEIGHT, 1, font.atlas_data, 100);
 	return texture_id;
 }
 

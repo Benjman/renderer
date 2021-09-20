@@ -1,14 +1,52 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
-#include <Core/Game.h>
 #include <Core/File.h>
-#include <Text/Flags.h>
+#include <Core/Game.h>
+#include <Core/Texture.h>
+#include <Shader.h>
+#include <Text.h>
 
 class CameraRunner : public Game {
 	public:
 		CameraRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height) {
-			File ttf = File::LOAD("/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
+			const GLfloat vertices[] = {
+				// positions
+				1.f, 1.f, 0.f,
+				1.f, -1.f, 0.f,
+				-1.f, -1.f, 0.f,
+				-1.f, 1.f, 0.f,
+
+				// tex coords
+				1.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f,
+				0.0f, 1.0f,
+			};
+
+			const GLuint indices[] = {
+				1, 2, 3,
+				0, 1, 3,
+			};
+
+			File vert = File::LOAD("shaders/basic.vert");
+			File frag = File::LOAD("shaders/basic.frag");
+			Shader::createShader(vert.contents, frag.contents).use();
+
+			Vao *vao = Vao::createVao();
+			Vbo::createVbo(vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(vertices), vertices);
+			Vbo::createVbo(vao, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(indices), indices);
+			VertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0, true);
+			VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *) (12 * sizeof(GLfloat)), true);
+
+			Font dejavu_font;
+			GLuint texture_id = load_font(dejavu_font, File::find_path("fonts/DejaVuSans.ttf").c_str());
+			Texture texture(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, texture_id);
+			texture.bind();
+			texture.parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+			texture.parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 
 	protected:
@@ -16,9 +54,6 @@ class CameraRunner : public Game {
 		}
 
 		void render() override {
-			// render_system.render(m_registry, m_width, m_height, m_texture);
-			// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT, &m_texture.at(0));
-
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
