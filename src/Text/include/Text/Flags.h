@@ -3,21 +3,32 @@
 
 #include <cstdint>
 
+#define TEXT_ALIGN_BITS (2)
+#define TEXT_ALIGN_SHIFT (0)
+#define TEXT_ALIGN_MASK (0x3)
+
+#define LINE_GAP_BITS (3)
+#define LINE_GAP_SHIFT (TEXT_ALIGN_SHIFT + TEXT_ALIGN_BITS)
+#define LINE_GAP_MASK (0x7)
+
+#define TEXT_SIZE_BITS (8)
+#define TEXT_SIZE_SHIFT (LINE_GAP_SHIFT + LINE_GAP_BITS)
+#define TEXT_SIZE_MASK (0xff)
+
+
 // TEXT_ALIGN_* mask is 2 bits; 4 values max
 extern const uint32_t TEXT_ALIGN_LEFT;
 extern const uint32_t TEXT_ALIGN_RIGHT;
 extern const uint32_t TEXT_ALIGN_CENTER;
 extern const uint32_t TEXT_ALIGN_JUSTIFY;
 
-// LINE_SPACE_* mask is 2 bits; 4 values max
-extern const uint32_t LINE_SPACE_1;
-extern const uint32_t LINE_SPACE_1_5;
-extern const uint32_t LINE_SPACE_2;
+// LINE_GAP_* mask is 3 bits; 8 values max
+extern const uint32_t LINE_GAP_1_0;
+extern const uint32_t LINE_GAP_1_15;
+extern const uint32_t LINE_GAP_1_5;
+extern const uint32_t LINE_GAP_2_0;
 
 // TEXT_SIZE_* mask is 8 bits, 256 values
-extern const uint32_t TEXT_SIZE_1;
-extern const uint32_t TEXT_SIZE_2;
-extern const uint32_t TEXT_SIZE_3;
 extern const uint32_t TEXT_SIZE_4;
 extern const uint32_t TEXT_SIZE_5;
 extern const uint32_t TEXT_SIZE_6;

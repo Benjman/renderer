@@ -1,9 +1,4 @@
-#ifndef TEXT_TEST_UTILS_GLFW_HPP
-#define TEXT_TEST_UTILS_GLFW_HPP
-
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include "glfw.h"
 
 #include <stdexcept>
 
@@ -42,5 +37,3 @@ extern void destroyGlfw(GLFWwindow *window) {
 	glfwTerminate();
 	window = nullptr;
 }
-
-#endif //#ifndef TEXT_TEST_UTILS_GLFW_HPP

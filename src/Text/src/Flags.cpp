@@ -1,23 +1,15 @@
 #include <Text/Flags.h>
 
-#define TEXT_ALIGN_BITS (2)
-#define TEXT_ALIGN_SHIFT (0)
-#define TEXT_ALIGN_MASK (0x3)
 extern const uint32_t TEXT_ALIGN_LEFT = 0x0 << TEXT_ALIGN_SHIFT;
 extern const uint32_t TEXT_ALIGN_RIGHT = 0x1 << TEXT_ALIGN_SHIFT;
 extern const uint32_t TEXT_ALIGN_CENTER = 0x2 << TEXT_ALIGN_SHIFT;
 extern const uint32_t TEXT_ALIGN_JUSTIFY = 0x3 << TEXT_ALIGN_SHIFT;
 
-#define LINE_SPACE_BITS (2)
-#define LINE_SPACE_SHIFT (TEXT_ALIGN_SHIFT + TEXT_ALIGN_BITS)
-#define LINE_SPACE_MASK (0x3 << (TEXT_ALIGN_BITS + TEXT_ALIGN_SHIFT))
-extern const uint32_t LINE_SPACE_1 = 0x0 << LINE_SPACE_SHIFT;
-extern const uint32_t LINE_SPACE_1_5 = 0x1 << LINE_SPACE_SHIFT;
-extern const uint32_t LINE_SPACE_2 = 0x2 << LINE_SPACE_SHIFT;
+extern const uint32_t LINE_GAP_1_0 = 0x0 << LINE_GAP_SHIFT;
+extern const uint32_t LINE_GAP_1_15 = 0x1 << LINE_GAP_SHIFT;
+extern const uint32_t LINE_GAP_1_5 = 0x2 << LINE_GAP_SHIFT;
+extern const uint32_t LINE_GAP_2_0 = 0x3 << LINE_GAP_SHIFT;
 
-#define TEXT_SIZE_BITS (8)
-#define TEXT_SIZE_SHIFT (LINE_SPACE_BITS + LINE_SPACE_SHIFT)
-#define TEXT_SIZE_MASK (0xff << (LINE_SPACE_BITS + LINE_SPACE_SHIFT)
 extern const uint32_t TEXT_SIZE_4 = 0x3 << TEXT_SIZE_SHIFT;
 extern const uint32_t TEXT_SIZE_5 = 0x4 << TEXT_SIZE_SHIFT;
 extern const uint32_t TEXT_SIZE_6 = 0x5 << TEXT_SIZE_SHIFT;

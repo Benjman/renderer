@@ -11,8 +11,10 @@ include_directories(
 	)
 
 add_executable(TextTests
+	./src/utils/glfw.cpp
 	./src/FontLoaderTest.cpp
 	./src/main.cpp
+	./src/TextTest.cpp
 	)
 
 target_link_libraries(TextTests

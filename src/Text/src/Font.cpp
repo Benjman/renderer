@@ -11,14 +11,14 @@
 #include <Text/Font.h>
 #include <iostream> // ghetto logging
 
+namespace internal {
+	FILE* get_file(const char *path, u_char* buffer);
+
+	GLuint upload(Font& font);
+}
+
 GLuint load_font(Font& font, const char* path) {
-	FILE *file = fopen(path, "rb");
-	if (!file) {
-		std::cerr << "TrueType file at path `" << path << "` not found." << std::endl;
-		return GL_ZERO;
-	}
-	fread(font.font_data, 1, 1024 * 1024 * 5, file);
-	fclose(file);
+	FILE* file = internal::get_file(path, font.font_data);
 
 	if (!stbtt_InitFont(&font.fontinfo, font.font_data, 0))
 		// TODO error handling
@@ -34,17 +34,31 @@ GLuint load_font(Font& font, const char* path) {
 	font.line_gap = roundf((float_t)line_gap * font.scale_factor);
 
 	if (!stbtt_BakeFontBitmap(font.font_data, 0, font.line_height, font.atlas_data,
-				ATLAS_WIDTH, ATLAS_HEIGHT, 32, TEXT_CHAR_COUNT, font.chardata))
+				font.width, font.height, 32, TEXT_CHAR_COUNT, font.chardata))
 		// TODO error handling
 		throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
+	return internal::upload(font);
+}
+
+FILE* internal::get_file(const char *path, u_char* buffer) {
+	FILE* file = fopen(path, "rb");
+	if (!file) {
+		throw std::runtime_error(std::string(std::string("TrueType file not found: ") + path).c_str());
+		return GL_ZERO;
+	}
+	fread(buffer, 1, 1024 * 1024 * 5, file);
+	fclose(file);
+	return file;
+}
+
+GLuint internal::upload(Font& font) {
 	GLuint texture_id = GL_ZERO;
 
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, font.atlas_data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, font.width, font.height, 0, GL_RED, GL_UNSIGNED_BYTE, font.atlas_data);
 
-//	stbi_write_jpg("test.jpg", ATLAS_WIDTH, ATLAS_HEIGHT, 1, font.atlas_data, 100);
+	// stbi_write_jpg("test.jpg", font.width, font.height, 1, font.atlas_data, 100);
 	return texture_id;
 }
-

@@ -20,8 +20,9 @@ add_library(Text
 	STATIC
 	${GLAD_C}
 
+	./src/Flags.cpp
 	./src/Font.cpp
-	./src/Flags.cpp)
+	./src/Text.cpp)
 
 target_include_directories(Text
 	PUBLIC ./include

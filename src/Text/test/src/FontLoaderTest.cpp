@@ -1,4 +1,4 @@
-#include "utils/glfw.hpp"
+#include "utils/glfw.h"
 
 #include <gtest/gtest.h>
 #include <cmath>
@@ -7,10 +7,10 @@
 #define private public
 #include <Text/Font.h>
 
-class Fixture : public ::testing::Test {
+class FontLoaderFixture : public ::testing::Test {
 	protected:
 		static void SetUpTestSuite() {
-			window = initializeGlfw("Text Tests", 1, 1, true);
+			window = initializeGlfw("Font Tests", 1, 1, true);
 		}
 
 		static void TearDownTestSuite() {
@@ -23,9 +23,9 @@ class Fixture : public ::testing::Test {
 		static GLFWwindow* window;
 };
 
-GLFWwindow* Fixture::window = nullptr;
+GLFWwindow* FontLoaderFixture::window = nullptr;
 
-TEST_F(Fixture, build_path) {
+TEST_F(FontLoaderFixture, build_path) {
 	Font font;
 	GLuint texture_id = load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
 
