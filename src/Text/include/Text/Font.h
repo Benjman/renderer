@@ -30,8 +30,10 @@ struct Font {
 	stbtt_bakedchar chardata[TEXT_CHAR_COUNT]{};
 	stbtt_fontinfo fontinfo{};
 
+	stbtt_aligned_quad get_char(u_char c, float_t* cursor_x, float_t* cursor_y) const;
+
 };
 
-extern GLuint load_font(Font& font, const char* path);
+extern GLuint load_font(Font& font, const char* path, bool upload = true);
 
 #endif // TEXT_FONT_H

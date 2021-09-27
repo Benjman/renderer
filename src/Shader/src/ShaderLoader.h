@@ -7,13 +7,16 @@
 
 #include <string>
 #include <iostream> // TODO remove after logging is implemented
-#include <cstring>
+#include <cassert>
 
 struct ShaderLoader {
 
 	static GLuint loadShader(const char* vert, size_t vert_size, const char* frag, size_t frag_size) {
 		std::string vertBuffer = vert;
 		std::string fragBuffer = frag;
+
+		assert(!vertBuffer.empty());
+		assert(!fragBuffer.empty());
 
 		GLuint vertId = compileShader(GL_VERTEX_SHADER, vertBuffer, vert_size);
 		GLuint fragId = compileShader(GL_FRAGMENT_SHADER, fragBuffer, frag_size);

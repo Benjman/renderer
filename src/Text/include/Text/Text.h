@@ -11,29 +11,33 @@ class Font;
 
 class Text {
 	public:
-		Text(std::string value, Font& font, glm::vec2 pos, uint32_t flags);
+		Font* font;
+		std::string value;
+		uint32_t flags;
+		float_t max_width;
+		glm::vec2 pos;
+		size_t char_count = 0; // non-whitespace chars
 
-		void set_value(std::string value, bool update_mesh = true);
+		float_t* v_buffer{};
+		uint32_t* i_buffer{};
+		size_t v_buffer_size = 0;
+		size_t i_buffer_size = 0;
 
-		float* get_mesh() const noexcept;
+		Text(std::string value, Font* font, glm::vec2 pos, uint32_t flags);
+		Text(std::string value, Font* font, glm::vec2 pos, float_t max_width, uint32_t flags);
 
+		void set_value(std::string value) noexcept;
+		void set_flag(uint32_t value, uint32_t mask) noexcept;
 		void set_flags(uint32_t flags) noexcept;
 
-		void set_alignment(u_char alignment) noexcept { this->alignment = alignment; }
-		void set_line_gap(float_t line_gap) noexcept { this->line_gap = line_gap; }
-		void set_text_size(float_t text_size) noexcept { this->text_size = text_size; }
+		uint32_t get_alignment() const noexcept;
+		float_t get_aspect_ratio() const noexcept;
+		uint32_t get_display_height() const noexcept;
+		uint32_t get_display_width() const noexcept;
+		float_t get_line_gap() const noexcept;
+		uint32_t get_text_size() const noexcept;
 
-	private:
-		std::string value;
-		float_t* mesh{};
-		float_t text_size = get_text_size_flags(TEXT_SIZE_12);
-		float_t line_gap = get_line_gap_flags(LINE_GAP_1_0);
-		u_char alignment = get_alignment_flags(TEXT_ALIGN_LEFT);
-		glm::vec2 pos;
-
-		u_char get_alignment_flags(uint32_t flags) noexcept;
-		float_t get_line_gap_flags(uint32_t flags) noexcept;
-		float_t get_text_size_flags(uint32_t flags) noexcept;
+		void generate_mesh();
 };
 
 #endif // TEXT_TEXT_H

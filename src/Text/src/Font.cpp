@@ -17,8 +17,8 @@ namespace internal {
 	GLuint upload(Font& font);
 }
 
-GLuint load_font(Font& font, const char* path) {
-	FILE* file = internal::get_file(path, font.font_data);
+GLuint load_font(Font& font, const char* path, bool upload) {
+	internal::get_file(path, font.font_data);
 
 	if (!stbtt_InitFont(&font.fontinfo, font.font_data, 0))
 		// TODO error handling
@@ -38,14 +38,22 @@ GLuint load_font(Font& font, const char* path) {
 		// TODO error handling
 		throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
+	if (!upload)
+		return GL_ZERO;
+
 	return internal::upload(font);
+}
+
+stbtt_aligned_quad Font::get_char(u_char c, float_t* cursor_x, float_t* cursor_y) const {
+	stbtt_aligned_quad quad;
+	stbtt_GetBakedQuad(chardata, width, height, c - 32, cursor_x, cursor_y, &quad, 0);
+	return quad;
 }
 
 FILE* internal::get_file(const char *path, u_char* buffer) {
 	FILE* file = fopen(path, "rb");
 	if (!file) {
 		throw std::runtime_error(std::string(std::string("TrueType file not found: ") + path).c_str());
-		return GL_ZERO;
 	}
 	fread(buffer, 1, 1024 * 1024 * 5, file);
 	fclose(file);
@@ -59,6 +67,6 @@ GLuint internal::upload(Font& font) {
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, font.width, font.height, 0, GL_RED, GL_UNSIGNED_BYTE, font.atlas_data);
 
-	// stbi_write_jpg("test.jpg", font.width, font.height, 1, font.atlas_data, 100);
+	 stbi_write_jpg("test.jpg", font.width, font.height, 1, font.atlas_data, 100);
 	return texture_id;
 }
