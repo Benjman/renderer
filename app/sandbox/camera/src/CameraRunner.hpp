@@ -31,7 +31,8 @@ class CameraRunner : public Game {
 
 			File vert = load_file(RES_PATH("shaders/basic.vert"));
 			File frag = load_file(RES_PATH("shaders/basic.frag"));
-			Shader::createShader((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size).use();
+			Shader shader;
+			shader.load((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size);
 
 			Vao *vao = Vao::createVao();
 			Vbo::createVbo(vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(vertices), vertices);

@@ -13,7 +13,10 @@ class TextRunner : public Game {
 		TextRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height) {
 			File vert = load_file(RES_PATH("shaders/text.vert"));
 			File frag = load_file(RES_PATH("shaders/text.frag"));
-			Shader::createShader((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size).use();
+
+			Shader shader;
+			shader.load((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size);
+			shader.use();
 
 			Font dejavu_font;
 			GLuint texture_id = load_font(dejavu_font, RES_PATH("fonts/DejaVuSans.ttf"));
@@ -28,6 +31,7 @@ class TextRunner : public Game {
 			text->generate_mesh();
 
 			Vao *vao = Vao::createVao();
+			vao->bind();
 			Vbo::createVbo(vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, text->v_buffer_size, text->v_buffer);
 			Vbo::createVbo(vao, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, text->i_buffer_size, text->i_buffer);
 			VertexAttribute(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) 0);

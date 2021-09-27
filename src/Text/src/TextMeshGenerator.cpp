@@ -9,20 +9,21 @@
 #include <stb_truetype.h>
 
 void internal::generate_text_mesh(Text* text) {
-	TextStructure structure;
-	generate_text_structure(text, structure);
-
-	float_t cursor_x = 0,
-			cursor_y = 0;
+	float_t cursor_x = text->pos.x,
+			cursor_y = text->pos.y;
 
 	size_t buffer_pointer = 0;
 
 	delete[] text->i_buffer;
-	size_t i_len = text->char_count * 6;
-	text->i_buffer = new uint32_t[i_len]{0};
-
 	delete[] text->v_buffer;
+
+	TextStructure structure;
+	generate_text_structure(text, structure);
+
+	size_t i_len = text->char_count * 6;
 	size_t v_len = text->char_count * VERTICES_PER_CHAR * ELEMENTS_PER_VERT;
+
+	text->i_buffer = new uint32_t[i_len]{0};
 	text->v_buffer = new float_t[v_len]{0};
 
 	if (!text->char_count)

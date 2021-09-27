@@ -12,26 +12,20 @@
 struct ShaderLoader {
 
 	static GLuint loadShader(const char* vert, size_t vert_size, const char* frag, size_t frag_size) {
-		std::string vertBuffer = vert;
-		std::string fragBuffer = frag;
-
-		assert(!vertBuffer.empty());
-		assert(!fragBuffer.empty());
-
-		GLuint vertId = compileShader(GL_VERTEX_SHADER, vertBuffer, vert_size);
-		GLuint fragId = compileShader(GL_FRAGMENT_SHADER, fragBuffer, frag_size);
+		GLuint vertId = compileShader(GL_VERTEX_SHADER, vert, vert_size);
+		GLuint fragId = compileShader(GL_FRAGMENT_SHADER, frag, frag_size);
 
 		return linkProgram(vertId, fragId);
 	}
 
 	private:
-	static GLuint compileShader(GLuint type, std::string& source, size_t len) {
+	static GLuint compileShader(GLuint type, const char* source, size_t len) {
 		GLuint id;
 		if (!(id = glCreateShader(type)))
 			return GL_ZERO;
 
 		GLint length[] { (GLint) len };
-		const char *src = source.c_str();
+		const char *src = source;
 		glShaderSource(id, 1, &src, length);
 		glCompileShader(id);
 
