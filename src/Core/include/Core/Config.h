@@ -5,8 +5,8 @@
  * This file is generated through a cmake Config.h.in
  */
 
-#define RES_DIR "${CMAKE_SOURCE_DIR}/res/"
+#define RES_DIR "/home/ben/src/renderer/res/"
 #define RES_PATH(rel_path) std::string(std::string(RES_DIR) + rel_path).c_str()
-#cmakedefine IS_DEBUG ${CMAKE_BUILD_TYPE}
+/* #undef IS_DEBUG */
 
 #endif // CONFIG_H

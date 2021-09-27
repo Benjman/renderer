@@ -12,7 +12,7 @@ add_library(Shader
 	./src/VertexAttribute.cpp
 	)
 
-if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_definitions("-DSHADER_DEBUG")
 endif ()
 

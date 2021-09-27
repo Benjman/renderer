@@ -28,30 +28,30 @@ protected:
 
 TEST_F(ShaderLoaderFixture, doesVertexShaderCompile) {
 	std::string src = vertShaderSrc;
-	ASSERT_TRUE(ShaderLoader::compileShader(GL_VERTEX_SHADER, src));
+	ASSERT_TRUE(ShaderLoader::compileShader(GL_VERTEX_SHADER, src, -1));
 }
 
 TEST_F(ShaderLoaderFixture, doesVertexShaderNotCompile) {
 	std::string bad_src = "bad shader source";
-	ASSERT_TRUE(ShaderLoader::compileShader(GL_VERTEX_SHADER, bad_src));
+	ASSERT_TRUE(ShaderLoader::compileShader(GL_VERTEX_SHADER, bad_src, -1));
 }
 
 TEST_F(ShaderLoaderFixture, doesFragmentShaderCompile) {
 	std::string src = fragShaderSrc;
-	ASSERT_TRUE(ShaderLoader::compileShader(GL_FRAGMENT_SHADER, src));
+	ASSERT_TRUE(ShaderLoader::compileShader(GL_FRAGMENT_SHADER, src, -1));
 }
 
 TEST_F(ShaderLoaderFixture, doesFragmentShaderNotCompile) {
 	std::string bad_src = "bad shader source";
-	ASSERT_TRUE(ShaderLoader::compileShader(GL_FRAGMENT_SHADER, bad_src));
+	ASSERT_TRUE(ShaderLoader::compileShader(GL_FRAGMENT_SHADER, bad_src, -1));
 }
 
 TEST_F(ShaderLoaderFixture, doesProgramLink) {
 	std::string vertSrc = vertShaderSrc;
 	std::string fragSrc = fragShaderSrc;
 
-	GLuint vertId = ShaderLoader::compileShader(GL_VERTEX_SHADER, vertSrc);
-	GLuint fragId = ShaderLoader::compileShader(GL_FRAGMENT_SHADER, fragSrc);
+	GLuint vertId = ShaderLoader::compileShader(GL_VERTEX_SHADER, vertSrc, -1);
+	GLuint fragId = ShaderLoader::compileShader(GL_FRAGMENT_SHADER, fragSrc, -1);
 
 	ASSERT_TRUE(ShaderLoader::linkProgram(vertId, fragId));
 }

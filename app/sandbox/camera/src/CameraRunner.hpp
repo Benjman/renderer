@@ -29,9 +29,9 @@ class CameraRunner : public Game {
 				0, 1, 3,
 			};
 
-			File vert = File::LOAD("shaders/basic.vert");
-			File frag = File::LOAD("shaders/basic.frag");
-			Shader::createShader(vert.contents, frag.contents).use();
+			File vert = load_file(RES_PATH("shaders/basic.vert"));
+			File frag = load_file(RES_PATH("shaders/basic.frag"));
+			Shader::createShader((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size).use();
 
 			Vao *vao = Vao::createVao();
 			Vbo::createVbo(vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(vertices), vertices);
@@ -40,7 +40,7 @@ class CameraRunner : public Game {
 			VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *) (12 * sizeof(GLfloat)), true);
 
 			Font dejavu_font;
-			GLuint texture_id = load_font(dejavu_font, File::find_path("fonts/DejaVuSans.ttf").c_str());
+			GLuint texture_id = load_font(dejavu_font, RES_PATH("fonts/DejaVuSans.ttf"));
 			Texture texture(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, texture_id);
 			texture.bind();
 			texture.parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);

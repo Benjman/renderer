@@ -40,9 +40,10 @@ class BreakoutRunner : public Game {
 
 	public:
 		BreakoutRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height) {
-			File vert = File::LOAD("shaders/basic.vert");
-			File frag = File::LOAD("shaders/basic.frag");
-			Shader::createShader(vert.contents, frag.contents).use();
+			File vert = load_file(RES_PATH("shaders/basic.vert"));
+			File frag = load_file(RES_PATH("shaders/basic.frag"));
+			Shader::createShader((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size).use();
+
 			Vao *vao = Vao::createVao();
 			Vbo::createVbo(vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(vertices), vertices);
 			Vbo::createVbo(vao, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(indices), indices);

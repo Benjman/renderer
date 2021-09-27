@@ -9,7 +9,7 @@ struct Shader {
 public:
   friend class ShaderLoader;
 
-  static Shader createShader(const char* vert, const char* frag);
+  static Shader createShader(const char* vert, size_t vert_size, const char* frag, size_t frag_size);
 
   void use() const;
 

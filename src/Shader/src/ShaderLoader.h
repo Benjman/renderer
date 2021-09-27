@@ -7,31 +7,29 @@
 
 #include <string>
 #include <iostream> // TODO remove after logging is implemented
-#include <cassert>
+#include <cstring>
 
 struct ShaderLoader {
 
-	static GLuint loadShader(const char* vert, const char* frag) {
+	static GLuint loadShader(const char* vert, size_t vert_size, const char* frag, size_t frag_size) {
 		std::string vertBuffer = vert;
 		std::string fragBuffer = frag;
 
-		assert(!vertBuffer.empty());
-		assert(!fragBuffer.empty());
-
-		GLuint vertId = compileShader(GL_VERTEX_SHADER, vertBuffer);
-		GLuint fragId = compileShader(GL_FRAGMENT_SHADER, fragBuffer);
+		GLuint vertId = compileShader(GL_VERTEX_SHADER, vertBuffer, vert_size);
+		GLuint fragId = compileShader(GL_FRAGMENT_SHADER, fragBuffer, frag_size);
 
 		return linkProgram(vertId, fragId);
 	}
 
 	private:
-	static GLuint compileShader(GLuint type, std::string& source) {
+	static GLuint compileShader(GLuint type, std::string& source, size_t len) {
 		GLuint id;
 		if (!(id = glCreateShader(type)))
 			return GL_ZERO;
 
+		GLint length[] { (GLint) len };
 		const char *src = source.c_str();
-		glShaderSource(id, 1,& src, nullptr);
+		glShaderSource(id, 1, &src, length);
 		glCompileShader(id);
 
 #ifdef SHADER_DEBUG
