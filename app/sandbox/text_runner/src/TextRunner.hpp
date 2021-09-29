@@ -28,7 +28,7 @@ class TextRunner : public Game {
 			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			text = new Text("Oh this is a test with a longer value to see if the line wrapping works.", &dejavu_font, glm::vec2(), TEXT_ALIGN_LEFT | DISPLAY_PROFILE_640_480 | TEXT_SIZE_64);
+			text = new Text("Oh this is a test with a longer value to see if the line wrapping works.", &dejavu_font, glm::vec2(), TEXT_ALIGN_LEFT | DISPLAY_PROFILE_640_480 | TEXT_SIZE_32);
 			text->generate_mesh();
 
 			text_vao = Vao::createVao();

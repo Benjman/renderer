@@ -172,6 +172,6 @@ bool internal::Line::try_add_word(Word* word) {
 void internal::Word::add_char(char c, TextMeshGenerationContext& context, float_t kern) {
 	float_t tmp_x = 0, tmp_y = 0;
 	context.text->font->get_char(c, &tmp_x, &tmp_y);
-	width += tmp_x + kern;
+	width += tmp_x * context.scale + kern;
 	value += c;
 }
