@@ -16,6 +16,7 @@ add_executable(TextTests
 	./src/main.cpp
 	./src/TextTest.cpp
 	./src/TextStructureTests.cpp
+	${GLAD_C}
 	)
 
 target_link_libraries(TextTests

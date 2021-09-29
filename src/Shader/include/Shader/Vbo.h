@@ -1,7 +1,7 @@
 #ifndef SHADER_VBO_H
 #define SHADER_VBO_H
 
-#include <gl.h>
+#include <GL/gl.h>
 
 class Vao;
 

@@ -1,9 +1,10 @@
 #ifndef SHADER_UNIFORM_H
 #define SHADER_UNIFORM_H
 
-#include <gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <GL/gl.h>
 
 static const GLint INVALID_UNIFORM_ID = -1;
 

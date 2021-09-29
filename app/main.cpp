@@ -1,13 +1,12 @@
-#include <Shader.h>
 #include <iostream>
 #include <vector>
 
-#include <gl.h>
-
-#include <Core/File.h>
-
+#include "utils/glfw.h"
 #include "logging.h"
 #include "SimplexNoise.h"
+
+#include <Core/File.h>
+#include <Shader.h>
 
 const GLfloat vertices[] = {
 	// positions

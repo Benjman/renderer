@@ -8,20 +8,15 @@ add_library(Core STATIC
 	./src/Texture.cpp
 	./src/components/Position2D.cpp
 	./src/components/Position3D.cpp
+	./src/utils/glfw.cpp
 	)
 
-target_link_libraries(Core
-	PUBLIC
-	Text
-	Shader
+find_package(GLFW REQUIRED)
 
-	PRIVATE
-	GL)
+target_link_libraries(Core
+	PUBLIC Text Shader ${GL_LIBS}
+	PRIVATE ${GL_LIBS})
 
 target_include_directories(Core
-	PUBLIC
-	${ENTT_INCLUDE}
-	${STB_INCLUDE}
-	./include)
-
-target_include_directories(Core PUBLIC ${ENTT_INCLUDE} ./include)
+	PUBLIC ./include ${ENTT_INCLUDE} ${STB_INCLUDE}
+	PRIVATE ${GL_INCLUDES})

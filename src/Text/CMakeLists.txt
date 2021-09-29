@@ -13,8 +13,8 @@ endif()
 
 find_package(GLFW REQUIRED)
 find_package(GTest REQUIRED)
-find_package(glad REQUIRED)
 find_package(stb REQUIRED)
+
 
 add_library(Text
 	STATIC
@@ -27,11 +27,8 @@ add_library(Text
 
 target_include_directories(Text
 	PUBLIC ./include
+	PRIVATE ${STB_INCLUDE} ${GL_INCLUDES})
 
-	PRIVATE
-	${STB_INCLUDE}
-	${GLAD_INCLUDE})
-
-target_link_libraries(Text PRIVATE ${CMAKE_DL_LIBS} ${GLFW_LIBRARY})
+target_link_libraries(Text PRIVATE ${GL_LIBS})
 
 add_subdirectory(test)

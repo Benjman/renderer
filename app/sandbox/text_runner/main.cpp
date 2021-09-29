@@ -1,6 +1,7 @@
-#include "src/TextRunner.hpp"
 #include <iostream>
-#include <gl.h>
+
+#include "../../utils/glfw.h"
+#include "src/TextRunner.hpp"
 
 int main(int argc, char **argv) {
 	const int width = 640;

@@ -1,7 +1,7 @@
 #ifndef TEXT_FONT_H
 #define TEXT_FONT_H
 
-#include "internal/gl.hpp"
+#include <GL/gl.h>
 #include <stb_truetype.h>
 
 #include <cmath>

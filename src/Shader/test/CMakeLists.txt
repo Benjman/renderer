@@ -11,7 +11,8 @@ add_executable(ShaderTests
 	./src/VboTest.cpp
 	./src/VertexAttributeTest.cpp
 	./src/ShaderLoaderTest.cpp
-	./src/VaoTest.cpp)
+	./src/VaoTest.cpp
+	./src/utils/glfw.cpp)
 
 target_link_libraries(ShaderTests
 	${GL_LIBS}
@@ -20,5 +21,7 @@ target_link_libraries(ShaderTests
 	GTest::Main
 
 	Shader)
+
+target_include_directories(ShaderTests PRIVATE ${GL_INCLUDES})
 
 add_test(ShaderTests ShaderTests)

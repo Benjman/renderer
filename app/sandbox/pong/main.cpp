@@ -1,6 +1,7 @@
-#include "./src/PongRunner.hpp"
-
 #include <iostream>
+
+#include "../../utils/glfw.h"
+#include "./src/PongRunner.hpp"
 
 int main(int argc, char **argv) {
 	const int width = 640;

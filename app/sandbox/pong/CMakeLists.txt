@@ -12,4 +12,5 @@ add_executable(Pong
 	./src/systems/MoveSystem.cpp
 	./src/systems/RenderSystem.cpp)
 
+target_include_directories(Pong PRIVATE ${GL_INCLUDES})
 target_link_libraries(Pong PRIVATE ${LIBS} Core)

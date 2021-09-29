@@ -1,3 +1,7 @@
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+
 #include <Core/Texture.h>
 
 Texture::Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLuint id)

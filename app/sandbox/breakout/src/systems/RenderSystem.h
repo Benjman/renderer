@@ -3,7 +3,7 @@
 
 #include <entt/fwd.hpp>
 #include <vector>
-#include <gl.h>
+#include <GL/gl.h>
 
 #include <Core/Events.h>
 

@@ -1,7 +1,8 @@
-#include <Core/Game.h>
-
-#include <gl.h>
 #include <iostream>
+
+#include "utils/glfw.h"
+
+#include <Core/Game.h>
 
 inline void keyHandler(GLFWwindow*,int,int,int,int);
 inline void windowSizeChangeHandler(GLFWwindow*,int,int);

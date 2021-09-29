@@ -12,3 +12,4 @@ add_executable(Breakout
 	./src/systems/RenderSystem.cpp)
 
 target_link_libraries(Breakout PRIVATE ${LIBS} Core)
+target_include_directories(Breakout PRIVATE ${GL_INCLUDES})

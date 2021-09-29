@@ -2,7 +2,8 @@
 #define CORE_GAME_H
 
 #include <entt/entt.hpp>
-#include <gl.h>
+#include <GL/gl.h>
+#include <GLFW/glfw3.h>
 
 #include "Events.h"
 

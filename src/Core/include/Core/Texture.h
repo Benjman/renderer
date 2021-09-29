@@ -1,8 +1,9 @@
 #ifndef CORE_TEXTURE_H
 #define CORE_TEXTURE_H
 
-#include <gl.h>
+#include <GL/gl.h>
 
+// TODO this should really be in the Shaders project
 struct Texture {
 	GLuint id;
 

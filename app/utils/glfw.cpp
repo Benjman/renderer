@@ -1,4 +1,7 @@
-#include "include/gl.h"
+#ifndef GLFW_IMPLEMENTATION
+#define GLFW_IMPLEMENTATION
+
+#include "glfw.h"
 #include <stdexcept>
 
 extern GLFWwindow *initializeGlfw(const char *title, int width, int height, bool headless) {
@@ -49,3 +52,5 @@ extern void glfwSwapBuffers(const GLFWwindow *window) {
 	glfwSwapBuffers(window);
 }
 
+
+#endif // GLFW_IMPLEMENTATION

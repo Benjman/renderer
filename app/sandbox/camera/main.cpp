@@ -1,6 +1,7 @@
+#include "../../utils/glfw.h"
 #include "src/CameraRunner.hpp"
+
 #include <iostream>
-#include <gl.h>
 
 int main(int argc, char **argv) {
 	const int width = 640;

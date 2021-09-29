@@ -1,7 +1,7 @@
 #ifndef SHADER_VERTEX_ATTRIBUTE_H
 #define SHADER_VERTEX_ATTRIBUTE_H
 
-#include <gl.h>
+#include <GL/gl.h>
 
 class VertexAttribute {
 	private:

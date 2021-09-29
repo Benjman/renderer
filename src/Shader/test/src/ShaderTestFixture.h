@@ -4,7 +4,8 @@
 #include <gtest/gtest.h>
 #include <type_traits>
 #include <math.h>
-#include <gl.h>
+
+#include "utils/glfw.h"
 
 #ifndef GLFW_HEADLESS
 static bool IS_HEADLESS = true;

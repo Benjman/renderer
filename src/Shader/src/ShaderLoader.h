@@ -1,9 +1,11 @@
 #ifndef SHADER_SHADER_LOADER_H
 #define SHADER_SHADER_LOADER_H
 
-#include <Shader/Shader.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
-#include <gl.h>
+#include <Shader/Shader.h>
 
 #include <string>
 #include <iostream> // TODO remove after logging is implemented
