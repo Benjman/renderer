@@ -30,10 +30,9 @@ TEST_F(FontLoaderFixture, build_path) {
 	GLuint texture_id = load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
 
 	ASSERT_TRUE(texture_id) << "Texture ID not generated";
-	ASSERT_GT(font.fontinfo.numGlyphs, 0) << "Failed to initialize stb_truetype";
+	// ASSERT_GT(font.fontinfo.numGlyphs, 0) << "Failed to initialize stb_truetype";
 	ASSERT_LT(font.ascent, std::numeric_limits<int32_t>::max()) << "Failed to get stbtt_GetFontVMetrics";
 	ASSERT_LT(font.descent, std::numeric_limits<int32_t>::max()) << "Failed to get stbtt_GetFontVMetrics";
 	ASSERT_LT(font.line_gap, std::numeric_limits<int32_t>::max()) << "Failed to get stbtt_GetFontVMetrics";
-	ASSERT_LT(font.scale_factor, std::numeric_limits<float_t>::max()) << "Failed to get stbtt_ScaleForPixelHeight";
 }
 

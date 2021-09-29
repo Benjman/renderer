@@ -24,33 +24,29 @@ namespace internal {
 GLuint load_font(Font& font, const char* path, bool upload) {
 	internal::get_file(path, font.font_data);
 
-	if (!stbtt_InitFont(&font.fontinfo, font.font_data, 0))
+	if (!stbtt_PackBegin(&font.context, font.atlas_data, font.width, font.height, 0, 1, nullptr))
 		// TODO error handling
 		throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
-	font.scale_factor = stbtt_ScaleForPixelHeight(&font.fontinfo, font.line_height);
+	stbtt_PackFontRange(&font.context, font.font_data, 0, font.line_height, 32, 95, font.chardata);
+	stbtt_PackEnd(&font.context);
 
+	// get metrics using old pai
+	stbtt_fontinfo info;
+	stbtt_InitFont(&info, font.font_data, 0);
 	int32_t ascent, descent, line_gap;
-	stbtt_GetFontVMetrics(&font.fontinfo, &ascent, &descent, &line_gap);
-
-	font.ascent = roundf((float_t)ascent * font.scale_factor);
-	font.descent = roundf((float_t)descent * font.scale_factor);
-	font.line_gap = roundf((float_t)line_gap * font.scale_factor);
-
-	if (!stbtt_BakeFontBitmap(font.font_data, 0, font.line_height, font.atlas_data,
-				font.width, font.height, 32, TEXT_CHAR_COUNT, font.chardata))
-		// TODO error handling
-		throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
-
-	if (!upload)
-		return GL_ZERO;
+	stbtt_GetFontVMetrics(&info, &ascent, &descent, &line_gap);
+	float_t scale = stbtt_ScaleForPixelHeight(&info, font.line_height);
+	font.ascent = (float_t) ascent * scale;
+	font.descent = (float_t) descent * scale;
+	font.line_gap = (float_t) line_gap * scale;
 
 	return internal::upload(font);
 }
 
 stbtt_aligned_quad Font::get_char(u_char c, float_t* cursor_x, float_t* cursor_y) const {
 	stbtt_aligned_quad quad;
-	stbtt_GetBakedQuad(chardata, width, height, c - 32, cursor_x, cursor_y, &quad, 0);
+	stbtt_GetPackedQuad(chardata, width, height, c - 32, cursor_x, cursor_y, &quad, 0);
 	return quad;
 }
 

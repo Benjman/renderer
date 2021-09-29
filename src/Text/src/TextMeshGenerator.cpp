@@ -1,101 +1,108 @@
-// TODO fix starting y-position not being at the top of the line
-// TODO kerning not rendering accurately
-
 #include <Text/internal/TextMeshGenerator.h>
 #include <Text.h>
-#include <cmath>
+
+#include <cstdint>
 #include <cstring>
-#include <iostream>
 #include <stb_truetype.h>
+#include <string>
+
+#define VERT_COUNT 16
+
+internal::TextMeshGenerationContext::~TextMeshGenerationContext() {
+	for (auto line : lines) {
+		delete line;
+	}
+}
 
 void internal::generate_text_mesh(Text* text) {
-	float_t cursor_x = text->pos.x,
-			cursor_y = text->pos.y;
+	TextMeshGenerationContext context;
+	generate_text_structure(text, context);
 
 	size_t buffer_pointer = 0;
-
-	delete[] text->i_buffer;
-	delete[] text->v_buffer;
-
-	TextStructure structure;
-	generate_text_structure(text, structure);
+	float_t cursor_x = text->pos.x,
+			cursor_y = text->pos.y + text->font->ascent;
 
 	size_t i_len = text->char_count * 6;
-	size_t v_len = text->char_count * VERTICES_PER_CHAR * ELEMENTS_PER_VERT;
+	size_t v_len = text->char_count * VERT_COUNT;
 
+	// TODO should we be worrying about buffer allocations? Perhaps the owner could ensure their buffers are ready for mesh generation
+	delete[] text->i_buffer;
 	text->i_buffer = new uint32_t[i_len]{0};
+
+	delete[] text->v_buffer;
 	text->v_buffer = new float_t[v_len]{0};
 
 	if (!text->char_count)
 		return;
 
-	for (auto line : structure.lines) {
-		process_line(line, text, &cursor_x, &cursor_y, &buffer_pointer);
+	for (auto line : context.lines) {
+		process_line(line, context, &cursor_x, &cursor_y, &buffer_pointer);
+		cursor_y += text->font->line_height;
+		cursor_x = text->pos.x;
 	}
 }
 
-void internal::process_line(Line* line, Text* text, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer) {
+void internal::process_line(Line* line, TextMeshGenerationContext& context, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer) {
 	for (auto word : line->words) {
 		for (size_t i = 0, len = word->value.size(); i < len; i++) {
-			stbtt_aligned_quad quad = text->font->get_char(word->value[i], cursor_x, cursor_y);
-			process_quad(quad, text, buffer_pointer);
+			stbtt_aligned_quad quad = context.text->font->get_char(word->value.at(i), cursor_x, cursor_y);
+			process_quad(quad, buffer_pointer, context);
+
+			// adjust for kerning
+			if (i + 1 != len) {
+				// *cursor_x += (float_t) stbtt_GetCodepointKernAdvance(&context.text->font->fontinfo, context.text->value.at(i), context.text->value.at(i + 1)) * context.scale;
+			}
 		}
 
-		text->font->get_char(' ', cursor_x, cursor_y);
+		context.text->font->get_char(' ', cursor_x, cursor_y);
 	}
 }
 
-void internal::process_quad(stbtt_aligned_quad quad, Text *text, size_t* buffer_pointer) {
-	float_t display_height = (float_t) text->get_display_height();
-	float_t aspect_ratio = text->get_aspect_ratio();
-	float_t text_size = (float_t) text->get_text_size();
+void internal::process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer, TextMeshGenerationContext& context) {
+	// scale from font line height to text size
+	quad.x0 *= context.scale;
+	quad.x1 *= context.scale;
+	quad.y0 *= context.scale;
+	quad.y1 *= context.scale;
 
-	float_t x0 = quad.x0;
-	float_t x1 = quad.x1;
-	float_t y0 = text->font->line_height + quad.y0;
-	float_t y1 = text->font->line_height + quad.y1;
+	// normalize value to screen space
+	quad.x0 /= context.display_height;
+	quad.x1 /= context.display_height;
+	quad.y0 /= context.display_height;
+	quad.y1 /= context.display_height;
 
-	x0 *= text_size / text->font->line_height;
-	x1 *= text_size / text->font->line_height;
-	y0 *= text_size / text->font->line_height;
-	y1 *= text_size / text->font->line_height;
+	// scale for aspect ratio
+	if (context.aspect_ratio > 1) {
+		quad.y0 *= context.aspect_ratio;
+		quad.y1 *= context.aspect_ratio;
+	} else {
+		quad.x0 *= context.aspect_ratio;
+		quad.x1 *= context.aspect_ratio;
+	}
 
-	x0 /= display_height;
-	x1 /= display_height;
-	y0 /= display_height;
-	y1 /= display_height;
+	// map from [0,1] to [-1,1]
+	quad.x0 = 2 * quad.x0 - 1;
+	quad.x1 = 2 * quad.x1 - 1;
+	quad.y0 = -2 * quad.y0 + 1;
+	quad.y1 = -2 * quad.y1 + 1;
 
-	 if (aspect_ratio > 1) {
-		 y0 *= aspect_ratio;
-		 y1 *= aspect_ratio;
-	 } else {
-		 x0 *= aspect_ratio;
-		 x1 *= aspect_ratio;
-	 }
+	const float_t vertices[VERT_COUNT] {
+		quad.x0, quad.y0,
+		quad.s0, -quad.t0,
 
-	// convert from [0,1] to [-1,1]
-	x0 = 2 * x0 - 1;
-	x1 = 2 * x1 - 1;
-	y0 = -2 * y0 + 1;
-	y1 = -2 * y1 + 1;
+		quad.x0, quad.y1,
+		quad.s0, -quad.t1,
 
-	const float_t vertices[VERTICES_PER_CHAR * ELEMENTS_PER_VERT] {
-			x0, y0,
-			quad.s0, -quad.t0,
+		quad.x1, quad.y1,
+		quad.s1, -quad.t1,
 
-			x0, y1,
-			quad.s0, -quad.t1,
-
-			x1, y1,
-			quad.s1, -quad.t1,
-
-			x1, y0,
-			quad.s1, -quad.t0
+		quad.x1, quad.y0,
+		quad.s1, -quad.t0
 	};
 
 	uint32_t indices[] {
-		0, 1, 3,
-		1, 2, 3,
+			0, 1, 3,
+			1, 2, 3,
 	};
 
 	for (GLuint &index : indices) {
@@ -103,26 +110,32 @@ void internal::process_quad(stbtt_aligned_quad quad, Text *text, size_t* buffer_
 	}
 
 	size_t i_size = sizeof(indices);
-	std::memcpy(&text->i_buffer[*buffer_pointer * 6], indices, i_size);
-	text->i_buffer_size += i_size;
+	std::memcpy(&context.text->i_buffer[*buffer_pointer * 6], indices, i_size);
+	context.text->i_buffer_size += i_size;
 
 	size_t v_size = sizeof(vertices);
-	std::memcpy(&text->v_buffer[*buffer_pointer * 16], vertices, v_size);
-	text->v_buffer_size += v_size;
+	std::memcpy(&context.text->v_buffer[*buffer_pointer * VERT_COUNT], vertices, v_size);
+	context.text->v_buffer_size += v_size;
 
 	(*buffer_pointer)++;
 }
 
-void internal::generate_text_structure(Text* text, TextStructure& structure) {
+void internal::generate_text_structure(Text* text, TextMeshGenerationContext& context) {
+	context.aspect_ratio = text->get_aspect_ratio();
+	context.display_height = text->get_display_height();
+	context.text_size = text->get_text_size();
+	context.text = text;
+	context.scale = context.text_size / text->font->line_height;
+
 	Word* word = new Word;
 	Line* line = new Line(text->max_width);
-	structure.lines.push_back(line);
+	context.lines.push_back(line);
 	for (size_t i = 0, len = text->value.size(); i < len; i++) {
 		char c = text->value.at(i);
 		if (c == ' ') {
 			if (!line->try_add_word(word)) {
 				line = new Line(text->max_width);
-				structure.lines.push_back(line);
+				context.lines.push_back(line);
 				line->try_add_word(word);
 			}
 			word = new Word;
@@ -131,15 +144,19 @@ void internal::generate_text_structure(Text* text, TextStructure& structure) {
 			line->width += tmp_x;
 			continue;
 		}
+
 		float_t kern = 0;
-		if (i + 1 != len)
-			kern = (float_t) stbtt_GetCodepointKernAdvance(&text->font->fontinfo, c, text->value.at(i + 1));
-		word->add_char(c, text->font, line, kern);
+		if (i + 1 != len) {
+			// kern = (float_t) stbtt_GetCodepointKernAdvance(&text->font->fontinfo, c, text->value.at(i + 1)) * context.scale;
+		}
+
+		word->add_char(c, context, kern);
 		text->char_count++;
 	}
+
 	if (!line->try_add_word(word)) {
 		line = new Line(text->max_width);
-		structure.lines.push_back(line);
+		context.lines.push_back(line);
 		line->try_add_word(word);
 	}
 }
@@ -148,13 +165,13 @@ bool internal::Line::try_add_word(Word* word) {
 	if (max_width < width + word->width)
 		return false;
 	words.emplace_back(word);
+	width += word->width;
 	return true;
 }
 
-void internal::Word::add_char(u_char c, Font* font, Line* line, float_t kern) {
+void internal::Word::add_char(char c, TextMeshGenerationContext& context, float_t kern) {
 	float_t tmp_x = 0, tmp_y = 0;
-	font->get_char(c, &tmp_x, &tmp_y);
+	context.text->font->get_char(c, &tmp_x, &tmp_y);
 	width += tmp_x + kern;
 	value += c;
 }
-

@@ -13,16 +13,11 @@ namespace internal {
 }
 
 Text::Text(std::string value, Font* font, glm::vec2 pos, uint32_t flags) :
-	Text(value, font, pos, std::numeric_limits<float_t>::max(), flags) {
-}
-
-Text::Text(std::string value, Font* font, glm::vec2 pos, float_t max_width, uint32_t flags) :
 	value(std::move(value)),
 	pos(pos),
 	font(font),
-	max_width(max_width),
-	flags(flags)
-{
+	flags(flags) {
+	max_width = get_display_width() - pos.x;
 }
 
 void Text::set_value(std::string value) noexcept {

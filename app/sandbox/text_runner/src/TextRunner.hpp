@@ -8,15 +8,16 @@
 #include <Shader.h>
 #include <Text.h>
 
+#include <iostream>
+
 class TextRunner : public Game {
 	public:
 		TextRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height) {
-			File vert = load_file(RES_PATH("shaders/text.vert"));
-			File frag = load_file(RES_PATH("shaders/text.frag"));
+			File text_vert = load_file(RES_PATH("shaders/text.vert"));
+			File text_frag = load_file(RES_PATH("shaders/text.frag"));
 
-			Shader shader;
-			shader.load((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size);
-			shader.use();
+			text_shader.load((const char*) text_vert.buffer, text_vert.size, (const char*) text_frag.buffer, text_frag.size);
+			text_shader.use();
 
 			Font dejavu_font;
 			GLuint texture_id = load_font(dejavu_font, RES_PATH("fonts/DejaVuSans.ttf"));
@@ -27,18 +28,40 @@ class TextRunner : public Game {
 			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			text = new Text("This is a test.", &dejavu_font, glm::vec2(), TEXT_ALIGN_LEFT | DISPLAY_PROFILE_640_480 | TEXT_SIZE_32);
+			text = new Text("Oh this is a test with a longer value to see if the line wrapping works.", &dejavu_font, glm::vec2(), TEXT_ALIGN_LEFT | DISPLAY_PROFILE_640_480 | TEXT_SIZE_64);
 			text->generate_mesh();
 
-			Vao *vao = Vao::createVao();
-			vao->bind();
-			Vbo::createVbo(vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, text->v_buffer_size, text->v_buffer);
-			Vbo::createVbo(vao, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, text->i_buffer_size, text->i_buffer);
+			text_vao = Vao::createVao();
+			text_vao->bind();
+			Vbo::createVbo(text_vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, text->v_buffer_size, text->v_buffer);
+			Vbo::createVbo(text_vao, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, text->i_buffer_size, text->i_buffer);
 			VertexAttribute(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) 0);
 			VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+			// // debug rows
+			// float debug_buffer[] = {
+			// 	// positions      // texture coords
+			// 	1.0f,  1.0f,      1.0f, 1.0f, // top right
+			// 	1.0f, -1.0f,      1.0f, 0.0f, // bottom right
+			// 	-1.0f, -1.0f,     0.0f, 0.0f, // bottom left
+			// 	-1.0f,  1.0f,     0.0f, 1.0f  // top left
+			// };
+
+			// unsigned int debug_indices[] = {
+			// 	0, 1, 3, // first triangle
+			// 	1, 2, 3  // second triangle
+			// };
+
+			// debug_vao = Vao::createVao();
+			// debug_vao->bind();
+			// Vbo::createVbo(debug_vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(debug_buffer), debug_buffer);
+			// Vbo::createVbo(debug_vao, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(debug_indices), debug_indices);
+			// VertexAttribute(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) 0);
+			// VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
 		}
 
 	protected:
@@ -49,7 +72,12 @@ class TextRunner : public Game {
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+			text_shader.use();
+			text_vao->bind();
 			glDrawElements(GL_TRIANGLES, 6 * text->char_count, GL_UNSIGNED_INT, 0);
+
+			// debug_vao->bind();
+			// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 			glfwSwapBuffers(m_window);
 			glfwPollEvents();
@@ -62,7 +90,11 @@ class TextRunner : public Game {
 		}
 
 	private:
+		Shader text_shader;
+		Vao* text_vao;
 		Text* text;
+
+		Vao* debug_vao;
 };
 
 #endif // SIMULATION_HPP
