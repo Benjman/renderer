@@ -7,7 +7,7 @@
 class TextMeshFixture : public ::testing::Test {
 	protected:
 		static void SetUpTestSuite() {
-			load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf", false);
+			load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
 		}
 
 		static void TearDownTestSuite() {
@@ -26,11 +26,11 @@ TEST_F(TextMeshFixture, word_count) {
 }
 
 TEST_F(TextMeshFixture, multi_line) {
-	Text text("Testing a bit", &font, glm::vec2(), 250, 0);
-	TextStructure structure;
-	generate_text_structure(&text, structure);
+	Text text("Testing a bit", &font, glm::vec2(), 0);
+	TextMeshGenerationContext context;
+	generate_text_structure(&text, context);
 
-	ASSERT_EQ(2, structure.lines.size()) << "Line count inaccurate.";
-	ASSERT_EQ(11, structure.char_count);
+	ASSERT_EQ(2, context.lines.size()) << "Line count inaccurate.";
+	ASSERT_EQ(11, context.text->char_count);
 }
 

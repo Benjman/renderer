@@ -10,20 +10,7 @@ struct Text;
 struct Font;
 
 namespace internal {
-	struct Line;
-
-	struct TextMeshGenerationContext {
-		std::vector<Line*> lines;
-		Text* text;
-		float_t width;
-		float_t height;
-		float_t aspect_ratio;
-		float_t display_height;
-		float_t text_size;
-		float_t scale;
-
-		~TextMeshGenerationContext();
-	};
+	struct TextMeshGenerationContext;
 
 	struct Word {
 		std::string value;
@@ -46,6 +33,21 @@ namespace internal {
 		}
 
 		bool try_add_word(Word* word);
+	};
+
+	struct TextMeshGenerationContext {
+		std::vector<Line*> lines;
+		Text* text;
+		float_t aspect_ratio;
+		float_t display_height;
+		float_t text_size;
+		float_t scale;
+
+		~TextMeshGenerationContext() {
+			for (auto line : lines) {
+				delete line;
+			}
+		}
 	};
 
 	void generate_text_mesh(Text* text);

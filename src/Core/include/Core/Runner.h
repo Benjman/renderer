@@ -7,11 +7,11 @@
 
 #include "Events.h"
 
-class Game {
+class Runner {
 	public:
-		Game(GLFWwindow *window, const int width, const int height);
+		Runner(GLFWwindow *window, const int width, const int height);
 
-		~Game() noexcept;
+		~Runner() noexcept;
 
 		const int run();
 
@@ -23,11 +23,10 @@ class Game {
 		int m_width;
 		int m_height;
 		GLFWwindow *m_window;
-		std::vector<GLfloat> m_texture;
 		entt::registry m_registry;
 		entt::dispatcher m_dispatcher;
 
-		Game() = delete;
+		Runner() = delete;
 
 		virtual void update(const double time) = 0;
 

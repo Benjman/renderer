@@ -3,16 +3,15 @@
 
 #include "Text/internal/TextMeshGenerator.h"
 #include <Core/File.h>
-#include <Core/Game.h>
-#include <Core/Texture.h>
+#include <Core/Runner.h>
 #include <Shader.h>
 #include <Text.h>
 
 #include <iostream>
 
-class TextRunner : public Game {
+class TextRunner : public Runner {
 	public:
-		TextRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height) {
+		TextRunner(GLFWwindow *window, const int width, const int height) : Runner(window, width, height) {
 			File text_vert = load_file(RES_PATH("shaders/text.vert"));
 			File text_frag = load_file(RES_PATH("shaders/text.frag"));
 
@@ -20,9 +19,11 @@ class TextRunner : public Game {
 			text_shader.use();
 
 			Font dejavu_font;
-			GLuint texture_id = load_font(dejavu_font, RES_PATH("fonts/DejaVuSans.ttf"));
-			Texture texture(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, texture_id);
+			load_font(dejavu_font, RES_PATH("fonts/DejaVuSans.ttf"));
+			Texture texture(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE);
 			texture.bind();
+			texture.upload(dejavu_font.atlas_data);
+			texture.upload(dejavu_font.atlas_data);
 			texture.parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
 			texture.parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
 			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);

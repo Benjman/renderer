@@ -12,8 +12,6 @@
 #define TEXT_CHAR_COUNT (95)
 
 struct Font {
-	GLuint textureId = 0;
-
 	const float_t line_height = 128;
 
 	float_t ascent = std::numeric_limits<float_t>::max();
@@ -33,6 +31,6 @@ struct Font {
 	stbtt_pack_context context;
 };
 
-extern GLuint load_font(Font& font, const char* path, bool upload = true);
+extern void load_font(Font& font, const char* path);
 
 #endif // TEXT_FONT_H

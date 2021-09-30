@@ -11,14 +11,12 @@ if (NOT CMAKE_MODULE_PATH)
 	set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../cmake/modules")
 endif()
 
-find_package(GLFW REQUIRED)
 find_package(GTest REQUIRED)
 find_package(stb REQUIRED)
 
 
 add_library(Text
 	STATIC
-	${GLAD_C}
 
 	./src/Font.cpp
 	./src/Text.cpp
@@ -27,8 +25,6 @@ add_library(Text
 
 target_include_directories(Text
 	PUBLIC ./include
-	PRIVATE ${STB_INCLUDE} ${GL_INCLUDES})
-
-target_link_libraries(Text PRIVATE ${GL_LIBS})
+	PRIVATE ${STB_INCLUDE})
 
 add_subdirectory(test)

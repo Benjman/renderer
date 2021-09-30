@@ -1,6 +1,6 @@
-#include <Text/Text.h>
-#include <Text/Font.h>
 #include <Text/internal/TextMeshGenerator.h>
+#include <Text.h>
+
 
 #include <utility>
 #include <limits>
