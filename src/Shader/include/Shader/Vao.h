@@ -1,9 +1,8 @@
 #ifndef SHADER_VAO_H
 #define SHADER_VAO_H
 
-#include <vector>
-
 #include <GL/gl.h>
+#include <vector>
 
 class VertexAttribute;
 

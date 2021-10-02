@@ -2,23 +2,23 @@
 
 #include "utils/glfw.h"
 
-#include <Core/Game.h>
+#include <Core/Runner.h>
 
 inline void keyHandler(GLFWwindow*,int,int,int,int);
 inline void windowSizeChangeHandler(GLFWwindow*,int,int);
-inline static Game *INSTANCE; // TODO refactor so there is a global map of GLFWwindows and Games
+inline static Runner *INSTANCE; // TODO refactor so there is a global map of GLFWwindows and Runners
 
-Game::Game(GLFWwindow *window, const int width, const int height) : m_window(window), m_width(width), m_height(height) {
+Runner::Runner(GLFWwindow *window, const int width, const int height) : m_window(window), m_width(width), m_height(height) {
 	INSTANCE = this;
 	glfwSetKeyCallback(m_window, keyHandler);
 	glfwSetWindowSizeCallback(m_window, windowSizeChangeHandler);
 }
 
-Game::~Game() noexcept {
+Runner::~Runner() noexcept {
 	glfwTerminate();
 }
 
-const int Game::run() {
+const int Runner::run() {
 	const constexpr double dt = 1. / 60.;
 
 	double time = 0.;
@@ -48,7 +48,7 @@ const int Game::run() {
 	return EXIT_SUCCESS;
 }
 
-void Game::doRender() {
+void Runner::doRender() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	render();

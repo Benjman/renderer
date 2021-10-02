@@ -16,6 +16,7 @@ add_library(Shader
 	STATIC
 	${GLAD_C}
 	./src/Shader.cpp
+	./src/Texture.cpp
 	./src/Uniform.cpp
 	./src/Vao.cpp
 	./src/Vbo.cpp

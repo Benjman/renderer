@@ -3,8 +3,7 @@
 
 #include <Core/Events.h>
 #include <Core/File.h>
-#include <Core/Game.h>
-#include <Core/Texture.h>
+#include <Core/Runner.h>
 #include <Core/components/Position2D.h>
 #include <Shader.h>
 
@@ -33,11 +32,11 @@ const GLuint indices[] = {
 		0, 1, 3,
 };
 
-class PongRunner : public Game {
+class PongRunner : public Runner {
 	Texture texture = Texture(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT);
 
 	public:
-		PongRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height), m_texture(std::vector<GLfloat>(width * height * 3)) {
+		PongRunner(GLFWwindow *window, const int width, const int height) : Runner(window, width, height), m_texture(std::vector<GLfloat>(width * height * 3)) {
 			File vert = load_file(RES_PATH("shaders/basic.vert"));
 			File frag = load_file(RES_PATH("shaders/basic.frag"));
 			Shader shader;

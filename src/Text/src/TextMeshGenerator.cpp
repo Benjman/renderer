@@ -1,3 +1,5 @@
+// TODO kerning
+// TODO calculated widths and max-widths not correct (try wrapping a line with 128 size text)
 #include <Text/internal/TextMeshGenerator.h>
 #include <Text.h>
 
@@ -7,12 +9,6 @@
 #include <string>
 
 #define VERT_COUNT 16
-
-internal::TextMeshGenerationContext::~TextMeshGenerationContext() {
-	for (auto line : lines) {
-		delete line;
-	}
-}
 
 void internal::generate_text_mesh(Text* text) {
 	TextMeshGenerationContext context;

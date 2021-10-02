@@ -1,7 +1,6 @@
 #include <iostream>
 
-#include <Core/Game.h>
-#include <Core/Texture.h>
+#include <Core/Runner.h>
 #include <Core/File.h>
 #include <Core/components/Position2D.h>
 #include <Shader.h>
@@ -35,11 +34,11 @@ const GLuint indices[] = {
 };
 
 
-class BreakoutRunner : public Game {
+class BreakoutRunner : public Runner {
 	Texture texture = Texture(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT);
 
 	public:
-		BreakoutRunner(GLFWwindow *window, const int width, const int height) : Game(window, width, height) {
+		BreakoutRunner(GLFWwindow *window, const int width, const int height) : Runner(window, width, height) {
 			File vert = load_file(RES_PATH("shaders/basic.vert"));
 			File frag = load_file(RES_PATH("shaders/basic.frag"));
 			Shader shader;

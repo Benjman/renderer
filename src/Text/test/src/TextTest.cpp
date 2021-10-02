@@ -1,10 +1,9 @@
-#include "utils/glfw.h"
-
 #include <gtest/gtest.h>
 #include <cmath>
 #include <GLFW/glfw3.h>
 
 #include <Text/Font.h>
+#include <Text/Flags.h>
 
 #define private public
 #include <Text/Text.h>
@@ -12,7 +11,7 @@
 class TextFixture : public ::testing::Test {
 	protected:
 		static void SetUpTestSuite() {
-			load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf", false);
+			load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
 		}
 
 		static void TearDownTestSuite() {

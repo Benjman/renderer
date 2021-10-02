@@ -1,8 +1,6 @@
 #ifndef TEXT_TEXT_H
 #define TEXT_TEXT_H
 
-#include "Flags.h"
-
 #include <cmath>
 #include <string>
 #include <glm/vec2.hpp>
@@ -11,7 +9,7 @@ class Font;
 
 class Text {
 	public:
-		size_t char_count = 0; // non-whitespace chars
+		size_t char_count = 0; // non-whitespace chars only
 		uint32_t flags;
 		Font* font;
 		uint32_t max_width;

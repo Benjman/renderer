@@ -1,9 +1,8 @@
-#ifndef CORE_TEXTURE_H
-#define CORE_TEXTURE_H
+#ifndef SHADER_TEXTURE_H
+#define SHADER_TEXTURE_H
 
 #include <GL/gl.h>
 
-// TODO this should really be in the Shaders project
 struct Texture {
 	GLuint id;
 
@@ -74,7 +73,7 @@ struct Texture {
 	 */
 	const GLenum type;
 
-	Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLuint id = 0);
+	Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type);
 
 	void bind();
 	void unbind();
@@ -93,4 +92,4 @@ struct Texture {
 	void upload3d(const void* data);
 };
 
-#endif // CORE_TEXTURE_H
+#endif // SHADER_TEXTURE_H

@@ -2,12 +2,12 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <Core/Texture.h>
+#include <Shader/Texture.h>
 
-Texture::Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLuint id)
-	: target(target), mipmapLevel(mipmapLevel), internalFormat(internalFormat), width(width), height(height), depth(depth), format(format), type(type), id(id) {
-	if (!id)
-		glGenTextures(1, &this->id);
+Texture::Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type)
+	: target(target), mipmapLevel(mipmapLevel), internalFormat(internalFormat), width(width), height(height), depth(depth), format(format), type(type)
+{
+	glGenTextures(1, &this->id);
 }
 
 void Texture::bind() {

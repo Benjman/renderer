@@ -1,7 +1,3 @@
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
-
 #define STB_RECT_PACK_IMPLEMENTATION
 #define STB_TRUETYPE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -17,11 +13,9 @@
 
 namespace internal {
 	FILE* get_file(const char *path, u_char* buffer);
-
-	GLuint upload(Font& font);
 }
 
-GLuint load_font(Font& font, const char* path, bool upload) {
+void load_font(Font& font, const char* path) {
 	internal::get_file(path, font.font_data);
 
 	if (!stbtt_PackBegin(&font.context, font.atlas_data, font.width, font.height, 0, 1, nullptr))
@@ -40,8 +34,6 @@ GLuint load_font(Font& font, const char* path, bool upload) {
 	font.ascent = (float_t) ascent * scale;
 	font.descent = (float_t) descent * scale;
 	font.line_gap = (float_t) line_gap * scale;
-
-	return internal::upload(font);
 }
 
 stbtt_aligned_quad Font::get_char(u_char c, float_t* cursor_x, float_t* cursor_y) const {
@@ -58,15 +50,4 @@ FILE* internal::get_file(const char *path, u_char* buffer) {
 	fread(buffer, 1, 1024 * 1024 * 5, file);
 	fclose(file);
 	return file;
-}
-
-GLuint internal::upload(Font& font) {
-	GLuint texture_id = GL_ZERO;
-
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_2D, texture_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, font.width, font.height, 0, GL_RED, GL_UNSIGNED_BYTE, font.atlas_data);
-
-	 stbi_write_jpg("test.jpg", font.width, font.height, 1, font.atlas_data, 100);
-	return texture_id;
 }
