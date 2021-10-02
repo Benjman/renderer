@@ -23,10 +23,8 @@ class TextRunner : public Game {
 			GLuint texture_id = load_font(dejavu_font, RES_PATH("fonts/DejaVuSans.ttf"));
 			Texture texture(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, texture_id);
 			texture.bind();
-			texture.parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-			texture.parameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 			text = new Text("Oh this is a test with a longer value to see if the line wrapping works.", &dejavu_font, glm::vec2(), TEXT_ALIGN_LEFT | DISPLAY_PROFILE_640_480 | TEXT_SIZE_32);
 			text->generate_mesh();
