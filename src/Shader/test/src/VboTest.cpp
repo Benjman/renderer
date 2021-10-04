@@ -8,8 +8,8 @@ GLuint TARGET = GL_ARRAY_BUFFER;
 struct VboTestFixture : public ShaderTestFixture {
 	protected:
 		void SetUp() override {
-			vao = Vao::createVao();
-			vbo = Vbo::createVbo(vao, TARGET, GL_STATIC_DRAW);
+			vao = new Vao();
+			vbo = new Vbo(TARGET, GL_STATIC_DRAW);
 			ASSERT_FALSE(glGetError());
 		}
 
@@ -40,13 +40,13 @@ TEST_F(VboTestFixture, fieldInitialization) {
 
 TEST_F(VboTestFixture, createVbo_vboBinds) {
 	Vao::unbind();
-	Vao *vao = Vao::createVao();
-	ASSERT_GT(vao->id, 0);
+	Vao vao;
+	ASSERT_GT(vao.id, 0);
 
 	testBoundVertexBuffer(0);
-	Vbo *vbo = Vbo::createVbo(vao, TARGET, GL_STATIC_DRAW);
-	testBoundVertexBuffer(vao->id);
-	vbo->unbind();
+	Vbo vbo(TARGET, GL_STATIC_DRAW);
+	testBoundVertexBuffer(vao.id);
+	vbo.unbind();
 }
 
 TEST_F(VboTestFixture, createVbo_bufferBinds) {
@@ -81,6 +81,6 @@ TEST_F(VboTestFixture, storeData) {
 	}
 }
 
-TEST_F(VboTestFixture, resizing) {
-	vbo;
-}
+// // TODO
+// TEST_F(VboTestFixture, resizing) {
+// }

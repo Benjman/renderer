@@ -7,18 +7,10 @@
 
 #include <stdexcept>
 
-Vbo *Vbo::createVbo(Vao *vao, GLenum target, GLenum usage, GLsizeiptr size, const void *data) {
-	auto vbo = new Vbo(target, usage);
+Vbo::Vbo(GLenum target, GLenum usage, GLsizeiptr size, const void *data, Vao *vao) : target(target), usage(usage), size(size) {
 	if (vao)
 		vao->bind();
-	vbo->storeData(data, size);
-	return vbo;
-}
-
-GLuint Vbo::findBoundVertexArrayBuffer() {
-	GLint tmp;
-	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &tmp);
-	return tmp;
+	storeData(data, size);
 }
 
 Vbo::~Vbo() {
@@ -28,8 +20,32 @@ Vbo::~Vbo() {
 	glDeleteBuffers(1, &id);
 }
 
+GLuint Vbo::findBoundVertexArrayBuffer() {
+	GLint tmp;
+	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &tmp);
+	return tmp;
+}
+
 void Vbo::unbind(GLenum target) {
 	glBindBuffer(target, GL_ZERO);
+}
+
+void Vbo::bind() const {
+	glBindBuffer(target, id);
+}
+
+void Vbo::unbind() {
+	unbind(target);
+}
+
+// TODO offset isn't even being considered in anything. Implement with offset
+void Vbo::storeData(const void *data, GLsizeiptr size, GLsizeiptr offset) {
+	if (this->size < size || this->size == 0) {
+		resize(size, data, offset);
+	} else {
+		bind();
+		glBufferSubData(target, offset, size, data);
+	}
 }
 
 void Vbo::resize(GLsizeiptr size, const void *data, GLsizeiptr offset) {
@@ -49,7 +65,7 @@ void Vbo::resize(GLsizeiptr size, const void *data, GLsizeiptr offset) {
 	// write new data to end of buffer
 	glBufferSubData(target, this->size, size - this->size, data);
 
-	if (old > GL_ZERO) {
+	if (old != GL_ZERO) {
 		// copy old buffer to new
 		glBindBuffer(GL_COPY_READ_BUFFER, old);
 		glBindBuffer(GL_COPY_WRITE_BUFFER, id);
@@ -62,19 +78,3 @@ void Vbo::resize(GLsizeiptr size, const void *data, GLsizeiptr offset) {
 	this->size = size;
 }
 
-void Vbo::storeData(const void *data, GLsizeiptr size, GLsizeiptr offset) {
-	if (this->size < size || this->size == 0) {
-		resize(size, data, offset);
-	} else {
-		bind();
-		glBufferSubData(target, offset, size, data);
-	}
-}
-
-void Vbo::bind() const {
-	glBindBuffer(target, id);
-}
-
-void Vbo::unbind() {
-	unbind(target);
-}

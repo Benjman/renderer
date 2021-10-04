@@ -12,14 +12,14 @@ class Vbo {
 		GLenum usage;
 		GLsizeiptr size;
 
-		Vbo(GLenum target, GLenum usage, GLsizeiptr size = 0) : target(target), usage(usage), size(size) {}
-
 		void resize(GLsizeiptr size, const void *data, GLsizeiptr offset);
 
 	public:
-		static Vbo *createVbo(Vao *vao, GLenum target, GLenum usage, GLsizeiptr size = 0, const void *data = nullptr);
 		static void unbind(GLenum target);
 		static GLuint findBoundVertexArrayBuffer();
+
+	public:
+		Vbo(GLenum target, GLenum usage, GLsizeiptr size = 0, const void *data = nullptr, Vao *vao = nullptr);
 
 		~Vbo();
 

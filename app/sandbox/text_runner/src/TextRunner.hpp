@@ -29,10 +29,9 @@ class TextRunner : public Runner {
 			text = new Text("Oh this is a test with a longer value to see if the line wrapping works.", &font, glm::vec2(), TEXT_ALIGN_LEFT | DISPLAY_PROFILE_640_480 | TEXT_SIZE_32);
 			text->generate_mesh();
 
-			text_vao = Vao::createVao();
-			text_vao->bind();
-			Vbo::createVbo(text_vao, GL_ARRAY_BUFFER, GL_STATIC_DRAW, text->v_buffer_size, text->v_buffer);
-			Vbo::createVbo(text_vao, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, text->i_buffer_size, text->i_buffer);
+			Vao vao;
+			Vbo vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW, text->v_buffer_size, text->v_buffer, &vao);
+			Vbo ebo(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, text->i_buffer_size, text->i_buffer, &vao);
 			VertexAttribute(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) 0);
 			VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
 

@@ -5,14 +5,12 @@
 #include <Shader/Vao.h>
 #include <Shader/VertexAttribute.h>
 
-Vao *Vao::createVao() {
-	GLuint id = GL_ZERO;
+Vao::Vao() {
 	glGenVertexArrays(1, &id);
-	return new Vao(id);
 }
 
 GLuint Vao::findBoundVertexArray() {
-	GLint id;
+	GLint id = GL_ZERO;
 	glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &id);
 	return id;
 }

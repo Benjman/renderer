@@ -7,7 +7,7 @@ struct VertexAttribFixture : public ShaderTestFixture {
 protected:
 	static void SetUpTestSuite() {
 		ShaderTestFixture::SetUpTestSuite();
-		vao = Vao::createVao();
+		vao = new Vao();
 		vao->bind();
 	}
 
@@ -30,7 +30,7 @@ protected:
 Vao* VertexAttribFixture::vao = nullptr;
 
 TEST_F(VertexAttribFixture, fieldInitialization) {
-	VertexAttribute attrib(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (void *)0, false);
+	VertexAttribute attrib(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float_t), (void *)0, false);
 	ASSERT_EQ(attrib.index, 1);
 	ASSERT_EQ(attrib.enabled, false);
 }

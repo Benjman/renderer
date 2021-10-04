@@ -11,14 +11,14 @@ class Vao {
 		std::vector<VertexAttribute *> attributes;
 		GLuint id;
 
-		Vao(GLuint id) : id(id) {}
-
 	public:
-		static Vao *createVao();
 		static void unbind();
 		static GLuint findBoundVertexArray();
 
 	public:
+		// TODO create copy constructor and equals operator (like camera does)
+		Vao();
+
 		~Vao();
 
 		void bind();
