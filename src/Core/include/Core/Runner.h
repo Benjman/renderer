@@ -23,6 +23,8 @@ class Runner {
 		int m_width;
 		int m_height;
 		GLFWwindow *m_window;
+
+		// TODO these entt classes should be in the implementing Runner classes
 		entt::registry m_registry;
 		entt::dispatcher m_dispatcher;
 
