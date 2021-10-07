@@ -6,11 +6,14 @@
 #include <Shader/Vbo.h>
 
 #include <stdexcept>
+#include <iostream>
 
-Vbo::Vbo(GLenum target, GLenum usage, GLsizeiptr size, const void *data, Vao *vao) : target(target), usage(usage), size(size) {
+Vbo::Vbo(GLenum target, GLenum usage, GLsizeiptr size, const void *data, Vao *vao) : target(target), usage(usage), size(0) {
 	if (vao)
 		vao->bind();
-	storeData(data, size);
+	if (data)
+		storeData(data, size);
+			GLuint error = GL_ZERO; if ((error = glGetError())) std::cout << "1Error " << error << std::endl;
 }
 
 Vbo::~Vbo() {

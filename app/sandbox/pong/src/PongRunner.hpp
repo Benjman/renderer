@@ -13,6 +13,8 @@
 #include "systems/MoveSystem.h"
 #include "systems/RenderSystem.h"
 
+#include <iostream>
+
 const GLfloat vertices[] = {
 		// positions
 		1.f, 1.f, 0.f,
@@ -45,9 +47,9 @@ class PongRunner : public Runner {
 
 			Vao vao;
 			Vbo vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(vertices), vertices, &vao);
-			Vbo ebo(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, &vao);
-			VertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0, true);
-			VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *) (12 * sizeof(GLfloat)), true);
+			Vbo ebo(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(indices), indices, &vao);
+			VertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0);
+			VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *) (12 * sizeof(GLfloat)));
 
 			texture.bind();
 			texture.parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);

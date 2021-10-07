@@ -45,11 +45,11 @@ class BreakoutRunner : public Runner {
 			shader.load((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size);
 			shader.use();
 
-			Vao vao;
-			Vbo vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(vertices), vertices, &vao);
-			Vbo ebo(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, &vao);
-			VertexAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0, true);
-			VertexAttribute(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *) (12 * sizeof(GLfloat)), true);
+			vao = new Vao;
+			vbo = new Vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(vertices), vertices, vao);
+			ebo = new Vbo(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, sizeof(indices), indices, vao);
+			vao->createAttribute(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *) 0);
+			vao->createAttribute(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void *) (12 * sizeof(GLfloat)));
 
 			texture.bind();
 			texture.parameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -124,4 +124,8 @@ class BreakoutRunner : public Runner {
 		CollisionSystem collision_system;
 		MoveSystem move_system;
 		RenderSystem render_system;
+
+		Vao* vao;
+		Vbo* vbo;
+		Vbo* ebo;
 };
