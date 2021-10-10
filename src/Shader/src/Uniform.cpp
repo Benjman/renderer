@@ -2,8 +2,13 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
+#include <Shader/Shader.h>
 #include <Shader/Uniform.h>
 #include <iostream>
+
+void IUniform::storeLocation(Shader& shader) {
+	storeLocation(shader.getId());
+}
 
 void IUniform::storeLocation(GLuint programId) {
 	_id = glGetUniformLocation(programId, _name);

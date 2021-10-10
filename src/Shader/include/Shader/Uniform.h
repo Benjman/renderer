@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+class Shader;
+
 static const GLint INVALID_UNIFORM_ID = -1;
 
 class IUniform {
@@ -18,6 +20,8 @@ class IUniform {
 		explicit IUniform(const char *name) : _name(name) { }
 
 		void storeLocation(GLuint programId);
+
+		void storeLocation(Shader& shader);
 
 };
 
