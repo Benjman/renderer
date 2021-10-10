@@ -5,7 +5,7 @@ include_directories(
 	../src
 	)
 
-add_executable(shader_tests
+add_executable(tests_shader
 	./src/main.cpp
 	./src/shader_test_fixture.cpp
 	./src/vbo_test.cpp
@@ -14,7 +14,7 @@ add_executable(shader_tests
 	./src/vao_test.cpp
 	./src/utils/glfw.cpp)
 
-target_link_libraries(shader_tests
+target_link_libraries(tests_shader
 	${GL_LIBS}
 
 	GTest::GTest
@@ -22,6 +22,6 @@ target_link_libraries(shader_tests
 
 	shader)
 
-target_include_directories(shader_tests PRIVATE ${GL_INCLUDES})
+target_include_directories(tests_shader PRIVATE ${GL_INCLUDES})
 
-add_test(shader_tests shader_tests)
+add_test(tests_shader tests_shader)

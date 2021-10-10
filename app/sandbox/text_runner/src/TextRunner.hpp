@@ -1,8 +1,8 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
-#include <Core/File.h>
-#include <Core/Runner.h>
+#include <core/file.h>
+#include <core/runner.h>
 #include <shader.h>
 #include <text.h>
 
@@ -54,6 +54,7 @@ class TextRunner : public Runner {
 		}
 
 	private:
+		// TODO fixme pointer hell below
 		Text* text;
 		Vao* vao;
 		Vbo* vbo;

@@ -5,14 +5,14 @@ include_directories(
 	../src
 	)
 
-add_executable(camera_tests
+add_executable(tests_camera
 	./src/main.cpp
 	)
 
-target_link_libraries(camera_tests
+target_link_libraries(tests_camera
 	GTest::GTest
 	GTest::Main
 
 	camera)
 
-add_test(camera_tests camera_tests)
+add_test(tests_camera camera_tests)

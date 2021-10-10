@@ -1,16 +1,16 @@
-project(Pong)
+project(pong)
 
-add_executable(Pong
+add_executable(pong
 	./main.cpp
-	./src/PongRunner.hpp
-	./src/components/AI.cpp
-	./src/components/Ball.cpp
-	./src/components/Player.cpp
-	./src/components/Sprite.cpp
-	./src/systems/AISystem.cpp
-	./src/systems/CollisionSystem.cpp
-	./src/systems/MoveSystem.cpp
-	./src/systems/RenderSystem.cpp)
+	./src/pong_runner.hpp
+	./src/components/ai.cpp
+	./src/components/ball.cpp
+	./src/components/player.cpp
+	./src/components/sprite.cpp
+	./src/systems/ai_system.cpp
+	./src/systems/collision_system.cpp
+	./src/systems/move_system.cpp
+	./src/systems/render_system.cpp)
 
-target_include_directories(Pong PRIVATE ${GL_INCLUDES})
-target_link_libraries(Pong PRIVATE ${LIBS} Core)
+target_include_directories(pong PRIVATE ${GL_INCLUDES})
+target_link_libraries(pong PRIVATE ${LIBS} core)

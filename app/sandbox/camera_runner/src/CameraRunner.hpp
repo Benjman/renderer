@@ -2,7 +2,7 @@
 #define SIMULATION_HPP
 
 #include <camera.h>
-#include <Core.h>
+#include <core.h>
 #include <shader.h>
 
 #include <entt/entt.hpp>

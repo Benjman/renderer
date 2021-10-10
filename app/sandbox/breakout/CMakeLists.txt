@@ -1,15 +1,15 @@
-project(Breakout)
+project(breakout)
 
-add_executable(Breakout
+add_executable(breakout
 	./main.cpp
-	./src/BreakoutRunner.hpp
-	./src/components/Ball.cpp
-	./src/components/Block.cpp
-	./src/components/Player.cpp
-	./src/components/Sprite.cpp
-	./src/systems/CollisionSystem.cpp
-	./src/systems/MoveSystem.cpp
-	./src/systems/RenderSystem.cpp)
+	./src/breakout_runner.hpp
+	./src/components/ball.cpp
+	./src/components/block.cpp
+	./src/components/player.cpp
+	./src/components/sprite.cpp
+	./src/systems/collision_system.cpp
+	./src/systems/move_system.cpp
+	./src/systems/render_system.cpp)
 
-target_link_libraries(Breakout PRIVATE ${LIBS} Core)
-target_include_directories(Breakout PRIVATE ${GL_INCLUDES})
+target_link_libraries(breakout PRIVATE ${LIBS} core)
+target_include_directories(breakout PRIVATE ${GL_INCLUDES})

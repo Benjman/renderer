@@ -5,7 +5,7 @@
 #include "logging.h"
 #include "SimplexNoise.h"
 
-#include <Core/File.h>
+#include <core/file.h>
 #include <shader.h>
 
 const GLfloat vertices[] = {

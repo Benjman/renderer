@@ -1,5 +1,5 @@
 #include "../../utils/glfw.h"
-#include "src/BreakoutRunner.hpp"
+#include "src/breakout_runner.hpp"
 
 #include <iostream>
 

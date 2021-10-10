@@ -7,17 +7,17 @@ include_directories(
 	${STB_INCLUDE}
 	)
 
-add_executable(texttests
+add_executable(tests_text
 	./src/font_loader_test.cpp
 	./src/main.cpp
 	./src/text_test.cpp
 	./src/text_structure_tests.cpp
 	)
 
-target_link_libraries(texttests
+target_link_libraries(tests_text
 	GTest::GTest
 	GTest::Main
 
 	text)
 
-add_test(texttests texttests)
+add_test(tests_text tests_text)
