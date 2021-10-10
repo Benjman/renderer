@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <Shader/Texture.h>
+#include <shader/texture.h>
 
 Texture::Texture(GLenum target, GLint mipmapLevel, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type)
 	: target(target), mipmapLevel(mipmapLevel), internalFormat(internalFormat), width(width), height(height), depth(depth), format(format), type(type)

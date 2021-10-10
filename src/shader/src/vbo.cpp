@@ -2,8 +2,8 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <Shader/Vao.h>
-#include <Shader/Vbo.h>
+#include <shader/vao.h>
+#include <shader/vbo.h>
 
 #include <stdexcept>
 

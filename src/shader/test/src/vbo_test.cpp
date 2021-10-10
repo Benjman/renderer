@@ -1,7 +1,7 @@
-#include "ShaderTestFixture.h"
+#include "shader_test_fixture.h"
 #define private public
-#include <Shader/Vao.h>
-#include <Shader/Vbo.h>
+#include <shader/vao.h>
+#include <shader/vbo.h>
 
 GLuint TARGET = GL_ARRAY_BUFFER;
 

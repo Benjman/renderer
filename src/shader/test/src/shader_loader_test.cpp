@@ -1,6 +1,6 @@
-#include "ShaderTestFixture.h"
+#include "shader_test_fixture.h"
 #define private public
-#include <ShaderLoader.h>
+#include <shader_loader.h>
 
 struct ShaderLoaderFixture : public ShaderTestFixture {
 	const char *vertShaderSrc = "#version 330 core\n"

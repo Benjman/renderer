@@ -3,7 +3,7 @@
 
 #include <Core/File.h>
 #include <Core/Runner.h>
-#include <Shader.h>
+#include <shader.h>
 #include <text.h>
 
 #include <iostream>

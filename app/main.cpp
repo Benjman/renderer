@@ -6,7 +6,7 @@
 #include "SimplexNoise.h"
 
 #include <Core/File.h>
-#include <Shader.h>
+#include <shader.h>
 
 const GLfloat vertices[] = {
 	// positions

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "ShaderTestFixture.h"
+#include "shader_test_fixture.h"
 
 GLFWwindow *m_window = nullptr;
 GLFWwindow *ShaderTestFixture::m_window = nullptr;

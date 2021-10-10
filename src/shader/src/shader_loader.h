@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <Shader/Shader.h>
+#include <shader/shader.h>
 
 #include <string>
 #include <iostream> // TODO remove after logging is implemented

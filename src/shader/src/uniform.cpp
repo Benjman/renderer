@@ -2,8 +2,9 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <Shader/Shader.h>
-#include <Shader/Uniform.h>
+#include <shader/shader.h>
+#include <shader/uniform.h>
+
 #include <iostream>
 
 void IUniform::storeLocation(Shader& shader) {

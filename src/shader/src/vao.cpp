@@ -2,8 +2,8 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <Shader/Vao.h>
-#include <Shader/VertexAttribute.h>
+#include <shader/vao.h>
+#include <shader/vertex_attribute.h>
 
 Vao::Vao() {
 	glGenVertexArrays(1, &id);

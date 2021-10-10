@@ -3,7 +3,7 @@
 #include <Core/Runner.h>
 #include <Core/File.h>
 #include <Core/components/Position2D.h>
-#include <Shader.h>
+#include <shader.h>
 
 #include "./components/Ball.h"
 #include "./components/Block.h"

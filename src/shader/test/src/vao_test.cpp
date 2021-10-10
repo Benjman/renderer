@@ -1,6 +1,6 @@
-#include "ShaderTestFixture.h"
+#include "shader_test_fixture.h"
 #define private public
-#include <Shader/Vao.h>
+#include <shader/vao.h>
 
 struct VaoTestFixture : public ShaderTestFixture {
 	protected:

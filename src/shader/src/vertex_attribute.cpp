@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include <Shader/VertexAttribute.h>
+#include <shader/vertex_attribute.h>
 
 VertexAttribute::VertexAttribute(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride,
 		const void *offset, bool enabled) : index(index), enabled(enabled) {

@@ -3,7 +3,7 @@
 
 #include <Camera.h>
 #include <Core.h>
-#include <Shader.h>
+#include <shader.h>
 
 #include <entt/entt.hpp>
 

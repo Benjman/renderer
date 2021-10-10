@@ -2,7 +2,6 @@
 #define SHADER_SHADER_H
 
 #include <cuchar> // for size_t
-
 #include <GL/gl.h>
 
 class Vao;

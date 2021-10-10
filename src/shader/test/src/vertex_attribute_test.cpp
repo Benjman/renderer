@@ -1,7 +1,7 @@
-#include "ShaderTestFixture.h"
-#include <Shader/Vao.h>
+#include "shader_test_fixture.h"
+#include <shader/vao.h>
 #define private public
-#include <Shader/VertexAttribute.h>
+#include <shader/vertex_attribute.h>
 
 struct VertexAttribFixture : public ShaderTestFixture {
 protected:
