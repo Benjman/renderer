@@ -22,6 +22,8 @@ struct Shader {
 			loadUniforms();
 		}
 
+		GLuint getId() const { return id; }
+
 	protected:
 		GLuint id = GL_ZERO;
 

@@ -6,14 +6,12 @@
 #include <Shader/Vbo.h>
 
 #include <stdexcept>
-#include <iostream>
 
 Vbo::Vbo(GLenum target, GLenum usage, GLsizeiptr size, const void *data, Vao *vao) : target(target), usage(usage), size(0) {
 	if (vao)
 		vao->bind();
 	if (data)
 		storeData(data, size);
-			GLuint error = GL_ZERO; if ((error = glGetError())) std::cout << "1Error " << error << std::endl;
 }
 
 Vbo::~Vbo() {
@@ -41,9 +39,8 @@ void Vbo::unbind() {
 	unbind(target);
 }
 
-// TODO offset isn't even being considered in anything. Implement with offset
 void Vbo::storeData(const void *data, GLsizeiptr size, GLsizeiptr offset) {
-	if (this->size < size || this->size == 0) {
+	if (this->size < offset + size || this->size == 0) {
 		resize(size, data, offset);
 	} else {
 		bind();
@@ -55,7 +52,7 @@ void Vbo::resize(GLsizeiptr size, const void *data, GLsizeiptr offset) {
 	if (this->size == 0 && size == 0)
 		return;
 
-	if (this->size > size)
+	if (this->size > offset + size)
 		throw std::runtime_error("can not resize vbo with size smaller than that which was already allocated");
 
 	GLuint old = id;
