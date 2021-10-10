@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(Camera)
+project(camera)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,12 +13,12 @@ endif()
 
 find_package(GTest REQUIRED)
 
-add_library(Camera
+add_library(camera
 	STATIC
-	./src/Camera.cpp
+	./src/camera.cpp
 	)
 
-target_include_directories(Camera PUBLIC ./include)
+target_include_directories(camera PUBLIC ./include)
 
 add_subdirectory(test)
 

@@ -1,7 +1,7 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
-#include <Camera.h>
+#include <camera.h>
 #include <Core.h>
 #include <shader.h>
 
