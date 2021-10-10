@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #define private public
-#include <Text/Font.h>
+#include <text/font.h>
 
 class FontLoaderFixture : public ::testing::Test {
 	protected:

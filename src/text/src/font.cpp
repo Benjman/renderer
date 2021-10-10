@@ -8,7 +8,7 @@
 #undef STB_RECT_PACK_IMPLEMENTATION
 #undef STB_IMAGE_WRITE_IMPLEMENTATION
 
-#include <Text/Font.h>
+#include <text/font.h>
 #include <iostream> // ghetto logging
 
 namespace internal {

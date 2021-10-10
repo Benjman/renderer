@@ -9,14 +9,14 @@
 struct Text;
 struct Font;
 
-namespace internal {
-	struct TextMeshGenerationContext;
+namespace internal::text {
+	struct Context;
 
 	struct Word {
 		std::string value;
 		float_t width = 0;
 
-		void add_char(char c, TextMeshGenerationContext& context, float_t kern);
+		void add_char(char c, Context& context, float_t kern);
 	};
 
 	struct Line {
@@ -35,7 +35,7 @@ namespace internal {
 		bool try_add_word(Word* word);
 	};
 
-	struct TextMeshGenerationContext {
+	struct Context {
 		std::vector<Line*> lines;
 		Text* text;
 		float_t aspect_ratio;
@@ -43,20 +43,20 @@ namespace internal {
 		float_t text_size;
 		float_t scale;
 
-		~TextMeshGenerationContext() {
+		~Context() {
 			for (auto line : lines) {
 				delete line;
 			}
 		}
 	};
 
-	void generate_text_mesh(Text* text);
+	void generate_mesh(Text* text);
 
-	void generate_text_structure(Text *text, TextMeshGenerationContext& context);
+	void generate_structure(Text *text, Context& context);
 
-	void process_line(Line* line, TextMeshGenerationContext& context, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer);
+	void process_line(Line* line, Context& context, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer);
 
-	void process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer, TextMeshGenerationContext& context);
+	void process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer, Context& context);
 };
 
 #endif // TEXT_TEXT_MESH_GENERATOR_H

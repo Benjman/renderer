@@ -1,11 +1,10 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
-#include "Text/internal/TextMeshGenerator.h"
 #include <Core/File.h>
 #include <Core/Runner.h>
 #include <Shader.h>
-#include <Text.h>
+#include <text.h>
 
 #include <iostream>
 

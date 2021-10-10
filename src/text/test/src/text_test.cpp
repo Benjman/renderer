@@ -2,11 +2,11 @@
 #include <cmath>
 #include <GLFW/glfw3.h>
 
-#include <Text/Font.h>
-#include <Text/Flags.h>
+#include <text/font.h>
+#include <text/flags.h>
 
 #define private public
-#include <Text/Text.h>
+#include <text/text.h>
 
 class TextFixture : public ::testing::Test {
 	protected:

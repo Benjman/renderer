@@ -1,7 +1,8 @@
 // TODO kerning
 // TODO calculated widths and max-widths not correct (try wrapping a line with 128 size text)
-#include <Text/internal/TextMeshGenerator.h>
-#include <Text.h>
+#include <GL/gl.h>
+#include <text/internal/generator.h>
+#include <text.h>
 
 #include <cstdint>
 #include <cstring>
@@ -10,9 +11,9 @@
 
 #define VERT_COUNT 16
 
-void internal::generate_text_mesh(Text* text) {
-	TextMeshGenerationContext context;
-	generate_text_structure(text, context);
+void internal::text::generate_mesh(Text* text) {
+	Context context;
+	generate_structure(text, context);
 
 	size_t buffer_pointer = 0;
 	float_t cursor_x = text->pos.x,
@@ -38,7 +39,7 @@ void internal::generate_text_mesh(Text* text) {
 	}
 }
 
-void internal::process_line(Line* line, TextMeshGenerationContext& context, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer) {
+void internal::text::process_line(Line* line, Context& context, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer) {
 	for (auto word : line->words) {
 		for (size_t i = 0, len = word->value.size(); i < len; i++) {
 			stbtt_aligned_quad quad = context.text->font->get_char(word->value.at(i), cursor_x, cursor_y);
@@ -54,7 +55,7 @@ void internal::process_line(Line* line, TextMeshGenerationContext& context, floa
 	}
 }
 
-void internal::process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer, TextMeshGenerationContext& context) {
+void internal::text::process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer, Context& context) {
 	// scale from font line height to text size
 	quad.x0 *= context.scale;
 	quad.x1 *= context.scale;
@@ -116,7 +117,7 @@ void internal::process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer, Tex
 	(*buffer_pointer)++;
 }
 
-void internal::generate_text_structure(Text* text, TextMeshGenerationContext& context) {
+void internal::text::generate_structure(Text* text, Context& context) {
 	context.aspect_ratio = text->get_aspect_ratio();
 	context.display_height = text->get_display_height();
 	context.text_size = text->get_text_size();
@@ -157,7 +158,7 @@ void internal::generate_text_structure(Text* text, TextMeshGenerationContext& co
 	}
 }
 
-bool internal::Line::try_add_word(Word* word) {
+bool internal::text::Line::try_add_word(Word* word) {
 	if (max_width < width + word->width)
 		return false;
 	words.emplace_back(word);
@@ -165,7 +166,7 @@ bool internal::Line::try_add_word(Word* word) {
 	return true;
 }
 
-void internal::Word::add_char(char c, TextMeshGenerationContext& context, float_t kern) {
+void internal::text::Word::add_char(char c, Context& context, float_t kern) {
 	float_t tmp_x = 0, tmp_y = 0;
 	context.text->font->get_char(c, &tmp_x, &tmp_y);
 	width += tmp_x * context.scale + kern;

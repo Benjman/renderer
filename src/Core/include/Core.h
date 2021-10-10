@@ -1,5 +1,6 @@
+// TODO do we really want to have this file?
 #pragma once
-#include <Text/Flags.h>
+#include <text.h>
 #include <Core/Controller.h>
 #include <Core/Runner.h>
 #include <Core/File.h>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(Text)
+project(text)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,15 +15,15 @@ find_package(GTest REQUIRED)
 find_package(stb REQUIRED)
 
 
-add_library(Text
+add_library(text
 	STATIC
 
-	./src/Font.cpp
-	./src/Text.cpp
-	./src/TextMeshGenerator.cpp
+	./src/font.cpp
+	./src/generator.cpp
+	./src/text.cpp
 	)
 
-target_include_directories(Text
+target_include_directories(text
 	PUBLIC ./include
 	PRIVATE ${STB_INCLUDE})
 

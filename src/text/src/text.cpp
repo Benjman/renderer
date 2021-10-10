@@ -1,6 +1,5 @@
-#include <Text/internal/TextMeshGenerator.h>
-#include <Text.h>
-
+#include <text/internal/generator.h>
+#include <text.h>
 
 #include <utility>
 #include <limits>
@@ -22,7 +21,7 @@ Text::Text(std::string value, Font* font, glm::vec2 pos, uint32_t flags) :
 
 void Text::set_value(std::string value) noexcept {
 	this->value = std::move(value);
-	internal::generate_text_mesh(this);
+	internal::text::generate_mesh(this);
 }
 
 void Text::set_flag(uint32_t value, uint32_t mask) noexcept {
@@ -131,5 +130,5 @@ uint32_t Text::get_display_height() const noexcept {
 }
 
 void Text::generate_mesh() {
-	internal::generate_text_mesh(this);
+	internal::text::generate_mesh(this);
 }
