@@ -23,6 +23,7 @@ set(LIBS ${LIBS} spdlog::spdlog Threads::Threads)
 
 add_subdirectory(./app)
 add_subdirectory(./lib)
+add_subdirectory(./src/Camera)
 add_subdirectory(./src/Core)
 add_subdirectory(./src/Shader)
 add_subdirectory(./src/Text)

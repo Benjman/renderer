@@ -50,7 +50,6 @@ const int Runner::run() {
 
 void Runner::doRender() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 	render();
 	glfwSwapBuffers(m_window);
 }

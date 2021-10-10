@@ -34,6 +34,7 @@ class Runner {
 
 		virtual void render() = 0;
 
+	private:
 		void doRender();
 
 };
