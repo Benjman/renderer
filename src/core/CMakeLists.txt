@@ -3,6 +3,7 @@ project(core)
 
 add_library(core STATIC
 	./src/file.cpp
+    ./src/intput.cpp
 	./src/runner.cpp
 	./src/components/position2d.cpp
 	./src/components/position3d.cpp
@@ -18,3 +19,5 @@ target_link_libraries(core
 target_include_directories(core
 	PUBLIC ./include ${ENTT_INCLUDE} ${STB_INCLUDE}
 	PRIVATE ${GL_INCLUDES})
+
+add_subdirectory(test)

@@ -47,9 +47,6 @@ class TextRunner : public Runner {
 			glDrawElements(GL_TRIANGLES, 6 * text->char_count, GL_UNSIGNED_INT, 0);
 		}
 
-		void keyEvent(int key, int mode) override {
-		}
-
 		void windowSizeChanged(int width, int height) override {
 		}
 

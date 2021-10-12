@@ -105,8 +105,15 @@ public:
 
 protected:
   void update(const double time) override {
-    move_system.update(time, m_registry, m_width, m_height);
-    collision_system.update(time, collideables);
+      if (m_input.any_key_pressed()) {
+          m_dispatcher.trigger<KeyDown>(m_input.last_key_pressed);
+      }
+      if(m_input.any_key_released()) {
+          m_dispatcher.trigger<KeyUp>(m_input.last_key_released);
+      }
+
+      move_system.update(time, m_registry, m_width, m_height);
+      collision_system.update(time, collideables);
   }
 
   void render() override {
@@ -117,14 +124,6 @@ protected:
     m_dispatcher.trigger<ViewportSizeChange>(width, height);
     m_width = width;
     m_height = height;
-  }
-
-  void keyEvent(int key, int mode) override {
-    if (mode == GLFW_PRESS) {
-      m_dispatcher.trigger<KeyDown>(key);
-    } else {
-      m_dispatcher.trigger<KeyUp>(key);
-    }
   }
 
 private:

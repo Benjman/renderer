@@ -91,23 +91,22 @@ class PongRunner : public Runner {
 
 	protected:
 		void update(const double time) override {
-			move_system.update(time, m_registry);
-			ai_system.update(time, m_registry);
-			collision_system.update(time, collideables);
+            if (m_input.any_key_pressed()) {
+                m_dispatcher.trigger<KeyDown>(m_input.last_key_pressed);
+            }
+            if(m_input.any_key_released()) {
+                m_dispatcher.trigger<KeyUp>(m_input.last_key_released);
+            }
+
+            move_system.update(time, m_registry);
+            ai_system.update(time, m_registry);
+            collision_system.update(time, collideables);
 		}
 
 		void render() override {
 			render_system.render(m_registry, m_width, m_height, m_texture);
 			texture.upload(&m_texture.at(0));
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		}
-
-		void keyEvent(int key, int mode) override {
-			if (mode == GLFW_PRESS) {
-				m_dispatcher.trigger<KeyDown>(key);
-			} else {
-				m_dispatcher.trigger<KeyUp>(key);
-			}
 		}
 
 		void windowSizeChanged(int width, int height) override {

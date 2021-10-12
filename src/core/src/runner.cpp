@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "utils/glfw.h"
 
 #include <core/runner.h>
@@ -56,7 +54,7 @@ void Runner::doRender() {
 
 inline void keyHandler(GLFWwindow*, int key, int scancode, int action, int mods) {
 	if (action == GLFW_REPEAT) return;
-	INSTANCE->keyEvent(key, action);
+    INSTANCE->m_input.key_event(key, scancode, action, mods);
 }
 
 inline void windowSizeChangeHandler(GLFWwindow*, int w, int h) {

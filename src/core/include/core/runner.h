@@ -6,16 +6,18 @@
 #include <GLFW/glfw3.h>
 
 #include "events.h"
+#include "input.h"
 
 class Runner {
 	public:
+        InputState m_input;
+
 		Runner(GLFWwindow *window, const int width, const int height);
 
 		~Runner() noexcept;
 
 		const int run();
 
-		virtual void keyEvent(int key, int mode) = 0;
 
 		virtual void windowSizeChanged(int width, int height) = 0;
 
@@ -36,7 +38,6 @@ class Runner {
 
 	private:
 		void doRender();
-
 };
 
 #endif //CORE_GAME_H
