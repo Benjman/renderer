@@ -40,7 +40,7 @@ class TextRunner : public Runner {
 		}
 
 	protected:
-		void update(const double time) override {
+		void update(const RunnerContext& context) override {
 		}
 
 		void render() override {

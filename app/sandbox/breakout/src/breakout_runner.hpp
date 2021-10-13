@@ -104,7 +104,7 @@ public:
   }
 
 protected:
-  void update(const double time) override {
+  void update(const RunnerContext& context) override {
       if (m_input.any_key_pressed()) {
           m_dispatcher.trigger<KeyDown>(m_input.last_key_pressed);
       }
@@ -112,8 +112,8 @@ protected:
           m_dispatcher.trigger<KeyUp>(m_input.last_key_released);
       }
 
-      move_system.update(time, m_registry, m_width, m_height);
-      collision_system.update(time, collideables);
+      move_system.update(context.delta, m_registry, m_width, m_height);
+      collision_system.update(context.delta, collideables);
   }
 
   void render() override {

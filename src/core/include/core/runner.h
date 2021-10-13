@@ -1,12 +1,25 @@
 #ifndef CORE_GAME_H
 #define CORE_GAME_H
 
+#include <cmath>
 #include <entt/entt.hpp>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
 #include "events.h"
 #include "input.h"
+
+struct RunnerContext {
+	double_t delta;
+	entt::registry& registry;
+	entt::dispatcher& dispatcher;
+    InputState& input;
+
+    RunnerContext(entt::registry& registry, entt::dispatcher& dispatcher, InputState& input)
+        : registry(registry), dispatcher(dispatcher), input(input)
+    { }
+
+};
 
 class Runner {
 	public:
@@ -32,7 +45,7 @@ class Runner {
 
 		Runner() = delete;
 
-		virtual void update(const double time) = 0;
+		virtual void update(const RunnerContext& context) = 0;
 
 		virtual void render() = 0;
 
