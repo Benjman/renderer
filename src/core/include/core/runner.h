@@ -11,6 +11,7 @@
 
 struct RunnerContext {
 	double_t delta;
+    double_t running;
 	entt::registry& registry;
 	entt::dispatcher& dispatcher;
     InputState& input;
@@ -39,7 +40,7 @@ class Runner {
 		int m_height;
 		GLFWwindow *m_window;
 
-		// TODO these entt classes should be in the implementing Runner classes
+		// TODO these entt references should be in the implementing Runner classes
 		entt::registry m_registry;
 		entt::dispatcher m_dispatcher;
 

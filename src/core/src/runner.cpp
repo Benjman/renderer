@@ -32,6 +32,7 @@ const int32_t Runner::run() {
 		current_time = new_time;
 
 		accumulator += frame_time;
+        context.running = new_time;
 
 		while (accumulator >= dt) {
             context.delta = accumulator;
