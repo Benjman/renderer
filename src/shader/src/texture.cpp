@@ -19,6 +19,7 @@ void Texture::unbind() {
 }
 
 void Texture::upload(const void* data) {
+    bind();
 	switch(target) {
 		case GL_TEXTURE_1D:
 			return upload1d(data);
