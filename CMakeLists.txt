@@ -13,7 +13,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 set(CMAKE_CONFIG_PATH ${CMAKE_CONFIG_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-message("${CMAKE_CONFIG_PATH}")
 
 configure_file(${CMAKE_CONFIG_PATH}/core/include/config.h.in ${CMAKE_SOURCE_DIR}/src/core/include/core/config.h)
 
@@ -25,7 +24,6 @@ set(LIBS ${LIBS} spdlog::spdlog Threads::Threads)
 
 add_subdirectory(./app)
 add_subdirectory(./lib)
-add_subdirectory(./src/camera)
 add_subdirectory(./src/core)
 add_subdirectory(./src/shader)
 add_subdirectory(./src/text)
