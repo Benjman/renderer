@@ -1,9 +1,8 @@
 #include <iostream>
 #include <entt/entt.hpp>
 
-#include <GLFW/glfw3.h>
-
 #include <core/components/position2d.h>
+#include <core/input.h>
 #include <core/events.h>
 
 #include "../components/ball.h"
@@ -14,20 +13,21 @@
 	return random(0, 1) ? -vel : vel;
 }
 
+using namespace input;
 void MoveSystem::on_key_down(const KeyDown& key_down) noexcept {
 	switch (key_down.keycode) {
-		case GLFW_KEY_W:
+		case KEY_W:
 			player_movement = Player::MoveDirection::NORTH;
 			break;
 
-		case GLFW_KEY_S:
+		case KEY_S:
 			player_movement = Player::MoveDirection::SOUTH;
 			break;
 	}
 }
 
 void MoveSystem::on_key_up(const KeyUp& key_up) noexcept {
-	if (key_up.keycode == GLFW_KEY_W || key_up.keycode == GLFW_KEY_S) {
+	if (key_up.keycode == KEY_W || key_up.keycode == KEY_S) {
 		player_movement = Player::MoveDirection::STOPPED;
 	}
 }

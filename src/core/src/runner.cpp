@@ -24,7 +24,7 @@ const int32_t Runner::run() {
 	double_t current_time = getRuntimeSeconds();
 	double_t new_time = 0.;
 	double_t frame_time = 0.;
-    RunnerContext context(m_registry, m_dispatcher, m_input);
+    RunnerContext context(m_registry, m_dispatcher);
 
 	while (!glfwWindowShouldClose(m_window)) {
 		new_time = getRuntimeSeconds();
@@ -57,7 +57,7 @@ void Runner::doRender() {
 
 inline void keyHandler(GLFWwindow*, int32_t key, int32_t scancode, int32_t action, int32_t mods) {
 	if (action == GLFW_REPEAT) return;
-    INSTANCE->m_input.key_event(key, scancode, action, mods);
+    input::key_event(key, scancode, action, mods);
 }
 
 inline void windowSizeChangeHandler(GLFWwindow*, int32_t w, int32_t h) {

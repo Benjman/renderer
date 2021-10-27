@@ -1,8 +1,26 @@
 #ifndef CORE_INPUT_H
 #define CORE_INPUT_H
 
-// These values mirror glfw. Not using glfw header for increased compile times, but accuracy is provided by tests.
+namespace input {
+    bool key_down(int key, int mods = 0);
+    bool key_up(int key, int mods = 0);
 
+    bool key_pressed(int key);
+    bool key_released(int key);
+
+    bool any_key_pressed();
+    bool any_key_released();
+
+    void key_event(const int key, const int scancode, const int action, const int mods);
+    void reset();
+
+    int last_key_pressed();
+    int last_key_released();
+    int mods();
+}
+
+
+// These values mirror glfw. Not using glfw header for increased compile times, but accuracy is provided by tests.
 #define KEY_UNKNOWN            -1
 
 #define KEY_SPACE              32
@@ -130,51 +148,5 @@
 
 #define KEY_RELEASE            0
 #define KEY_PRESS              1
-
-
-struct InputState {
-    friend class Runner;
-
-    /** Returns true if a key is currently in the pressed state **/
-    bool key_down(int key, int mods = 0) {
-        return m_keys_down[key] && m_mods & mods;
-    }
-
-    /** Returns true if a key is currently in the released state **/
-    bool key_up(int key, int mods = 0) {
-        return key_down(key) == false;
-    }
-
-    /** Returns true if a key was pressed this frame **/
-    bool key_pressed(int key) {
-        return m_keys_pressed[key];
-    }
-
-    /** Returns true if a key was released this frame **/
-    bool key_released(int key) {
-        return m_keys_released[key];
-    }
-
-    bool any_key_pressed() {
-        return m_keys_pressed[KEY_LAST + 1];
-    }
-
-    bool any_key_released() {
-        return m_keys_released[KEY_LAST + 1];
-    }
-
-    void key_event(const int key, const int scancode, const int action, const int mods);
-
-    int last_key_pressed;
-    int last_key_released;
-
-    private:
-    int m_mods = 0;
-    bool m_keys_down[KEY_LAST + 1]{false};
-    bool m_keys_pressed[KEY_LAST + 2]{false}; // +2 because last element keeps the state for if any key was pressed
-    bool m_keys_released[KEY_LAST + 2]{false}; // +2 because last element keeps the state for if any key was released
-
-    void reset();
-};
 
 #endif // CORE_INPUT_H

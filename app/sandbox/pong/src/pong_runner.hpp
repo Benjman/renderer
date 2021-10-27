@@ -91,11 +91,11 @@ class PongRunner : public Runner {
 
 	protected:
 		void update(const RunnerContext& context) override {
-            if (m_input.any_key_pressed()) {
-                m_dispatcher.trigger<KeyDown>(m_input.last_key_pressed);
+            if (input::any_key_pressed()) {
+                m_dispatcher.trigger<KeyDown>(input::last_key_pressed());
             }
-            if(m_input.any_key_released()) {
-                m_dispatcher.trigger<KeyUp>(m_input.last_key_released);
+            if (input::any_key_released()) {
+                m_dispatcher.trigger<KeyUp>(input::last_key_released());
             }
 
             move_system.update(context.delta, m_registry);

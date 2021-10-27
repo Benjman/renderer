@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <iostream>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -6,27 +7,27 @@
 #define private public
 #include <core/input.h>
 
-TEST(InputTest, initial_state) {
-    InputState input;
+struct InputTestFixture : public ::testing::Test {
+	protected:
+        void SetUp() {
+            input::reset();
+        }
+};
 
-    // array sizes
-    ASSERT_EQ(sizeof(bool) * (KEY_LAST + 1), sizeof(input.m_keys_down));
-    ASSERT_EQ(sizeof(bool) * (KEY_LAST + 2), sizeof(input.m_keys_pressed));
-    ASSERT_EQ(sizeof(bool) * (KEY_LAST + 2), sizeof(input.m_keys_released));
-
+TEST_F(InputTestFixture, initial_state) {
     // initial states
     for (int i = 0; i <= KEY_LAST; i++) {
-        ASSERT_FALSE(input.m_keys_down[i]);
-        ASSERT_FALSE(input.m_keys_pressed[i]);
-        ASSERT_FALSE(input.m_keys_released[i]);
+        ASSERT_FALSE(input::key_down(i));
+        ASSERT_FALSE(input::key_pressed(i));
+        ASSERT_FALSE(input::key_released(i));
     }
 
-    ASSERT_FALSE(input.m_keys_pressed[KEY_LAST + 1]);
-    ASSERT_FALSE(input.m_keys_released[KEY_LAST + 1]);
-    ASSERT_EQ(0, input.m_mods);
+    ASSERT_FALSE(input::key_pressed(KEY_LAST + 1));
+    ASSERT_FALSE(input::key_released(KEY_LAST + 1));
+    ASSERT_EQ(0, input::mods());
 }
 
-TEST(InputTest, glfw_mirroring) {
+TEST_F(InputTestFixture, glfw_mirroring) {
 	ASSERT_EQ(KEY_UNKNOWN, GLFW_KEY_UNKNOWN);
 	ASSERT_EQ(KEY_SPACE, GLFW_KEY_SPACE);
 	ASSERT_EQ(KEY_APOSTROPHE, GLFW_KEY_APOSTROPHE);
@@ -153,992 +154,985 @@ TEST(InputTest, glfw_mirroring) {
 	ASSERT_EQ(KEY_PRESS, GLFW_PRESS);
 }
 
-TEST(InputTest, any_pressed_flag) {
-    InputState state;
-    ASSERT_FALSE(state.m_keys_pressed[KEY_LAST + 1]);
-    state.key_event(KEY_Q, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_LAST + 1]);
+TEST_F(InputTestFixture, any_pressed_flag) {
+    ASSERT_FALSE(input::key_pressed(KEY_LAST + 1));
+    input::key_event(KEY_Q, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_LAST + 1));
 }
 
-TEST(InputTest, any_released_flag) {
-    InputState state;
-    ASSERT_FALSE(state.m_keys_released[KEY_LAST + 1]);
-    state.key_event(KEY_Q, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_LAST + 1]);
+TEST_F(InputTestFixture, any_released_flag) {
+    ASSERT_FALSE(input::key_released(KEY_LAST + 1));
+    input::key_event(KEY_Q, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_LAST + 1));
 }
 
-TEST(InputTest, key_pressed_state) {
-    InputState state;
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_SPACE]);
-    state.key_event(KEY_SPACE, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_SPACE]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_APOSTROPHE]);
-    state.key_event(KEY_APOSTROPHE, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_APOSTROPHE]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_COMMA]);
-    state.key_event(KEY_COMMA, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_COMMA]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_MINUS]);
-    state.key_event(KEY_MINUS, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_MINUS]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_PERIOD]);
-    state.key_event(KEY_PERIOD, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_PERIOD]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_SLASH]);
-    state.key_event(KEY_SLASH, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_SLASH]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_0]);
-    state.key_event(KEY_0, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_0]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_1]);
-    state.key_event(KEY_1, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_1]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_2]);
-    state.key_event(KEY_2, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_2]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_3]);
-    state.key_event(KEY_3, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_3]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_4]);
-    state.key_event(KEY_4, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_4]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_5]);
-    state.key_event(KEY_5, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_5]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_6]);
-    state.key_event(KEY_6, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_6]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_7]);
-    state.key_event(KEY_7, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_7]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_8]);
-    state.key_event(KEY_8, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_8]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_9]);
-    state.key_event(KEY_9, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_9]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_SEMICOLON]);
-    state.key_event(KEY_SEMICOLON, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_SEMICOLON]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_EQUAL]);
-    state.key_event(KEY_EQUAL, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_EQUAL]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_A]);
-    state.key_event(KEY_A, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_A]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_B]);
-    state.key_event(KEY_B, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_B]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_C]);
-    state.key_event(KEY_C, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_C]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_D]);
-    state.key_event(KEY_D, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_D]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_E]);
-    state.key_event(KEY_E, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_E]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F]);
-    state.key_event(KEY_F, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_G]);
-    state.key_event(KEY_G, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_G]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_H]);
-    state.key_event(KEY_H, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_H]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_I]);
-    state.key_event(KEY_I, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_I]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_J]);
-    state.key_event(KEY_J, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_J]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_K]);
-    state.key_event(KEY_K, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_K]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_L]);
-    state.key_event(KEY_L, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_L]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_M]);
-    state.key_event(KEY_M, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_M]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_N]);
-    state.key_event(KEY_N, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_N]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_O]);
-    state.key_event(KEY_O, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_O]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_P]);
-    state.key_event(KEY_P, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_P]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_Q]);
-    state.key_event(KEY_Q, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_Q]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_R]);
-    state.key_event(KEY_R, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_R]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_S]);
-    state.key_event(KEY_S, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_S]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_T]);
-    state.key_event(KEY_T, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_T]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_U]);
-    state.key_event(KEY_U, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_U]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_V]);
-    state.key_event(KEY_V, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_V]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_W]);
-    state.key_event(KEY_W, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_W]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_X]);
-    state.key_event(KEY_X, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_X]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_Y]);
-    state.key_event(KEY_Y, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_Y]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_Z]);
-    state.key_event(KEY_Z, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_Z]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_LEFT_BRACKET]);
-    state.key_event(KEY_LEFT_BRACKET, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_LEFT_BRACKET]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_BACKSLASH]);
-    state.key_event(KEY_BACKSLASH, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_BACKSLASH]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_RIGHT_BRACKET]);
-    state.key_event(KEY_RIGHT_BRACKET, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_RIGHT_BRACKET]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_GRAVE_ACCENT]);
-    state.key_event(KEY_GRAVE_ACCENT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_GRAVE_ACCENT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_WORLD_1]);
-    state.key_event(KEY_WORLD_1, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_WORLD_1]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_WORLD_2]);
-    state.key_event(KEY_WORLD_2, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_WORLD_2]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_ESCAPE]);
-    state.key_event(KEY_ESCAPE, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_ESCAPE]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_ENTER]);
-    state.key_event(KEY_ENTER, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_ENTER]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_TAB]);
-    state.key_event(KEY_TAB, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_TAB]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_BACKSPACE]);
-    state.key_event(KEY_BACKSPACE, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_BACKSPACE]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_INSERT]);
-    state.key_event(KEY_INSERT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_INSERT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_DELETE]);
-    state.key_event(KEY_DELETE, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_DELETE]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_RIGHT]);
-    state.key_event(KEY_RIGHT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_RIGHT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_LEFT]);
-    state.key_event(KEY_LEFT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_LEFT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_DOWN]);
-    state.key_event(KEY_DOWN, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_DOWN]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_UP]);
-    state.key_event(KEY_UP, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_UP]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_PAGE_UP]);
-    state.key_event(KEY_PAGE_UP, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_PAGE_UP]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_PAGE_DOWN]);
-    state.key_event(KEY_PAGE_DOWN, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_PAGE_DOWN]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_HOME]);
-    state.key_event(KEY_HOME, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_HOME]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_END]);
-    state.key_event(KEY_END, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_END]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_CAPS_LOCK]);
-    state.key_event(KEY_CAPS_LOCK, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_CAPS_LOCK]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_SCROLL_LOCK]);
-    state.key_event(KEY_SCROLL_LOCK, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_SCROLL_LOCK]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_NUM_LOCK]);
-    state.key_event(KEY_NUM_LOCK, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_NUM_LOCK]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_PRINT_SCREEN]);
-    state.key_event(KEY_PRINT_SCREEN, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_PRINT_SCREEN]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_PAUSE]);
-    state.key_event(KEY_PAUSE, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_PAUSE]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F1]);
-    state.key_event(KEY_F1, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F1]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F2]);
-    state.key_event(KEY_F2, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F2]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F3]);
-    state.key_event(KEY_F3, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F3]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F4]);
-    state.key_event(KEY_F4, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F4]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F5]);
-    state.key_event(KEY_F5, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F5]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F6]);
-    state.key_event(KEY_F6, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F6]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F7]);
-    state.key_event(KEY_F7, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F7]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F8]);
-    state.key_event(KEY_F8, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F8]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F9]);
-    state.key_event(KEY_F9, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F9]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F10]);
-    state.key_event(KEY_F10, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F10]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F11]);
-    state.key_event(KEY_F11, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F11]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F12]);
-    state.key_event(KEY_F12, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F12]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F13]);
-    state.key_event(KEY_F13, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F13]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F14]);
-    state.key_event(KEY_F14, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F14]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F15]);
-    state.key_event(KEY_F15, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F15]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F16]);
-    state.key_event(KEY_F16, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F16]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F17]);
-    state.key_event(KEY_F17, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F17]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F18]);
-    state.key_event(KEY_F18, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F18]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F19]);
-    state.key_event(KEY_F19, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F19]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F20]);
-    state.key_event(KEY_F20, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F20]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F21]);
-    state.key_event(KEY_F21, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F21]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F22]);
-    state.key_event(KEY_F22, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F22]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F23]);
-    state.key_event(KEY_F23, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F23]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F24]);
-    state.key_event(KEY_F24, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F24]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_F25]);
-    state.key_event(KEY_F25, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_F25]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_0]);
-    state.key_event(KEY_KP_0, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_0]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_1]);
-    state.key_event(KEY_KP_1, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_1]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_2]);
-    state.key_event(KEY_KP_2, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_2]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_3]);
-    state.key_event(KEY_KP_3, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_3]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_4]);
-    state.key_event(KEY_KP_4, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_4]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_5]);
-    state.key_event(KEY_KP_5, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_5]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_6]);
-    state.key_event(KEY_KP_6, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_6]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_7]);
-    state.key_event(KEY_KP_7, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_7]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_8]);
-    state.key_event(KEY_KP_8, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_8]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_9]);
-    state.key_event(KEY_KP_9, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_9]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_DECIMAL]);
-    state.key_event(KEY_KP_DECIMAL, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_DECIMAL]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_DIVIDE]);
-    state.key_event(KEY_KP_DIVIDE, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_DIVIDE]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_MULTIPLY]);
-    state.key_event(KEY_KP_MULTIPLY, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_MULTIPLY]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_SUBTRACT]);
-    state.key_event(KEY_KP_SUBTRACT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_SUBTRACT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_ADD]);
-    state.key_event(KEY_KP_ADD, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_ADD]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_ENTER]);
-    state.key_event(KEY_KP_ENTER, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_ENTER]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_KP_EQUAL]);
-    state.key_event(KEY_KP_EQUAL, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_KP_EQUAL]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_LEFT_SHIFT]);
-    state.key_event(KEY_LEFT_SHIFT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_LEFT_SHIFT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_LEFT_CONTROL]);
-    state.key_event(KEY_LEFT_CONTROL, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_LEFT_CONTROL]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_LEFT_ALT]);
-    state.key_event(KEY_LEFT_ALT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_LEFT_ALT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_LEFT_SUPER]);
-    state.key_event(KEY_LEFT_SUPER, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_LEFT_SUPER]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_RIGHT_SHIFT]);
-    state.key_event(KEY_RIGHT_SHIFT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_RIGHT_SHIFT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_RIGHT_CONTROL]);
-    state.key_event(KEY_RIGHT_CONTROL, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_RIGHT_CONTROL]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_RIGHT_ALT]);
-    state.key_event(KEY_RIGHT_ALT, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_RIGHT_ALT]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_RIGHT_SUPER]);
-    state.key_event(KEY_RIGHT_SUPER, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_RIGHT_SUPER]);
-
-    ASSERT_FALSE(state.m_keys_pressed[KEY_MENU]);
-    state.key_event(KEY_MENU, 0, KEY_PRESS, 0);
-    ASSERT_TRUE(state.m_keys_pressed[KEY_MENU]);
+TEST_F(InputTestFixture, key_pressed_state) {
+    ASSERT_FALSE(input::key_pressed(KEY_SPACE));
+    input::key_event(KEY_SPACE, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_SPACE));
+
+    ASSERT_FALSE(input::key_pressed(KEY_APOSTROPHE));
+    input::key_event(KEY_APOSTROPHE, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_APOSTROPHE));
+
+    ASSERT_FALSE(input::key_pressed(KEY_COMMA));
+    input::key_event(KEY_COMMA, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_COMMA));
+
+    ASSERT_FALSE(input::key_pressed(KEY_MINUS));
+    input::key_event(KEY_MINUS, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_MINUS));
+
+    ASSERT_FALSE(input::key_pressed(KEY_PERIOD));
+    input::key_event(KEY_PERIOD, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_PERIOD));
+
+    ASSERT_FALSE(input::key_pressed(KEY_SLASH));
+    input::key_event(KEY_SLASH, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_SLASH));
+
+    ASSERT_FALSE(input::key_pressed(KEY_0));
+    input::key_event(KEY_0, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_0));
+
+    ASSERT_FALSE(input::key_pressed(KEY_1));
+    input::key_event(KEY_1, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_1));
+
+    ASSERT_FALSE(input::key_pressed(KEY_2));
+    input::key_event(KEY_2, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_2));
+
+    ASSERT_FALSE(input::key_pressed(KEY_3));
+    input::key_event(KEY_3, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_3));
+
+    ASSERT_FALSE(input::key_pressed(KEY_4));
+    input::key_event(KEY_4, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_4));
+
+    ASSERT_FALSE(input::key_pressed(KEY_5));
+    input::key_event(KEY_5, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_5));
+
+    ASSERT_FALSE(input::key_pressed(KEY_6));
+    input::key_event(KEY_6, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_6));
+
+    ASSERT_FALSE(input::key_pressed(KEY_7));
+    input::key_event(KEY_7, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_7));
+
+    ASSERT_FALSE(input::key_pressed(KEY_8));
+    input::key_event(KEY_8, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_8));
+
+    ASSERT_FALSE(input::key_pressed(KEY_9));
+    input::key_event(KEY_9, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_9));
+
+    ASSERT_FALSE(input::key_pressed(KEY_SEMICOLON));
+    input::key_event(KEY_SEMICOLON, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_SEMICOLON));
+
+    ASSERT_FALSE(input::key_pressed(KEY_EQUAL));
+    input::key_event(KEY_EQUAL, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_EQUAL));
+
+    ASSERT_FALSE(input::key_pressed(KEY_A));
+    input::key_event(KEY_A, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_A));
+
+    ASSERT_FALSE(input::key_pressed(KEY_B));
+    input::key_event(KEY_B, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_B));
+
+    ASSERT_FALSE(input::key_pressed(KEY_C));
+    input::key_event(KEY_C, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_C));
+
+    ASSERT_FALSE(input::key_pressed(KEY_D));
+    input::key_event(KEY_D, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_D));
+
+    ASSERT_FALSE(input::key_pressed(KEY_E));
+    input::key_event(KEY_E, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_E));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F));
+    input::key_event(KEY_F, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F));
+
+    ASSERT_FALSE(input::key_pressed(KEY_G));
+    input::key_event(KEY_G, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_G));
+
+    ASSERT_FALSE(input::key_pressed(KEY_H));
+    input::key_event(KEY_H, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_H));
+
+    ASSERT_FALSE(input::key_pressed(KEY_I));
+    input::key_event(KEY_I, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_I));
+
+    ASSERT_FALSE(input::key_pressed(KEY_J));
+    input::key_event(KEY_J, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_J));
+
+    ASSERT_FALSE(input::key_pressed(KEY_K));
+    input::key_event(KEY_K, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_K));
+
+    ASSERT_FALSE(input::key_pressed(KEY_L));
+    input::key_event(KEY_L, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_L));
+
+    ASSERT_FALSE(input::key_pressed(KEY_M));
+    input::key_event(KEY_M, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_M));
+
+    ASSERT_FALSE(input::key_pressed(KEY_N));
+    input::key_event(KEY_N, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_N));
+
+    ASSERT_FALSE(input::key_pressed(KEY_O));
+    input::key_event(KEY_O, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_O));
+
+    ASSERT_FALSE(input::key_pressed(KEY_P));
+    input::key_event(KEY_P, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_P));
+
+    ASSERT_FALSE(input::key_pressed(KEY_Q));
+    input::key_event(KEY_Q, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_Q));
+
+    ASSERT_FALSE(input::key_pressed(KEY_R));
+    input::key_event(KEY_R, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_R));
+
+    ASSERT_FALSE(input::key_pressed(KEY_S));
+    input::key_event(KEY_S, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_S));
+
+    ASSERT_FALSE(input::key_pressed(KEY_T));
+    input::key_event(KEY_T, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_T));
+
+    ASSERT_FALSE(input::key_pressed(KEY_U));
+    input::key_event(KEY_U, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_U));
+
+    ASSERT_FALSE(input::key_pressed(KEY_V));
+    input::key_event(KEY_V, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_V));
+
+    ASSERT_FALSE(input::key_pressed(KEY_W));
+    input::key_event(KEY_W, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_W));
+
+    ASSERT_FALSE(input::key_pressed(KEY_X));
+    input::key_event(KEY_X, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_X));
+
+    ASSERT_FALSE(input::key_pressed(KEY_Y));
+    input::key_event(KEY_Y, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_Y));
+
+    ASSERT_FALSE(input::key_pressed(KEY_Z));
+    input::key_event(KEY_Z, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_Z));
+
+    ASSERT_FALSE(input::key_pressed(KEY_LEFT_BRACKET));
+    input::key_event(KEY_LEFT_BRACKET, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_LEFT_BRACKET));
+
+    ASSERT_FALSE(input::key_pressed(KEY_BACKSLASH));
+    input::key_event(KEY_BACKSLASH, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_BACKSLASH));
+
+    ASSERT_FALSE(input::key_pressed(KEY_RIGHT_BRACKET));
+    input::key_event(KEY_RIGHT_BRACKET, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_RIGHT_BRACKET));
+
+    ASSERT_FALSE(input::key_pressed(KEY_GRAVE_ACCENT));
+    input::key_event(KEY_GRAVE_ACCENT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_GRAVE_ACCENT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_WORLD_1));
+    input::key_event(KEY_WORLD_1, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_WORLD_1));
+
+    ASSERT_FALSE(input::key_pressed(KEY_WORLD_2));
+    input::key_event(KEY_WORLD_2, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_WORLD_2));
+
+    ASSERT_FALSE(input::key_pressed(KEY_ESCAPE));
+    input::key_event(KEY_ESCAPE, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_ESCAPE));
+
+    ASSERT_FALSE(input::key_pressed(KEY_ENTER));
+    input::key_event(KEY_ENTER, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_ENTER));
+
+    ASSERT_FALSE(input::key_pressed(KEY_TAB));
+    input::key_event(KEY_TAB, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_TAB));
+
+    ASSERT_FALSE(input::key_pressed(KEY_BACKSPACE));
+    input::key_event(KEY_BACKSPACE, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_BACKSPACE));
+
+    ASSERT_FALSE(input::key_pressed(KEY_INSERT));
+    input::key_event(KEY_INSERT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_INSERT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_DELETE));
+    input::key_event(KEY_DELETE, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_DELETE));
+
+    ASSERT_FALSE(input::key_pressed(KEY_RIGHT));
+    input::key_event(KEY_RIGHT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_RIGHT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_LEFT));
+    input::key_event(KEY_LEFT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_LEFT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_DOWN));
+    input::key_event(KEY_DOWN, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_DOWN));
+
+    ASSERT_FALSE(input::key_pressed(KEY_UP));
+    input::key_event(KEY_UP, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_UP));
+
+    ASSERT_FALSE(input::key_pressed(KEY_PAGE_UP));
+    input::key_event(KEY_PAGE_UP, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_PAGE_UP));
+
+    ASSERT_FALSE(input::key_pressed(KEY_PAGE_DOWN));
+    input::key_event(KEY_PAGE_DOWN, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_PAGE_DOWN));
+
+    ASSERT_FALSE(input::key_pressed(KEY_HOME));
+    input::key_event(KEY_HOME, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_HOME));
+
+    ASSERT_FALSE(input::key_pressed(KEY_END));
+    input::key_event(KEY_END, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_END));
+
+    ASSERT_FALSE(input::key_pressed(KEY_CAPS_LOCK));
+    input::key_event(KEY_CAPS_LOCK, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_CAPS_LOCK));
+
+    ASSERT_FALSE(input::key_pressed(KEY_SCROLL_LOCK));
+    input::key_event(KEY_SCROLL_LOCK, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_SCROLL_LOCK));
+
+    ASSERT_FALSE(input::key_pressed(KEY_NUM_LOCK));
+    input::key_event(KEY_NUM_LOCK, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_NUM_LOCK));
+
+    ASSERT_FALSE(input::key_pressed(KEY_PRINT_SCREEN));
+    input::key_event(KEY_PRINT_SCREEN, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_PRINT_SCREEN));
+
+    ASSERT_FALSE(input::key_pressed(KEY_PAUSE));
+    input::key_event(KEY_PAUSE, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_PAUSE));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F1));
+    input::key_event(KEY_F1, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F1));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F2));
+    input::key_event(KEY_F2, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F2));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F3));
+    input::key_event(KEY_F3, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F3));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F4));
+    input::key_event(KEY_F4, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F4));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F5));
+    input::key_event(KEY_F5, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F5));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F6));
+    input::key_event(KEY_F6, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F6));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F7));
+    input::key_event(KEY_F7, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F7));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F8));
+    input::key_event(KEY_F8, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F8));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F9));
+    input::key_event(KEY_F9, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F9));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F10));
+    input::key_event(KEY_F10, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F10));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F11));
+    input::key_event(KEY_F11, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F11));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F12));
+    input::key_event(KEY_F12, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F12));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F13));
+    input::key_event(KEY_F13, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F13));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F14));
+    input::key_event(KEY_F14, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F14));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F15));
+    input::key_event(KEY_F15, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F15));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F16));
+    input::key_event(KEY_F16, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F16));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F17));
+    input::key_event(KEY_F17, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F17));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F18));
+    input::key_event(KEY_F18, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F18));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F19));
+    input::key_event(KEY_F19, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F19));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F20));
+    input::key_event(KEY_F20, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F20));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F21));
+    input::key_event(KEY_F21, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F21));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F22));
+    input::key_event(KEY_F22, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F22));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F23));
+    input::key_event(KEY_F23, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F23));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F24));
+    input::key_event(KEY_F24, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F24));
+
+    ASSERT_FALSE(input::key_pressed(KEY_F25));
+    input::key_event(KEY_F25, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_F25));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_0));
+    input::key_event(KEY_KP_0, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_0));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_1));
+    input::key_event(KEY_KP_1, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_1));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_2));
+    input::key_event(KEY_KP_2, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_2));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_3));
+    input::key_event(KEY_KP_3, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_3));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_4));
+    input::key_event(KEY_KP_4, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_4));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_5));
+    input::key_event(KEY_KP_5, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_5));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_6));
+    input::key_event(KEY_KP_6, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_6));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_7));
+    input::key_event(KEY_KP_7, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_7));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_8));
+    input::key_event(KEY_KP_8, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_8));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_9));
+    input::key_event(KEY_KP_9, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_9));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_DECIMAL));
+    input::key_event(KEY_KP_DECIMAL, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_DECIMAL));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_DIVIDE));
+    input::key_event(KEY_KP_DIVIDE, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_DIVIDE));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_MULTIPLY));
+    input::key_event(KEY_KP_MULTIPLY, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_MULTIPLY));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_SUBTRACT));
+    input::key_event(KEY_KP_SUBTRACT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_SUBTRACT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_ADD));
+    input::key_event(KEY_KP_ADD, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_ADD));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_ENTER));
+    input::key_event(KEY_KP_ENTER, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_ENTER));
+
+    ASSERT_FALSE(input::key_pressed(KEY_KP_EQUAL));
+    input::key_event(KEY_KP_EQUAL, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_KP_EQUAL));
+
+    ASSERT_FALSE(input::key_pressed(KEY_LEFT_SHIFT));
+    input::key_event(KEY_LEFT_SHIFT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_LEFT_SHIFT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_LEFT_CONTROL));
+    input::key_event(KEY_LEFT_CONTROL, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_LEFT_CONTROL));
+
+    ASSERT_FALSE(input::key_pressed(KEY_LEFT_ALT));
+    input::key_event(KEY_LEFT_ALT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_LEFT_ALT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_LEFT_SUPER));
+    input::key_event(KEY_LEFT_SUPER, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_LEFT_SUPER));
+
+    ASSERT_FALSE(input::key_pressed(KEY_RIGHT_SHIFT));
+    input::key_event(KEY_RIGHT_SHIFT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_RIGHT_SHIFT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_RIGHT_CONTROL));
+    input::key_event(KEY_RIGHT_CONTROL, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_RIGHT_CONTROL));
+
+    ASSERT_FALSE(input::key_pressed(KEY_RIGHT_ALT));
+    input::key_event(KEY_RIGHT_ALT, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_RIGHT_ALT));
+
+    ASSERT_FALSE(input::key_pressed(KEY_RIGHT_SUPER));
+    input::key_event(KEY_RIGHT_SUPER, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_RIGHT_SUPER));
+
+    ASSERT_FALSE(input::key_pressed(KEY_MENU));
+    input::key_event(KEY_MENU, 0, KEY_PRESS, 0);
+    ASSERT_TRUE(input::key_pressed(KEY_MENU));
 }
 
 
-TEST(InputTest, key_released_state) {
-    InputState state;
-
-    ASSERT_FALSE(state.m_keys_released[KEY_SPACE]);
-    state.key_event(KEY_SPACE, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_SPACE]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_APOSTROPHE]);
-    state.key_event(KEY_APOSTROPHE, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_APOSTROPHE]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_COMMA]);
-    state.key_event(KEY_COMMA, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_COMMA]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_MINUS]);
-    state.key_event(KEY_MINUS, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_MINUS]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_PERIOD]);
-    state.key_event(KEY_PERIOD, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_PERIOD]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_SLASH]);
-    state.key_event(KEY_SLASH, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_SLASH]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_0]);
-    state.key_event(KEY_0, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_0]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_1]);
-    state.key_event(KEY_1, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_1]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_2]);
-    state.key_event(KEY_2, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_2]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_3]);
-    state.key_event(KEY_3, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_3]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_4]);
-    state.key_event(KEY_4, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_4]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_5]);
-    state.key_event(KEY_5, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_5]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_6]);
-    state.key_event(KEY_6, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_6]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_7]);
-    state.key_event(KEY_7, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_7]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_8]);
-    state.key_event(KEY_8, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_8]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_9]);
-    state.key_event(KEY_9, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_9]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_SEMICOLON]);
-    state.key_event(KEY_SEMICOLON, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_SEMICOLON]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_EQUAL]);
-    state.key_event(KEY_EQUAL, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_EQUAL]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_A]);
-    state.key_event(KEY_A, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_A]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_B]);
-    state.key_event(KEY_B, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_B]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_C]);
-    state.key_event(KEY_C, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_C]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_D]);
-    state.key_event(KEY_D, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_D]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_E]);
-    state.key_event(KEY_E, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_E]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F]);
-    state.key_event(KEY_F, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_G]);
-    state.key_event(KEY_G, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_G]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_H]);
-    state.key_event(KEY_H, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_H]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_I]);
-    state.key_event(KEY_I, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_I]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_J]);
-    state.key_event(KEY_J, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_J]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_K]);
-    state.key_event(KEY_K, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_K]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_L]);
-    state.key_event(KEY_L, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_L]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_M]);
-    state.key_event(KEY_M, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_M]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_N]);
-    state.key_event(KEY_N, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_N]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_O]);
-    state.key_event(KEY_O, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_O]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_P]);
-    state.key_event(KEY_P, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_P]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_Q]);
-    state.key_event(KEY_Q, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_Q]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_R]);
-    state.key_event(KEY_R, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_R]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_S]);
-    state.key_event(KEY_S, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_S]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_T]);
-    state.key_event(KEY_T, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_T]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_U]);
-    state.key_event(KEY_U, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_U]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_V]);
-    state.key_event(KEY_V, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_V]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_W]);
-    state.key_event(KEY_W, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_W]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_X]);
-    state.key_event(KEY_X, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_X]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_Y]);
-    state.key_event(KEY_Y, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_Y]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_Z]);
-    state.key_event(KEY_Z, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_Z]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_LEFT_BRACKET]);
-    state.key_event(KEY_LEFT_BRACKET, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_LEFT_BRACKET]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_BACKSLASH]);
-    state.key_event(KEY_BACKSLASH, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_BACKSLASH]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_RIGHT_BRACKET]);
-    state.key_event(KEY_RIGHT_BRACKET, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_RIGHT_BRACKET]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_GRAVE_ACCENT]);
-    state.key_event(KEY_GRAVE_ACCENT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_GRAVE_ACCENT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_WORLD_1]);
-    state.key_event(KEY_WORLD_1, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_WORLD_1]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_WORLD_2]);
-    state.key_event(KEY_WORLD_2, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_WORLD_2]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_ESCAPE]);
-    state.key_event(KEY_ESCAPE, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_ESCAPE]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_ENTER]);
-    state.key_event(KEY_ENTER, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_ENTER]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_TAB]);
-    state.key_event(KEY_TAB, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_TAB]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_BACKSPACE]);
-    state.key_event(KEY_BACKSPACE, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_BACKSPACE]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_INSERT]);
-    state.key_event(KEY_INSERT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_INSERT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_DELETE]);
-    state.key_event(KEY_DELETE, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_DELETE]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_RIGHT]);
-    state.key_event(KEY_RIGHT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_RIGHT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_LEFT]);
-    state.key_event(KEY_LEFT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_LEFT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_DOWN]);
-    state.key_event(KEY_DOWN, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_DOWN]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_UP]);
-    state.key_event(KEY_UP, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_UP]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_PAGE_UP]);
-    state.key_event(KEY_PAGE_UP, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_PAGE_UP]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_PAGE_DOWN]);
-    state.key_event(KEY_PAGE_DOWN, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_PAGE_DOWN]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_HOME]);
-    state.key_event(KEY_HOME, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_HOME]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_END]);
-    state.key_event(KEY_END, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_END]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_CAPS_LOCK]);
-    state.key_event(KEY_CAPS_LOCK, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_CAPS_LOCK]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_SCROLL_LOCK]);
-    state.key_event(KEY_SCROLL_LOCK, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_SCROLL_LOCK]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_NUM_LOCK]);
-    state.key_event(KEY_NUM_LOCK, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_NUM_LOCK]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_PRINT_SCREEN]);
-    state.key_event(KEY_PRINT_SCREEN, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_PRINT_SCREEN]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_PAUSE]);
-    state.key_event(KEY_PAUSE, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_PAUSE]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F1]);
-    state.key_event(KEY_F1, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F1]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F2]);
-    state.key_event(KEY_F2, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F2]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F3]);
-    state.key_event(KEY_F3, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F3]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F4]);
-    state.key_event(KEY_F4, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F4]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F5]);
-    state.key_event(KEY_F5, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F5]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F6]);
-    state.key_event(KEY_F6, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F6]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F7]);
-    state.key_event(KEY_F7, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F7]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F8]);
-    state.key_event(KEY_F8, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F8]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F9]);
-    state.key_event(KEY_F9, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F9]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F10]);
-    state.key_event(KEY_F10, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F10]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F11]);
-    state.key_event(KEY_F11, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F11]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F12]);
-    state.key_event(KEY_F12, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F12]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F13]);
-    state.key_event(KEY_F13, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F13]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F14]);
-    state.key_event(KEY_F14, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F14]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F15]);
-    state.key_event(KEY_F15, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F15]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F16]);
-    state.key_event(KEY_F16, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F16]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F17]);
-    state.key_event(KEY_F17, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F17]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F18]);
-    state.key_event(KEY_F18, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F18]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F19]);
-    state.key_event(KEY_F19, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F19]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F20]);
-    state.key_event(KEY_F20, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F20]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F21]);
-    state.key_event(KEY_F21, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F21]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F22]);
-    state.key_event(KEY_F22, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F22]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F23]);
-    state.key_event(KEY_F23, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F23]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F24]);
-    state.key_event(KEY_F24, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F24]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_F25]);
-    state.key_event(KEY_F25, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_F25]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_0]);
-    state.key_event(KEY_KP_0, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_0]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_1]);
-    state.key_event(KEY_KP_1, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_1]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_2]);
-    state.key_event(KEY_KP_2, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_2]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_3]);
-    state.key_event(KEY_KP_3, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_3]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_4]);
-    state.key_event(KEY_KP_4, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_4]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_5]);
-    state.key_event(KEY_KP_5, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_5]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_6]);
-    state.key_event(KEY_KP_6, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_6]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_7]);
-    state.key_event(KEY_KP_7, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_7]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_8]);
-    state.key_event(KEY_KP_8, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_8]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_9]);
-    state.key_event(KEY_KP_9, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_9]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_DECIMAL]);
-    state.key_event(KEY_KP_DECIMAL, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_DECIMAL]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_DIVIDE]);
-    state.key_event(KEY_KP_DIVIDE, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_DIVIDE]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_MULTIPLY]);
-    state.key_event(KEY_KP_MULTIPLY, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_MULTIPLY]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_SUBTRACT]);
-    state.key_event(KEY_KP_SUBTRACT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_SUBTRACT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_ADD]);
-    state.key_event(KEY_KP_ADD, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_ADD]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_ENTER]);
-    state.key_event(KEY_KP_ENTER, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_ENTER]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_KP_EQUAL]);
-    state.key_event(KEY_KP_EQUAL, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_KP_EQUAL]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_LEFT_SHIFT]);
-    state.key_event(KEY_LEFT_SHIFT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_LEFT_SHIFT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_LEFT_CONTROL]);
-    state.key_event(KEY_LEFT_CONTROL, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_LEFT_CONTROL]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_LEFT_ALT]);
-    state.key_event(KEY_LEFT_ALT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_LEFT_ALT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_LEFT_SUPER]);
-    state.key_event(KEY_LEFT_SUPER, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_LEFT_SUPER]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_RIGHT_SHIFT]);
-    state.key_event(KEY_RIGHT_SHIFT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_RIGHT_SHIFT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_RIGHT_CONTROL]);
-    state.key_event(KEY_RIGHT_CONTROL, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_RIGHT_CONTROL]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_RIGHT_ALT]);
-    state.key_event(KEY_RIGHT_ALT, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_RIGHT_ALT]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_RIGHT_SUPER]);
-    state.key_event(KEY_RIGHT_SUPER, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_RIGHT_SUPER]);
-
-    ASSERT_FALSE(state.m_keys_released[KEY_MENU]);
-    state.key_event(KEY_MENU, 0, KEY_RELEASE, 0);
-    ASSERT_TRUE(state.m_keys_released[KEY_MENU]);
+TEST_F(InputTestFixture, key_released_state) {
+    ASSERT_FALSE(input::key_released(KEY_SPACE));
+    input::key_event(KEY_SPACE, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_SPACE));
+
+    ASSERT_FALSE(input::key_released(KEY_APOSTROPHE));
+    input::key_event(KEY_APOSTROPHE, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_APOSTROPHE));
+
+    ASSERT_FALSE(input::key_released(KEY_COMMA));
+    input::key_event(KEY_COMMA, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_COMMA));
+
+    ASSERT_FALSE(input::key_released(KEY_MINUS));
+    input::key_event(KEY_MINUS, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_MINUS));
+
+    ASSERT_FALSE(input::key_released(KEY_PERIOD));
+    input::key_event(KEY_PERIOD, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_PERIOD));
+
+    ASSERT_FALSE(input::key_released(KEY_SLASH));
+    input::key_event(KEY_SLASH, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_SLASH));
+
+    ASSERT_FALSE(input::key_released(KEY_0));
+    input::key_event(KEY_0, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_0));
+
+    ASSERT_FALSE(input::key_released(KEY_1));
+    input::key_event(KEY_1, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_1));
+
+    ASSERT_FALSE(input::key_released(KEY_2));
+    input::key_event(KEY_2, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_2));
+
+    ASSERT_FALSE(input::key_released(KEY_3));
+    input::key_event(KEY_3, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_3));
+
+    ASSERT_FALSE(input::key_released(KEY_4));
+    input::key_event(KEY_4, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_4));
+
+    ASSERT_FALSE(input::key_released(KEY_5));
+    input::key_event(KEY_5, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_5));
+
+    ASSERT_FALSE(input::key_released(KEY_6));
+    input::key_event(KEY_6, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_6));
+
+    ASSERT_FALSE(input::key_released(KEY_7));
+    input::key_event(KEY_7, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_7));
+
+    ASSERT_FALSE(input::key_released(KEY_8));
+    input::key_event(KEY_8, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_8));
+
+    ASSERT_FALSE(input::key_released(KEY_9));
+    input::key_event(KEY_9, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_9));
+
+    ASSERT_FALSE(input::key_released(KEY_SEMICOLON));
+    input::key_event(KEY_SEMICOLON, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_SEMICOLON));
+
+    ASSERT_FALSE(input::key_released(KEY_EQUAL));
+    input::key_event(KEY_EQUAL, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_EQUAL));
+
+    ASSERT_FALSE(input::key_released(KEY_A));
+    input::key_event(KEY_A, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_A));
+
+    ASSERT_FALSE(input::key_released(KEY_B));
+    input::key_event(KEY_B, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_B));
+
+    ASSERT_FALSE(input::key_released(KEY_C));
+    input::key_event(KEY_C, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_C));
+
+    ASSERT_FALSE(input::key_released(KEY_D));
+    input::key_event(KEY_D, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_D));
+
+    ASSERT_FALSE(input::key_released(KEY_E));
+    input::key_event(KEY_E, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_E));
+
+    ASSERT_FALSE(input::key_released(KEY_F));
+    input::key_event(KEY_F, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F));
+
+    ASSERT_FALSE(input::key_released(KEY_G));
+    input::key_event(KEY_G, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_G));
+
+    ASSERT_FALSE(input::key_released(KEY_H));
+    input::key_event(KEY_H, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_H));
+
+    ASSERT_FALSE(input::key_released(KEY_I));
+    input::key_event(KEY_I, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_I));
+
+    ASSERT_FALSE(input::key_released(KEY_J));
+    input::key_event(KEY_J, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_J));
+
+    ASSERT_FALSE(input::key_released(KEY_K));
+    input::key_event(KEY_K, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_K));
+
+    ASSERT_FALSE(input::key_released(KEY_L));
+    input::key_event(KEY_L, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_L));
+
+    ASSERT_FALSE(input::key_released(KEY_M));
+    input::key_event(KEY_M, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_M));
+
+    ASSERT_FALSE(input::key_released(KEY_N));
+    input::key_event(KEY_N, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_N));
+
+    ASSERT_FALSE(input::key_released(KEY_O));
+    input::key_event(KEY_O, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_O));
+
+    ASSERT_FALSE(input::key_released(KEY_P));
+    input::key_event(KEY_P, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_P));
+
+    ASSERT_FALSE(input::key_released(KEY_Q));
+    input::key_event(KEY_Q, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_Q));
+
+    ASSERT_FALSE(input::key_released(KEY_R));
+    input::key_event(KEY_R, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_R));
+
+    ASSERT_FALSE(input::key_released(KEY_S));
+    input::key_event(KEY_S, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_S));
+
+    ASSERT_FALSE(input::key_released(KEY_T));
+    input::key_event(KEY_T, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_T));
+
+    ASSERT_FALSE(input::key_released(KEY_U));
+    input::key_event(KEY_U, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_U));
+
+    ASSERT_FALSE(input::key_released(KEY_V));
+    input::key_event(KEY_V, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_V));
+
+    ASSERT_FALSE(input::key_released(KEY_W));
+    input::key_event(KEY_W, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_W));
+
+    ASSERT_FALSE(input::key_released(KEY_X));
+    input::key_event(KEY_X, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_X));
+
+    ASSERT_FALSE(input::key_released(KEY_Y));
+    input::key_event(KEY_Y, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_Y));
+
+    ASSERT_FALSE(input::key_released(KEY_Z));
+    input::key_event(KEY_Z, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_Z));
+
+    ASSERT_FALSE(input::key_released(KEY_LEFT_BRACKET));
+    input::key_event(KEY_LEFT_BRACKET, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_LEFT_BRACKET));
+
+    ASSERT_FALSE(input::key_released(KEY_BACKSLASH));
+    input::key_event(KEY_BACKSLASH, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_BACKSLASH));
+
+    ASSERT_FALSE(input::key_released(KEY_RIGHT_BRACKET));
+    input::key_event(KEY_RIGHT_BRACKET, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_RIGHT_BRACKET));
+
+    ASSERT_FALSE(input::key_released(KEY_GRAVE_ACCENT));
+    input::key_event(KEY_GRAVE_ACCENT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_GRAVE_ACCENT));
+
+    ASSERT_FALSE(input::key_released(KEY_WORLD_1));
+    input::key_event(KEY_WORLD_1, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_WORLD_1));
+
+    ASSERT_FALSE(input::key_released(KEY_WORLD_2));
+    input::key_event(KEY_WORLD_2, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_WORLD_2));
+
+    ASSERT_FALSE(input::key_released(KEY_ESCAPE));
+    input::key_event(KEY_ESCAPE, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_ESCAPE));
+
+    ASSERT_FALSE(input::key_released(KEY_ENTER));
+    input::key_event(KEY_ENTER, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_ENTER));
+
+    ASSERT_FALSE(input::key_released(KEY_TAB));
+    input::key_event(KEY_TAB, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_TAB));
+
+    ASSERT_FALSE(input::key_released(KEY_BACKSPACE));
+    input::key_event(KEY_BACKSPACE, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_BACKSPACE));
+
+    ASSERT_FALSE(input::key_released(KEY_INSERT));
+    input::key_event(KEY_INSERT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_INSERT));
+
+    ASSERT_FALSE(input::key_released(KEY_DELETE));
+    input::key_event(KEY_DELETE, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_DELETE));
+
+    ASSERT_FALSE(input::key_released(KEY_RIGHT));
+    input::key_event(KEY_RIGHT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_RIGHT));
+
+    ASSERT_FALSE(input::key_released(KEY_LEFT));
+    input::key_event(KEY_LEFT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_LEFT));
+
+    ASSERT_FALSE(input::key_released(KEY_DOWN));
+    input::key_event(KEY_DOWN, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_DOWN));
+
+    ASSERT_FALSE(input::key_released(KEY_UP));
+    input::key_event(KEY_UP, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_UP));
+
+    ASSERT_FALSE(input::key_released(KEY_PAGE_UP));
+    input::key_event(KEY_PAGE_UP, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_PAGE_UP));
+
+    ASSERT_FALSE(input::key_released(KEY_PAGE_DOWN));
+    input::key_event(KEY_PAGE_DOWN, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_PAGE_DOWN));
+
+    ASSERT_FALSE(input::key_released(KEY_HOME));
+    input::key_event(KEY_HOME, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_HOME));
+
+    ASSERT_FALSE(input::key_released(KEY_END));
+    input::key_event(KEY_END, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_END));
+
+    ASSERT_FALSE(input::key_released(KEY_CAPS_LOCK));
+    input::key_event(KEY_CAPS_LOCK, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_CAPS_LOCK));
+
+    ASSERT_FALSE(input::key_released(KEY_SCROLL_LOCK));
+    input::key_event(KEY_SCROLL_LOCK, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_SCROLL_LOCK));
+
+    ASSERT_FALSE(input::key_released(KEY_NUM_LOCK));
+    input::key_event(KEY_NUM_LOCK, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_NUM_LOCK));
+
+    ASSERT_FALSE(input::key_released(KEY_PRINT_SCREEN));
+    input::key_event(KEY_PRINT_SCREEN, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_PRINT_SCREEN));
+
+    ASSERT_FALSE(input::key_released(KEY_PAUSE));
+    input::key_event(KEY_PAUSE, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_PAUSE));
+
+    ASSERT_FALSE(input::key_released(KEY_F1));
+    input::key_event(KEY_F1, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F1));
+
+    ASSERT_FALSE(input::key_released(KEY_F2));
+    input::key_event(KEY_F2, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F2));
+
+    ASSERT_FALSE(input::key_released(KEY_F3));
+    input::key_event(KEY_F3, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F3));
+
+    ASSERT_FALSE(input::key_released(KEY_F4));
+    input::key_event(KEY_F4, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F4));
+
+    ASSERT_FALSE(input::key_released(KEY_F5));
+    input::key_event(KEY_F5, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F5));
+
+    ASSERT_FALSE(input::key_released(KEY_F6));
+    input::key_event(KEY_F6, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F6));
+
+    ASSERT_FALSE(input::key_released(KEY_F7));
+    input::key_event(KEY_F7, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F7));
+
+    ASSERT_FALSE(input::key_released(KEY_F8));
+    input::key_event(KEY_F8, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F8));
+
+    ASSERT_FALSE(input::key_released(KEY_F9));
+    input::key_event(KEY_F9, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F9));
+
+    ASSERT_FALSE(input::key_released(KEY_F10));
+    input::key_event(KEY_F10, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F10));
+
+    ASSERT_FALSE(input::key_released(KEY_F11));
+    input::key_event(KEY_F11, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F11));
+
+    ASSERT_FALSE(input::key_released(KEY_F12));
+    input::key_event(KEY_F12, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F12));
+
+    ASSERT_FALSE(input::key_released(KEY_F13));
+    input::key_event(KEY_F13, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F13));
+
+    ASSERT_FALSE(input::key_released(KEY_F14));
+    input::key_event(KEY_F14, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F14));
+
+    ASSERT_FALSE(input::key_released(KEY_F15));
+    input::key_event(KEY_F15, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F15));
+
+    ASSERT_FALSE(input::key_released(KEY_F16));
+    input::key_event(KEY_F16, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F16));
+
+    ASSERT_FALSE(input::key_released(KEY_F17));
+    input::key_event(KEY_F17, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F17));
+
+    ASSERT_FALSE(input::key_released(KEY_F18));
+    input::key_event(KEY_F18, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F18));
+
+    ASSERT_FALSE(input::key_released(KEY_F19));
+    input::key_event(KEY_F19, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F19));
+
+    ASSERT_FALSE(input::key_released(KEY_F20));
+    input::key_event(KEY_F20, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F20));
+
+    ASSERT_FALSE(input::key_released(KEY_F21));
+    input::key_event(KEY_F21, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F21));
+
+    ASSERT_FALSE(input::key_released(KEY_F22));
+    input::key_event(KEY_F22, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F22));
+
+    ASSERT_FALSE(input::key_released(KEY_F23));
+    input::key_event(KEY_F23, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F23));
+
+    ASSERT_FALSE(input::key_released(KEY_F24));
+    input::key_event(KEY_F24, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F24));
+
+    ASSERT_FALSE(input::key_released(KEY_F25));
+    input::key_event(KEY_F25, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_F25));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_0));
+    input::key_event(KEY_KP_0, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_0));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_1));
+    input::key_event(KEY_KP_1, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_1));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_2));
+    input::key_event(KEY_KP_2, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_2));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_3));
+    input::key_event(KEY_KP_3, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_3));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_4));
+    input::key_event(KEY_KP_4, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_4));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_5));
+    input::key_event(KEY_KP_5, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_5));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_6));
+    input::key_event(KEY_KP_6, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_6));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_7));
+    input::key_event(KEY_KP_7, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_7));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_8));
+    input::key_event(KEY_KP_8, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_8));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_9));
+    input::key_event(KEY_KP_9, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_9));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_DECIMAL));
+    input::key_event(KEY_KP_DECIMAL, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_DECIMAL));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_DIVIDE));
+    input::key_event(KEY_KP_DIVIDE, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_DIVIDE));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_MULTIPLY));
+    input::key_event(KEY_KP_MULTIPLY, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_MULTIPLY));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_SUBTRACT));
+    input::key_event(KEY_KP_SUBTRACT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_SUBTRACT));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_ADD));
+    input::key_event(KEY_KP_ADD, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_ADD));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_ENTER));
+    input::key_event(KEY_KP_ENTER, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_ENTER));
+
+    ASSERT_FALSE(input::key_released(KEY_KP_EQUAL));
+    input::key_event(KEY_KP_EQUAL, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_KP_EQUAL));
+
+    ASSERT_FALSE(input::key_released(KEY_LEFT_SHIFT));
+    input::key_event(KEY_LEFT_SHIFT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_LEFT_SHIFT));
+
+    ASSERT_FALSE(input::key_released(KEY_LEFT_CONTROL));
+    input::key_event(KEY_LEFT_CONTROL, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_LEFT_CONTROL));
+
+    ASSERT_FALSE(input::key_released(KEY_LEFT_ALT));
+    input::key_event(KEY_LEFT_ALT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_LEFT_ALT));
+
+    ASSERT_FALSE(input::key_released(KEY_LEFT_SUPER));
+    input::key_event(KEY_LEFT_SUPER, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_LEFT_SUPER));
+
+    ASSERT_FALSE(input::key_released(KEY_RIGHT_SHIFT));
+    input::key_event(KEY_RIGHT_SHIFT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_RIGHT_SHIFT));
+
+    ASSERT_FALSE(input::key_released(KEY_RIGHT_CONTROL));
+    input::key_event(KEY_RIGHT_CONTROL, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_RIGHT_CONTROL));
+
+    ASSERT_FALSE(input::key_released(KEY_RIGHT_ALT));
+    input::key_event(KEY_RIGHT_ALT, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_RIGHT_ALT));
+
+    ASSERT_FALSE(input::key_released(KEY_RIGHT_SUPER));
+    input::key_event(KEY_RIGHT_SUPER, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_RIGHT_SUPER));
+
+    ASSERT_FALSE(input::key_released(KEY_MENU));
+    input::key_event(KEY_MENU, 0, KEY_RELEASE, 0);
+    ASSERT_TRUE(input::key_released(KEY_MENU));
 }
 
-TEST(InputTest, mods) {
-    InputState state;
-    ASSERT_EQ(0, state.m_mods);
-    state.key_event(KEY_Q, 0, KEY_PRESS, 13);
-    ASSERT_EQ(13, state.m_mods);
+TEST_F(InputTestFixture, mods) {
+    ASSERT_EQ(0, input::mods());
+    input::key_event(KEY_Q, 0, KEY_PRESS, 13);
+    ASSERT_EQ(13, input::mods());
 }

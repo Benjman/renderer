@@ -14,18 +14,15 @@ struct RunnerContext {
     double_t running;
 	entt::registry& registry;
 	entt::dispatcher& dispatcher;
-    InputState& input;
 
-    RunnerContext(entt::registry& registry, entt::dispatcher& dispatcher, InputState& input)
-        : registry(registry), dispatcher(dispatcher), input(input)
+    RunnerContext(entt::registry& registry, entt::dispatcher& dispatcher)
+        : registry(registry), dispatcher(dispatcher)
     { }
 
 };
 
 class Runner {
 	public:
-        InputState m_input;
-
 		Runner(GLFWwindow *window, const int width, const int height);
 
 		~Runner() noexcept;
