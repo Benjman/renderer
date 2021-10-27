@@ -1,16 +1,16 @@
 #pragma once
 
 #include "shader/uniform.h"
-#include <GL/gl.h>
-#include <GL/glext.h>
 #include <core/file.h>
 #include <core/runner.h>
-#include <glm/trigonometric.hpp>
 #include <shader.h>
-#include <sys/types.h>
 #include <text.h>
 
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <glm/trigonometric.hpp>
 #include <iostream>
+#include <sys/types.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
