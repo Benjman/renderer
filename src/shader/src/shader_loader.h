@@ -8,7 +8,7 @@
 #include <shader/shader.h>
 
 #include <string>
-#include <iostream> // TODO remove after logging is implemented
+#include <iostream> // TODO add spdlog to the Shader project and remove this include
 #include <cassert>
 
 struct ShaderLoader {

@@ -5,7 +5,7 @@
 #include <shader/shader.h>
 #include <shader/uniform.h>
 
-#include <iostream>
+#include <iostream> // TODO add spdlog to the Shader project and remove this include
 
 void IUniform::storeLocation(Shader& shader) {
 	storeLocation(shader.getId());
