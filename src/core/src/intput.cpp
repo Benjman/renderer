@@ -1,8 +1,5 @@
 #include <core/input.h>
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
 #include <algorithm> // std::fill
 
 namespace input {
@@ -50,11 +47,11 @@ void input::reset() {
 
 void input::key_event(const int key, const int scancode, const int action, const int mods) {
     m_mods = mods;
-    if (action == GLFW_PRESS) {
+    if (action == KEY_PRESS) {
         m_keys_down[key] = true;
         m_keys_pressed[key] = true;
         m_keys_pressed[KEY_LAST + 1] = true; // last element keeps global state of if any key has been pressed
-    } else if (action == GLFW_RELEASE) {
+    } else if (action == KEY_RELEASE) {
         m_keys_down[key] = false;
         m_keys_released[key] = true;
         m_keys_released[KEY_LAST + 1] = true; // last element keeps global state of if any key has been released
