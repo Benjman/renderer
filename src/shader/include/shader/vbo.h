@@ -16,7 +16,7 @@ class Vbo {
 
 	public:
 		static void unbind(GLenum target);
-		static GLuint findBoundVertexArrayBuffer();
+		static GLuint findBoundBuffer(GLenum target);
 
 	public:
 		Vbo(GLenum target, GLenum usage, GLsizeiptr size = 0, const void *data = nullptr, Vao *vao = nullptr);

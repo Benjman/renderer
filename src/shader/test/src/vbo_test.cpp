@@ -14,8 +14,9 @@ struct VboTestFixture : public ShaderTestFixture {
 		}
 
 		void TearDown() override {
-			if (glGetError() != GL_NO_ERROR)
-				throw std::runtime_error("GL Error");
+            GLuint error;
+			if ((error = glGetError()) != GL_NO_ERROR)
+				throw std::runtime_error("GL Error: " + std::to_string(error));
 			Vbo::unbind(TARGET);
 			delete vbo;
 			delete vao;
@@ -38,14 +39,26 @@ TEST_F(VboTestFixture, fieldInitialization) {
 	ASSERT_EQ(vbo.usage, GL_STATIC_DRAW);
 }
 
-TEST_F(VboTestFixture, createVbo_vboBinds) {
+TEST_F(VboTestFixture, createVbo_vboDoesntBindWithNoData) {
 	Vao::unbind();
 	Vao vao;
 	ASSERT_GT(vao.id, 0);
 
-	testBoundVertexBuffer(0);
+	ASSERT_EQ(Vao::findBoundVertexArray(), 0);
 	Vbo vbo(TARGET, GL_STATIC_DRAW);
-	testBoundVertexBuffer(vao.id);
+	ASSERT_EQ(Vao::findBoundVertexArray(), 0);
+}
+
+TEST_F(VboTestFixture, createVbo_vboBindsWithData) {
+    GLfloat data[] = {1.f};
+
+	Vao::unbind();
+	Vao vao;
+	ASSERT_GT(vao.id, 0);
+
+	ASSERT_EQ(Vao::findBoundVertexArray(), 0);
+	Vbo vbo(TARGET, GL_STATIC_DRAW, sizeof(data), data, &vao);
+	ASSERT_EQ(Vao::findBoundVertexArray(), vao.id);
 	vbo.unbind();
 }
 
@@ -54,15 +67,15 @@ TEST_F(VboTestFixture, createVbo_bufferBinds) {
 }
 
 TEST_F(VboTestFixture, unbind) {
-	ASSERT_EQ(vbo->id, Vbo::findBoundVertexArrayBuffer());
+	ASSERT_EQ(vbo->id, Vbo::findBoundBuffer(vbo->target));
 	vbo->unbind();
-	ASSERT_EQ(0, Vbo::findBoundVertexArrayBuffer());
+	ASSERT_EQ(0, Vbo::findBoundBuffer(vbo->target));
 }
 
 TEST_F(VboTestFixture, storeData) {
 	GLfloat vertices[] = {
-			0.5f,  0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
 			-0.5f, -0.5f, 0.0f,
 			-0.5f,  0.5f, 0.0f
 	};

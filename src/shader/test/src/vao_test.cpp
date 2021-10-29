@@ -17,24 +17,23 @@ struct VaoTestFixture : public ShaderTestFixture {
 TEST_F(VaoTestFixture, createVao) {
 	Vao vao;
 	ASSERT_GT(vao.id, GL_ZERO);
-
 }
 
 TEST_F(VaoTestFixture, bind) {
 	glBindVertexArray(GL_ZERO);
 	GLint id = GL_ZERO;
 
-	testBoundVertexBuffer(GL_ZERO);
+    ASSERT_EQ(0, Vao::findBoundVertexArray());
 
 	Vao vao;
 
 	// ensure creation doesn't bind
-	testBoundVertexBuffer(GL_ZERO);
+    ASSERT_EQ(0, Vao::findBoundVertexArray());
 
 	vao.bind();
 	ASSERT_GT(vao.id, GL_ZERO);
 
-	testBoundVertexBuffer(vao.id);
+    ASSERT_EQ(vao.id, Vao::findBoundVertexArray());
 }
 
 TEST_F(VaoTestFixture, unbind) {
@@ -60,20 +59,25 @@ TEST_F(VaoTestFixture, findBoundVertexArray) {
 }
 
 TEST_F(VaoTestFixture, destructorUnbinds) {
-	Vao vao;
-	vao.bind();
-	ASSERT_EQ(Vao::findBoundVertexArray(), GL_ZERO);
+	Vao* vao = new Vao;
+	vao->bind();
+	ASSERT_EQ(vao->id, Vao::findBoundVertexArray());
+    delete vao;
+	ASSERT_EQ(0, Vao::findBoundVertexArray());
 }
 
 TEST_F(VaoTestFixture, destructorDeletesBuffer) {
-	Vao vao;
-	vao.bind();
+	Vao* vao = new Vao;
+	vao->bind();
 
-	GLuint id = vao.id;
-
+	GLuint id = vao->id;
 
 	ASSERT_FALSE(glGetError());
 	glBindVertexArray(id);
+	ASSERT_FALSE(glGetError());
+
+    delete vao;
+    glBindVertexArray(id);
 	ASSERT_TRUE(glGetError());
 }
 

@@ -7,6 +7,10 @@
 
 #include <stdexcept>
 
+namespace internal {
+    GLenum findBufferTargetBinding(GLenum target);
+}
+
 Vbo::Vbo(GLenum target, GLenum usage, GLsizeiptr size, const void *data, Vao *vao) : target(target), usage(usage), size(0) {
 	if (vao)
 		vao->bind();
@@ -15,15 +19,14 @@ Vbo::Vbo(GLenum target, GLenum usage, GLsizeiptr size, const void *data, Vao *va
 }
 
 Vbo::~Vbo() {
-	if (target == GL_ARRAY_BUFFER
-			&& id == Vbo::findBoundVertexArrayBuffer())
+	if (id == Vbo::findBoundBuffer(target))
 		unbind(target);
 	glDeleteBuffers(1, &id);
 }
 
-GLuint Vbo::findBoundVertexArrayBuffer() {
+GLuint Vbo::findBoundBuffer(GLenum target) {
 	GLint tmp;
-	glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &tmp);
+	glGetIntegerv(internal::findBufferTargetBinding(target), &tmp);
 	return tmp;
 }
 
@@ -78,3 +81,14 @@ void Vbo::resize(GLsizeiptr size, const void *data, GLsizeiptr offset) {
 	this->size = size;
 }
 
+GLenum internal::findBufferTargetBinding(GLenum target) {
+    switch (target) {
+        case GL_ARRAY_BUFFER:
+            return GL_ARRAY_BUFFER_BINDING;
+        case GL_ELEMENT_ARRAY_BUFFER:
+            return GL_ELEMENT_ARRAY_BUFFER_BINDING;
+        default:
+            // probably just need to make from target to `target_BINDING`
+            throw std::runtime_error(std::string("Unknown target: ") + std::to_string(target));
+    }
+}

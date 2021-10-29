@@ -32,6 +32,4 @@ struct ShaderTestFixture : public ::testing::Test {
 		static GLFWwindow *m_window;
 };
 
-void testBoundVertexBuffer(GLuint id);
-
 #endif //RENDERER_SHADERTESTFIXTURE_H

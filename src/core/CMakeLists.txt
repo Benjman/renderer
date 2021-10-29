@@ -13,7 +13,7 @@ add_library(core STATIC
 find_package(GLFW REQUIRED)
 
 target_link_libraries(core
-	PUBLIC camera shader text ${GL_LIBS}
+	PUBLIC shader text ${GL_LIBS}
 	PRIVATE ${GL_LIBS})
 
 target_include_directories(core
