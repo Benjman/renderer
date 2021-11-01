@@ -22,9 +22,8 @@ class CameraController : public Controller {
         Camera m_camera;
 
     public:
-        void init(); // TODO delete me
-		void init(ControllerContext& context) override {}
-		void update(ControllerContext& context) override;
+		void init() override;
+		void update(const RunnerContext& context) override;
 
         const glm::mat4 view() const noexcept;
         const glm::mat4 proj_ortho() const noexcept;

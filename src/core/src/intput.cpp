@@ -1,6 +1,9 @@
 #include <core/input.h>
 
 #include <algorithm> // std::fill
+#include <iostream>
+
+#include <spdlog/spdlog.h>
 
 namespace input {
     int m_mods = 0;
@@ -13,7 +16,7 @@ namespace input {
 }
 
 bool input::key_down(int key, int mods) {
-    return m_keys_released[KEY_LAST + 1];
+    return m_keys_pressed[key];
 }
 
 bool input::key_up(int key, int mods) {
@@ -39,13 +42,16 @@ bool input::any_key_released() {
 void input::reset() {
     if (m_keys_pressed[KEY_LAST + 1]) {
         std::fill(m_keys_pressed, m_keys_pressed + sizeof(m_keys_pressed), false);
+        spdlog::trace("keys_pressed reset");
     }
     if (m_keys_released[KEY_LAST + 1]) {
         std::fill(m_keys_released, m_keys_released + sizeof(m_keys_released), false);
+        spdlog::trace("keys_released reset");
     }
 }
 
 void input::key_event(const int key, const int scancode, const int action, const int mods) {
+    spdlog::debug("KEY EVENT - Key: {0}\tAction: {1}", scancode, action);
     m_mods = mods;
     if (action == KEY_PRESS) {
         m_keys_down[key] = true;

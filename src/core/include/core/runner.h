@@ -4,26 +4,16 @@
 #include <cmath>
 #include <entt/entt.hpp>
 #include <GL/gl.h>
-#include <GLFW/glfw3.h>
 
-#include "events.h"
-#include "input.h"
-#include "window.h"
+#include "fwd.hpp"
 
-struct RunnerContext {
-	double_t delta;
-    double_t running;
-	entt::registry& registry;
-	entt::dispatcher& dispatcher;
+#include "runner_context.h"
 
-    RunnerContext(entt::registry& registry, entt::dispatcher& dispatcher)
-        : registry(registry), dispatcher(dispatcher) { }
-
-};
+class GLFWwindow;
 
 class Runner {
 	public:
-		Runner(GLFWwindow *window, const int width, const int height);
+		Runner(GLFWwindow *glfw_window, const int width, const int height);
 
 		~Runner() noexcept;
 
@@ -35,7 +25,7 @@ class Runner {
 	protected:
 		int m_width;
 		int m_height;
-		GLFWwindow *m_window;
+		GLFWwindow *m_glfw_window;
 
 		// TODO these entt references should be in the implementing Runner classes
 		entt::registry m_registry;

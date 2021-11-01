@@ -17,7 +17,8 @@ find_package(GLFW REQUIRED)
 
 target_link_libraries(core
 	PUBLIC shader text ${GL_LIBS}
-	PRIVATE ${GL_LIBS})
+	PRIVATE ${GL_LIBS}
+        spdlog::spdlog)
 
 target_include_directories(core
 	PUBLIC ./include ${ENTT_INCLUDE} ${STB_INCLUDE}

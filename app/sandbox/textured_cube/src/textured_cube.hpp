@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/camera/camera_controller.h"
+#include "core/input.h"
 #include <core/camera.h>
 #include <core/file.h>
 #include <core/runner.h>
@@ -100,10 +101,15 @@ class SandboxRunner : public Runner {
 
     protected:
         void update(const RunnerContext& context) override {
-            // TODO this should really be in the render, add RunnerContext to render()
+            camera.update(context);
+            updateMatrices(context);
+        }
+
+        void updateMatrices(const RunnerContext& context) {
+            // TODO updating viewing matrices is only used in the render, thus these matrix updates should be moved
             glm::mat4 model = glm::rotate(glm::mat4(1.0), (float_t) context.running, glm::vec3(0.5, 1.0, 0.0));
-            glm::mat4 view = camera.view(); //glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -3.0));
-            glm::mat4 proj = camera.proj_persp(); //glm::perspective(glm::radians(45.0f), (float_t) m_width / (float_t) m_height, 0.1f, 100.0f);
+            glm::mat4 view = camera.view();
+            glm::mat4 proj = camera.proj_persp();
 
             mvp.load(proj * view * model);
         }

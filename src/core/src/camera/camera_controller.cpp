@@ -1,15 +1,22 @@
 #include <core/camera/camera_controller.h>
-#include <core/window.h>
+#include <core/runner_context.h>
+#include <core/input.h>
 
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/trigonometric.hpp>
+#include <iostream>
+#include <string>
+
+#include <spdlog/spdlog.h>
 
 void CameraController::init() {
-    m_camera.position(glm::vec3(0, 0, -3));
+    m_camera.position(glm::vec3(0.0, 0.0, -3.0));
 }
 
-void CameraController::update(ControllerContext &context) {}
+void CameraController::update(const RunnerContext &context) {
+    if (input::key_down(KEY_E)) {
+        m_camera.position() += glm::vec3(1, 0, context.delta);
+        spdlog::info("Camera pos: x({0:f}) y({1:f}) z({2:f})", m_camera.position().x, m_camera.position().y, m_camera.position().z);
+    }
+}
 
 const glm::mat4 CameraController::view() const noexcept {
     return m_camera.view();

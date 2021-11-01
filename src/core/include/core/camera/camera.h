@@ -32,7 +32,7 @@ class Camera {
         const glm::mat4 proj_ortho() const noexcept;
         const glm::mat4 proj_persp() const noexcept;
 
-        [[nodiscard]] const glm::vec3 position() const noexcept { return m_position; }
+        [[nodiscard]] glm::vec3 position() const noexcept { return m_position; }
         void position(glm::vec3 position) noexcept { m_position = glm::vec3(position); }
 
         [[nodiscard]] const float_t dist() const noexcept { return m_dist; }

@@ -6,6 +6,7 @@
 #include <core/file.h>
 #include <core/runner.h>
 #include <core/components/position2d.h>
+#include <core/input.h>
 #include <shader.h>
 
 #include "components/all.h"
