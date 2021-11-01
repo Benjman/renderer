@@ -8,6 +8,7 @@ include_directories(
 add_executable(tests_core
 	./src/main.cpp
     ./src/input_test.cpp
+    ./src/window.cpp
     )
 
 target_link_libraries(tests_core

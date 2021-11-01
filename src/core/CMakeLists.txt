@@ -5,6 +5,9 @@ add_library(core STATIC
 	./src/file.cpp
     ./src/intput.cpp
 	./src/runner.cpp
+	./src/window.cpp
+    ./src/camera/camera.cpp
+    ./src/camera/camera_controller.cpp
 	./src/components/position2d.cpp
 	./src/components/position3d.cpp
 	./src/utils/glfw.cpp

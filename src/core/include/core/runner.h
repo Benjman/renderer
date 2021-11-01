@@ -8,6 +8,7 @@
 
 #include "events.h"
 #include "input.h"
+#include "window.h"
 
 struct RunnerContext {
 	double_t delta;
@@ -16,8 +17,7 @@ struct RunnerContext {
 	entt::dispatcher& dispatcher;
 
     RunnerContext(entt::registry& registry, entt::dispatcher& dispatcher)
-        : registry(registry), dispatcher(dispatcher)
-    { }
+        : registry(registry), dispatcher(dispatcher) { }
 
 };
 

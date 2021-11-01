@@ -1,13 +1,14 @@
 #pragma once
 
-#include "shader/uniform.h"
+#include "core/camera/camera_controller.h"
+#include <core/camera.h>
 #include <core/file.h>
 #include <core/runner.h>
 #include <shader.h>
 #include <text.h>
 
 #include <GL/gl.h>
-#include <GL/glext.h>
+
 #include <glm/trigonometric.hpp>
 #include <iostream>
 #include <sys/types.h>
@@ -17,8 +18,11 @@
 #undef STB_IMAGE_IMPLEMENTATION
 
 class SandboxRunner : public Runner {
+    CameraController cameraController;
+
     public:
         SandboxRunner(GLFWwindow *window, const uint32_t width, const uint32_t height) : Runner(window, width, height) {
+            camera.init();
             float_t aspect = (float_t) width / (float_t) height ;
             float vertices[] = {
                 -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -98,8 +102,9 @@ class SandboxRunner : public Runner {
         void update(const RunnerContext& context) override {
             // TODO this should really be in the render, add RunnerContext to render()
             glm::mat4 model = glm::rotate(glm::mat4(1.0), (float_t) context.running, glm::vec3(0.5, 1.0, 0.0));
-            glm::mat4 view = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -3.0));
-            glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float_t) m_width / (float_t) m_height, 0.1f, 100.0f);
+            glm::mat4 view = camera.view(); //glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -3.0));
+            glm::mat4 proj = camera.proj_persp(); //glm::perspective(glm::radians(45.0f), (float_t) m_width / (float_t) m_height, 0.1f, 100.0f);
+
             mvp.load(proj * view * model);
         }
 
@@ -118,5 +123,5 @@ class SandboxRunner : public Runner {
         Vbo vbo = Vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
         UniformMatrix4f mvp = UniformMatrix4f("u_mvp");
 
-
+        CameraController camera;
 };

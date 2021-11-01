@@ -1,3 +1,4 @@
+#include "core/window.h"
 #include "utils/glfw.h"
 
 #include <core/runner.h>
@@ -10,6 +11,7 @@ Runner::Runner(GLFWwindow *window, const int32_t width, const int32_t height) : 
 	INSTANCE = this;
 	glfwSetKeyCallback(m_window, keyHandler);
 	glfwSetWindowSizeCallback(m_window, windowSizeChangeHandler);
+    window::update(width, height);
 }
 
 Runner::~Runner() noexcept {
@@ -62,4 +64,5 @@ inline void keyHandler(GLFWwindow*, int32_t key, int32_t scancode, int32_t actio
 
 inline void windowSizeChangeHandler(GLFWwindow*, int32_t w, int32_t h) {
 	INSTANCE->windowSizeChanged(w, h);
+    window::update(w, h);
 }

@@ -1,7 +1,9 @@
 #ifndef CORE_CONTROLLER_H
 #define CORE_CONTROLLER_H
 
-#include <math.h> // double_t
+#include "input.h"
+
+#include <cmath> // double_t
 #include <entt/fwd.hpp>
 
 struct ControllerContext {
