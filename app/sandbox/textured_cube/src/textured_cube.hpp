@@ -23,7 +23,6 @@ class SandboxRunner : public Runner {
 
     public:
         SandboxRunner(GLFWwindow *window, const uint32_t width, const uint32_t height) : Runner(window, width, height) {
-            camera.init();
             float_t aspect = (float_t) width / (float_t) height ;
             float vertices[] = {
                 -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -100,6 +99,10 @@ class SandboxRunner : public Runner {
         }
 
     protected:
+        void init(const RunnerContext& context) override {
+            camera.init(context);
+        }
+
         void update(const RunnerContext& context) override {
             camera.update(context);
             updateMatrices(context);

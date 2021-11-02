@@ -33,6 +33,8 @@ class Runner {
 
 		Runner() = delete;
 
+        virtual void init(const RunnerContext& context) = 0;
+
 		virtual void update(const RunnerContext& context) = 0;
 
 		virtual void render() = 0;

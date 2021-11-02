@@ -91,6 +91,9 @@ class PongRunner : public Runner {
 		}
 
 	protected:
+		void init(const RunnerContext& context) override {
+		}
+
 		void update(const RunnerContext& context) override {
             if (input::any_key_pressed()) {
                 m_dispatcher.trigger<KeyDown>(input::last_key_pressed());

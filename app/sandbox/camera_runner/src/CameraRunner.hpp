@@ -61,6 +61,9 @@ class CameraRunner : public Runner {
 		}
 
 	protected:
+		void init(const RunnerContext& context) override {
+		}
+
 		void update(const RunnerContext& context) override {
 		}
 
