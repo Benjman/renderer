@@ -20,6 +20,7 @@ class CameraController : public Controller {
 
     private:
         Camera m_camera;
+        float_t m_translation_speed = 1.5; // units per second
 
     public:
 		void init() override;

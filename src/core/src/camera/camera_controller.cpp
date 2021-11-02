@@ -8,14 +8,18 @@
 #include <spdlog/spdlog.h>
 
 void CameraController::init() {
-    m_camera.position(glm::vec3(0.0, 0.0, -3.0));
+    m_camera.position = glm::vec3(0.0, 0.0, -3.0);
 }
 
 void CameraController::update(const RunnerContext &context) {
-    if (input::key_down(KEY_E)) {
-        m_camera.position() += glm::vec3(1, 0, context.delta);
-        spdlog::info("Camera pos: x({0:f}) y({1:f}) z({2:f})", m_camera.position().x, m_camera.position().y, m_camera.position().z);
-    }
+    if (input::key_down(KEY_E))
+        m_camera.position += glm::vec3(0, 0, m_translation_speed * context.delta);
+    if (input::key_down(KEY_D))
+        m_camera.position -= glm::vec3(0, 0, m_translation_speed * context.delta);
+    if (input::key_down(KEY_S))
+        m_camera.position += glm::vec3(m_translation_speed * context.delta, 0, 0);
+    if (input::key_down(KEY_F))
+        m_camera.position -= glm::vec3(m_translation_speed * context.delta, 0, 0);
 }
 
 const glm::mat4 CameraController::view() const noexcept {

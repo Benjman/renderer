@@ -18,12 +18,13 @@ class Camera {
         static constexpr float_t FOV = 45.0;
 
     private:
-        glm::vec3 m_position;
-        float_t m_dist;
-        float_t m_pitch;
-        float_t m_yaw;
+        float_t m_dist = 0;
+        float_t m_pitch = 0;
+        float_t m_yaw = 0;
 
     public:
+        glm::vec3 position;
+
         Camera() = default;
         Camera(const Camera& camera);
         Camera operator=(const Camera& camera);
@@ -31,9 +32,6 @@ class Camera {
         const glm::mat4 view() const noexcept;
         const glm::mat4 proj_ortho() const noexcept;
         const glm::mat4 proj_persp() const noexcept;
-
-        [[nodiscard]] glm::vec3 position() const noexcept { return m_position; }
-        void position(glm::vec3 position) noexcept { m_position = glm::vec3(position); }
 
         [[nodiscard]] const float_t dist() const noexcept { return m_dist; }
         void dist(float_t& dist) noexcept { m_dist = dist; }

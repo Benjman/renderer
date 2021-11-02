@@ -26,16 +26,19 @@ Runner::~Runner() noexcept {
 }
 
 const int32_t Runner::run() {
-	const constexpr double_t dt = 1. / 60.;
+	const constexpr double_t dt = 1.0 / 60.0;
 
-	double_t time = 0.;
-	double_t accumulator = 0.;
-	double_t current_time = getRuntimeSeconds();
-	double_t new_time = 0.;
-	double_t frame_time = 0.;
     RunnerContext context(m_registry, m_dispatcher);
 
+	double_t time = 0.0;
+	double_t accumulator = 0.0;
+	double_t current_time = getRuntimeSeconds();
+	double_t new_time = 0.0;
+	double_t frame_time = 0.0;
+
 	while (!glfwWindowShouldClose(m_glfw_window)) {
+		glfwPollEvents();
+
 		new_time = getRuntimeSeconds();
 		frame_time = new_time - current_time;
 		current_time = new_time;
@@ -52,9 +55,7 @@ const int32_t Runner::run() {
 		}
 
 		doRender();
-
         input::reset();
-		glfwPollEvents();
 	}
 
 	return EXIT_SUCCESS;

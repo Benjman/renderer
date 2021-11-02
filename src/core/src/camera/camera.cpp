@@ -5,6 +5,7 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
+#include <spdlog/spdlog.h>
 
 Camera::Camera(const Camera& camera) {
     *this = camera;
@@ -13,7 +14,7 @@ Camera::Camera(const Camera& camera) {
 Camera Camera::operator=(const Camera &camera) {
     m_dist = camera.m_dist;
     m_pitch = camera.m_pitch;
-    m_position = camera.m_position;
+    position = camera.position;
     m_yaw = camera.m_yaw;
     return *this;
 }
@@ -21,7 +22,7 @@ Camera Camera::operator=(const Camera &camera) {
 const glm::mat4 Camera::view() const noexcept {
     glm::mat4 view = glm::rotate(glm::mat4(1), glm::radians(pitch()), WORLD_RIGHT);
     view = glm::rotate(view, glm::radians(yaw()), WORLD_UP);
-    view = glm::translate(view, position());
+    view = glm::translate(view, position);
     return view;
 }
 
