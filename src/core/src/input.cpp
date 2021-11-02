@@ -130,6 +130,14 @@ void input::mouse_button_event(uint16_t button, uint16_t action, uint16_t mods) 
     }
 }
 
+bool input::mouse_down(uint16_t button) {
+    return m_mouse_buttons_down[button];
+}
+
+bool input::mouse_up(uint16_t button) {
+    return mouse_down(button) == false;
+}
+
 bool input::mouse_pressed(uint16_t button) {
     return m_mouse_buttons_pressed[button];
 }

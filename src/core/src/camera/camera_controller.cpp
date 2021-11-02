@@ -12,19 +12,28 @@ void CameraController::init() {
 }
 
 void CameraController::update(const RunnerContext &context) {
-    if (input::key_down(CAMERA_KEY_FORWARD))
+    input(context);
+}
+
+void CameraController::input(const RunnerContext &context) {
+    if (input::key_down(TRANSLATE_KEY_FORWARD))
         m_camera.position += glm::vec3(0, 0, m_translation_speed * context.delta);
-    if (input::key_down(CAMERA_KEY_BACKWARD))
+    if (input::key_down(TRANSLATE_KEY_BACKWARD))
         m_camera.position -= glm::vec3(0, 0, m_translation_speed * context.delta);
-    if (input::key_down(CAMERA_KEY_LEFT))
+    if (input::key_down(TRANSLATE_KEY_LEFT))
         m_camera.position += glm::vec3(m_translation_speed * context.delta, 0, 0);
-    if (input::key_down(CAMERA_KEY_RIGHT))
+    if (input::key_down(TRANSLTE_KEY_RIGHT))
         m_camera.position -= glm::vec3(m_translation_speed * context.delta, 0, 0);
 
-    if (input::key_down(CAMERA_KEY_UP))
+    if (input::key_down(TRANSLATE_KEY_UP))
         m_camera.position -= glm::vec3(0, m_translation_speed * context.delta, 0);
-    if (input::key_down(CAMERA_KEY_DOWN))
+    if (input::key_down(TRANSLATE_KEY_DOWN))
         m_camera.position += glm::vec3(0, m_translation_speed * context.delta, 0);
+
+    if (input::mouse_down(MOUSE_BUTTON_LEFT)) {
+        m_camera.pitch += input::mouse_dy() * PITCH_SENSITIVITY;
+        m_camera.yaw += input::mouse_dx() * YAW_SENSITIVITY;
+    }
 }
 
 const glm::mat4 CameraController::view() const noexcept {

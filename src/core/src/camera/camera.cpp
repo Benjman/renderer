@@ -12,16 +12,16 @@ Camera::Camera(const Camera& camera) {
 }
 
 Camera Camera::operator=(const Camera &camera) {
-    m_dist = camera.m_dist;
-    m_pitch = camera.m_pitch;
+    dist = camera.dist;
+    pitch = camera.pitch;
     position = camera.position;
-    m_yaw = camera.m_yaw;
+    yaw = camera.yaw;
     return *this;
 }
 
 const glm::mat4 Camera::view() const noexcept {
-    glm::mat4 view = glm::rotate(glm::mat4(1), glm::radians(pitch()), WORLD_RIGHT);
-    view = glm::rotate(view, glm::radians(yaw()), WORLD_UP);
+    glm::mat4 view = glm::rotate(glm::mat4(1), glm::radians(pitch), WORLD_RIGHT);
+    view = glm::rotate(view, glm::radians(yaw), WORLD_UP);
     view = glm::translate(view, position);
     return view;
 }

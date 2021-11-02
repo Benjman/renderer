@@ -27,6 +27,9 @@ namespace input {
     double_t mouse_dx();
     double_t mouse_dy();
 
+    bool mouse_down(uint16_t button);
+    bool mouse_up(uint16_t button);
+
     bool mouse_pressed(uint16_t button);
     bool mouse_released(uint16_t button);
 

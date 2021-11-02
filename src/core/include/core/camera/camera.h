@@ -17,13 +17,12 @@ class Camera {
         static constexpr float_t FAR_PLANE = 10.0;
         static constexpr float_t FOV = 45.0;
 
-    private:
-        float_t m_dist = 0;
-        float_t m_pitch = 0;
-        float_t m_yaw = 0;
-
     public:
         glm::vec3 position;
+
+        float_t dist = 0;
+        float_t pitch = 0;
+        float_t yaw = 0;
 
         Camera() = default;
         Camera(const Camera& camera);
@@ -32,15 +31,6 @@ class Camera {
         const glm::mat4 view() const noexcept;
         const glm::mat4 proj_ortho() const noexcept;
         const glm::mat4 proj_persp() const noexcept;
-
-        [[nodiscard]] const float_t dist() const noexcept { return m_dist; }
-        void dist(float_t& dist) noexcept { m_dist = dist; }
-
-        [[nodiscard]] const float_t pitch() const noexcept { return m_pitch; }
-        void pitch(float_t& pitch) noexcept { m_pitch = pitch; }
-
-        [[nodiscard]] const float_t yaw() const noexcept { return m_yaw; }
-        void yaw(float_t& yaw) noexcept { m_yaw = yaw; }
 
 };
 
