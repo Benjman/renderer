@@ -16,7 +16,7 @@ namespace input {
 }
 
 bool input::key_down(int key, int mods) {
-    return m_keys_pressed[key];
+    return m_keys_down[key];
 }
 
 bool input::key_up(int key, int mods) {

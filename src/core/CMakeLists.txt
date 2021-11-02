@@ -3,7 +3,7 @@ project(core)
 
 add_library(core STATIC
 	./src/file.cpp
-    ./src/intput.cpp
+    ./src/input.cpp
 	./src/runner.cpp
 	./src/window.cpp
     ./src/camera/camera.cpp
