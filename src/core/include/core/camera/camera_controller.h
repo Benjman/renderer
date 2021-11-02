@@ -3,6 +3,7 @@
 
 #include "camera.h"
 #include "../controller.h"
+#include "../input.h"
 
 #include <glm/mat4x4.hpp>
 
@@ -21,6 +22,13 @@ class CameraController : public Controller {
     private:
         Camera m_camera;
         float_t m_translation_speed = 1.5; // units per second
+
+        int CAMERA_KEY_FORWARD = KEY_E;
+        int CAMERA_KEY_BACKWARD = KEY_D;
+        int CAMERA_KEY_LEFT = KEY_S;
+        int CAMERA_KEY_RIGHT = KEY_F;
+        int CAMERA_KEY_UP = KEY_A;
+        int CAMERA_KEY_DOWN = KEY_Z;
 
     public:
 		void init() override;

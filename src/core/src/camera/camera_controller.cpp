@@ -12,14 +12,19 @@ void CameraController::init() {
 }
 
 void CameraController::update(const RunnerContext &context) {
-    if (input::key_down(KEY_E))
+    if (input::key_down(CAMERA_KEY_FORWARD))
         m_camera.position += glm::vec3(0, 0, m_translation_speed * context.delta);
-    if (input::key_down(KEY_D))
+    if (input::key_down(CAMERA_KEY_BACKWARD))
         m_camera.position -= glm::vec3(0, 0, m_translation_speed * context.delta);
-    if (input::key_down(KEY_S))
+    if (input::key_down(CAMERA_KEY_LEFT))
         m_camera.position += glm::vec3(m_translation_speed * context.delta, 0, 0);
-    if (input::key_down(KEY_F))
+    if (input::key_down(CAMERA_KEY_RIGHT))
         m_camera.position -= glm::vec3(m_translation_speed * context.delta, 0, 0);
+
+    if (input::key_down(CAMERA_KEY_UP))
+        m_camera.position -= glm::vec3(0, m_translation_speed * context.delta, 0);
+    if (input::key_down(CAMERA_KEY_DOWN))
+        m_camera.position += glm::vec3(0, m_translation_speed * context.delta, 0);
 }
 
 const glm::mat4 CameraController::view() const noexcept {
