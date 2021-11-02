@@ -12,6 +12,7 @@ using namespace input;
 struct InputTestFixture : public ::testing::Test {
 	protected:
         void SetUp() {
+            input::mouse_move_event(0, 0);
             input::reset();
         }
 };
@@ -1137,4 +1138,52 @@ TEST_F(InputTestFixture, mods) {
     ASSERT_EQ(0, mods());
     key_event(KEY_Q, 0, KEY_PRESS, 13);
     ASSERT_EQ(13, mods());
+}
+
+TEST_F(InputTestFixture, mouse_buttons) {
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_1, MOUSE_BUTTON_1);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_2, MOUSE_BUTTON_2);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_3, MOUSE_BUTTON_3);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_4, MOUSE_BUTTON_4);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_5, MOUSE_BUTTON_5);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_6, MOUSE_BUTTON_6);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_7, MOUSE_BUTTON_7);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_8, MOUSE_BUTTON_8);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_LAST, MOUSE_BUTTON_LAST);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_LEFT, MOUSE_BUTTON_LEFT);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_RIGHT);
+    ASSERT_EQ(GLFW_MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_MIDDLE);
+}
+
+TEST_F(InputTestFixture, mouse_initial_state) {
+    ASSERT_EQ(0, input::mouse_x());
+    ASSERT_EQ(0, input::mouse_y());
+    ASSERT_EQ(0, input::mouse_dx());
+    ASSERT_EQ(0, input::mouse_dy());
+}
+
+TEST_F(InputTestFixture, mouse_event) {
+    ASSERT_EQ(0, input::mouse_x());
+    ASSERT_EQ(0, input::mouse_y());
+
+    input::mouse_move_event(13, 21);
+    ASSERT_EQ(13, input::mouse_x());
+    ASSERT_EQ(21, input::mouse_y());
+}
+
+TEST_F(InputTestFixture, mouse_delta) {
+    ASSERT_EQ(0, input::mouse_dx());
+    ASSERT_EQ(0, input::mouse_dy());
+
+    input::mouse_move_event(17, 27);
+    ASSERT_EQ(17, input::mouse_dx());
+    ASSERT_EQ(27, input::mouse_dy());
+
+    input::mouse_move_event(12, 20);
+    ASSERT_EQ(-5, input::mouse_dx());
+    ASSERT_EQ(-7, input::mouse_dy());
+
+    input::mouse_move_event(32, 13);
+    ASSERT_EQ(20, input::mouse_dx());
+    ASSERT_EQ(-7, input::mouse_dy());
 }

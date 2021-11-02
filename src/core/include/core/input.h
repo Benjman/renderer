@@ -1,22 +1,37 @@
 #ifndef CORE_INPUT_H
 #define CORE_INPUT_H
 
-namespace input {
-    bool key_down(int key, int mods = 0);
-    bool key_up(int key, int mods = 0);
+#include <cmath>
+#include <cstdint>
 
-    bool key_pressed(int key);
-    bool key_released(int key);
+namespace input {
+    bool key_down(uint16_t key, uint16_t mods = 0);
+    bool key_up(uint16_t key, uint16_t mods = 0);
+
+    bool key_pressed(uint16_t key);
+    bool key_released(uint16_t key);
 
     bool any_key_pressed();
     bool any_key_released();
 
-    void key_event(const int key, const int scancode, const int action, const int mods);
+    void key_event(const uint16_t key, const uint16_t scancode, const uint16_t action, const uint16_t mods);
     void reset();
 
-    int last_key_pressed();
-    int last_key_released();
-    int mods();
+    uint16_t last_key_pressed();
+    uint16_t last_key_released();
+    uint16_t mods();
+
+    double_t mouse_x();
+    double_t mouse_y();
+
+    double_t mouse_dx();
+    double_t mouse_dy();
+
+    bool mouse_pressed(uint16_t button);
+    bool mouse_released(uint16_t button);
+
+    void mouse_move_event(double_t x, double_t y);
+    void mouse_button_event(uint16_t button, uint16_t action, uint16_t mods);
 }
 
 
@@ -148,5 +163,18 @@ namespace input {
 
 #define KEY_RELEASE            0
 #define KEY_PRESS              1
+
+#define MOUSE_BUTTON_1         0
+#define MOUSE_BUTTON_2         1
+#define MOUSE_BUTTON_3         2
+#define MOUSE_BUTTON_4         3
+#define MOUSE_BUTTON_5         4
+#define MOUSE_BUTTON_6         5
+#define MOUSE_BUTTON_7         6
+#define MOUSE_BUTTON_8         7
+#define MOUSE_BUTTON_LAST      MOUSE_BUTTON_8
+#define MOUSE_BUTTON_LEFT      MOUSE_BUTTON_1
+#define MOUSE_BUTTON_RIGHT     MOUSE_BUTTON_2
+#define MOUSE_BUTTON_MIDDLE    MOUSE_BUTTON_3
 
 #endif // CORE_INPUT_H
