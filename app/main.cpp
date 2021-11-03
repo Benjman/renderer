@@ -86,8 +86,8 @@ int main(const int argc, const char *argv[]) {
 	spdlog::set_level(spdlog::level::trace);
 	window = initializeGlfw("Testing", 800, 800);
 
-	File vert = load_file(RES_PATH("shaders/basic.vert"));
-	File frag = load_file(RES_PATH("shaders/basic.frag"));
+	File vert = load_file(RES_PATH(shaders/basic.vert));
+	File frag = load_file(RES_PATH(shaders/basic.frag));
 	Shader shader;
 	shader.load((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size);
 	shader.use();

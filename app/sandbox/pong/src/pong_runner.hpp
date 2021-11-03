@@ -41,8 +41,8 @@ class PongRunner : public Runner {
 
 	public:
 		PongRunner(GLFWwindow *window, const int width, const int height) : Runner(window, width, height), m_texture(std::vector<GLfloat>(width * height * 3)) {
-			File vert = load_file(RES_PATH("shaders/basic.vert"));
-			File frag = load_file(RES_PATH("shaders/basic.frag"));
+			File vert = load_file(RES_PATH(shaders/basic.vert));
+			File frag = load_file(RES_PATH(shaders/basic.frag));
 			Shader shader;
 			shader.load((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size);
 			shader.use();

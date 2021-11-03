@@ -68,8 +68,8 @@ class SandboxRunner : public Runner {
                 -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
             };
 
-            File vert = load_file(RES_PATH("shaders/texture3d.vert"));
-            File frag = load_file(RES_PATH("shaders/texture3d.frag"));
+            File vert = load_file(RES_PATH(shaders/texture3d.vert));
+            File frag = load_file(RES_PATH(shaders/texture3d.frag));
 
             shader.load((const char*) vert.buffer, vert.size, (const char*) frag.buffer, frag.size);
             shader.use();
@@ -84,7 +84,7 @@ class SandboxRunner : public Runner {
 
             int img_width, img_height, channels;
             stbi_set_flip_vertically_on_load(true);
-            u_char* img_data = stbi_load(RES_PATH("textures/wall.jpg"), &img_width, &img_height, &channels, 3);
+            u_char* img_data = stbi_load(RES_PATH(textures/wall.jpg), &img_width, &img_height, &channels, 3);
 
             Texture tex_wall(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 2, GL_RGB, GL_UNSIGNED_BYTE);
             tex_wall.upload(&img_data[0]);
