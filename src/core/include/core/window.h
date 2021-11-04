@@ -7,7 +7,7 @@ namespace window {
     float_t width();
     float_t height();
 
-    void update(float_t width, float_t height);
+    void set_size(float_t width, float_t height);
 }
 
 #endif // CORE_WINDOW_H

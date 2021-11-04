@@ -22,7 +22,7 @@ Runner::Runner(GLFWwindow *glfw_window, const int32_t width, const int32_t heigh
     glfwSetCursorPosCallback(m_glfw_window, [](GLFWwindow*, double_t x, double_t y) { input::mouse_move_event(x, y); });
     glfwSetMouseButtonCallback(glfw_window, [](GLFWwindow*, int32_t button, int32_t action, int32_t mods) { input::mouse_button_event(button, action, mods); });
 
-    window::update(width, height);
+    window::set_size(width, height);
     spdlog::set_level(spdlog::level::info);
 }
 
@@ -80,5 +80,5 @@ inline void keyHandler(GLFWwindow*, int32_t key, int32_t scancode, int32_t actio
 
 inline void windowSizeChangeHandler(GLFWwindow*, int32_t w, int32_t h) {
 	INSTANCE->windowSizeChanged(w, h);
-    window::update(w, h);
+    window::set_size(w, h);
 }
