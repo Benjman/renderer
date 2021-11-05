@@ -18,7 +18,7 @@ float_t window::height() {
     return m_height;
 }
 
-void window::update(float_t width, float_t height) {
+void window::set_size(float_t width, float_t height) {
     m_width = width;
     m_height = height;
     m_aspect_ratio = (float_t) width / (float_t) height;
