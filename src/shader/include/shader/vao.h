@@ -9,7 +9,7 @@ class VertexAttribute;
 class Vao {
 	private:
 		std::vector<VertexAttribute *> attributes;
-		GLuint id;
+		GLuint id = GL_ZERO;
 
 	public:
 		static void unbind();
