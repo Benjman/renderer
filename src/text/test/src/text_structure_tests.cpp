@@ -1,26 +1,14 @@
 #include <gtest/gtest.h>
+#include <glm/vec2.hpp>
+
+#include "text_test_fixture.h"
 
 #include <text.h>
 #include <text/internal/generator.h>
-#include <glm/vec2.hpp>
 
-class TextMeshGeneratorFixture : public ::testing::Test {
-	protected:
-		static void SetUpTestSuite() {
-			load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
-		}
+using namespace internal;
 
-		static void TearDownTestSuite() {
-		}
-
-		static Font font;
-};
-
-Font TextMeshGeneratorFixture::font = Font();
-
-using namespace internal::text;
-
-TEST_F(TextMeshGeneratorFixture, word_count) {
+TEST_F(TextTestFixture, word_count) {
 	Text text("This is a test", &font, glm::vec2(), 0);
 	Context context;
 	generate_structure(&text, context);
