@@ -5,8 +5,6 @@
 #include <iostream>
 #include <string>
 
-#include <spdlog/spdlog.h>
-
 void CameraController::init(const RunnerContext& context) {
     m_camera.position = glm::vec3(0.0, 0.0, -3.0);
 }

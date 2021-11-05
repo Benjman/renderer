@@ -1,5 +1,4 @@
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
 #include <shader/vao.h>
@@ -34,11 +33,10 @@ void Vao::unbind() {
 	glBindVertexArray(0);
 }
 
-VertexAttribute *Vao::createAttribute(GLuint index, GLint size, GLenum type,
-		GLboolean normalized, GLsizei stride, const void *offset) {
+VertexAttribute *Vao::createAttribute(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *offset) {
 	bind();
 	auto *attrib = new VertexAttribute(index, size, type, normalized, stride, offset);
-	attributes.emplace_back(attrib);
-	return attrib;
+    attributes.emplace_back(attrib);
+    return attrib;
 }
 

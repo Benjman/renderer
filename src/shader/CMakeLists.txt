@@ -27,6 +27,6 @@ target_include_directories(shader
 	PUBLIC ./include
 	PRIVATE ${GL_INCLUDES})
 
-target_link_libraries(shader PRIVATE ${GL_LIBS})
+target_link_libraries(shader PRIVATE ${GL_LIBS} spdlog::spdlog)
 
 add_subdirectory(test)
