@@ -23,8 +23,10 @@ add_library(text
 	./src/text.cpp
 	)
 
+target_link_libraries(text PRIVATE spdlog::spdlog)
+
 target_include_directories(text
 	PUBLIC ./include
 	PRIVATE ${STB_INCLUDE})
 
-add_subdirectory(test)
+#add_subdirectory(test)

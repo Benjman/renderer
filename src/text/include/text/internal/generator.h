@@ -6,57 +6,54 @@
 #include <string>
 #include <vector>
 
-struct Text;
+class Text;
 struct Font;
 
-namespace internal::text {
-	struct Context;
+namespace internal {
+    struct TextMeshGenerator {
+		struct Word {
+			std::string value;
+			float_t width = 0;
 
-	struct Word {
-		std::string value;
-		float_t width = 0;
+			void add_char(TextMeshGenerator& generator, char c, float_t kern);
+		};
 
-		void add_char(char c, Context& context, float_t kern);
-	};
+		struct Line {
+			std::vector<Word*> words;
+			float_t width = 0;
+			float_t max_width;
 
-	struct Line {
-		std::vector<Word*> words;
-		float_t width = 0;
-		float_t max_width;
+			Line(float_t max_width) : max_width(max_width) {}
 
-		Line(float_t max_width) : max_width(max_width) {}
-
-		~Line() {
-			for (auto word : words) {
-				delete word;
+			~Line() {
+				for (auto word : words) {
+					delete word;
+				}
 			}
-		}
 
-		bool try_add_word(Word* word);
-	};
+			bool try_add_word(Word* word);
+		};
 
-	struct Context {
+		Text& root;
+        float_t scale = 1.0;
 		std::vector<Line*> lines;
-		Text* text;
-		float_t aspect_ratio;
-		float_t display_height;
-		float_t text_size;
-		float_t scale;
 
-		~Context() {
-			for (auto line : lines) {
-				delete line;
-			}
-		}
-	};
+		TextMeshGenerator(Text& root) : root(root) {}
 
-	void generate_mesh(Text* text);
+        ~TextMeshGenerator() {
+            for (Line* line : lines) {
+                delete line;
+            }
+        }
 
-	void generate_structure(Text *text, Context& context);
+		void generate_mesh();
 
-	void process_line(Line* line, Context& context, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer);
+		void generate_structure();
 
-	void process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer, Context& context);
+		void process_line(Line* line, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer);
+
+		void process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer);
+    };
 };
 
 #endif // TEXT_TEXT_MESH_GENERATOR_H
