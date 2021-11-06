@@ -35,9 +35,9 @@ class Text {
     Text() = default;
 
 	public:
-		void generate_mesh();
-
         static TextBuilder create(std::string value, Font* font, float_t display_height, float_t aspect_ratio);
+
+		void generate_mesh();
 
         uint32_t* m_idx_buf{};
         size_t m_idx_buf_size = 0;
