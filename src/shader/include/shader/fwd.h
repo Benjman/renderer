@@ -1,0 +1,24 @@
+#pragma once
+
+struct Shader;
+struct Texture;
+class Uniform;
+class Uniformv;
+class Uniform1f;
+class Uniform2f;
+class Uniform3f;
+class Uniform4f;
+class Uniform1i;
+class Uniform2i;
+class Uniform3i;
+class Uniform4i;
+class Uniform1ui;
+class Uniform2ui;
+class Uniform3ui;
+class Uniform4ui;
+class UniformMatrix2f;
+class UniformMatrix3f;
+class UniformMatrix4f;
+class Vao;
+class Vbo;
+class VertexAttribute;
