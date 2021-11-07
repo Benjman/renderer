@@ -10,6 +10,7 @@ add_library(core STATIC
     ./src/camera/camera_controller.cpp
 	./src/components/position2d.cpp
 	./src/components/position3d.cpp
+	./src/ui/ui_element.cpp
 	./src/utils/glfw.cpp
 	)
 
