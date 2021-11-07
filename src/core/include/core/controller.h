@@ -1,7 +1,7 @@
 #ifndef CORE_CONTROLLER_H
 #define CORE_CONTROLLER_H
 
-#include <core/fwd.hpp>
+#include <core/fwd.h>
 
 #include <cmath> // double_t
 #include <entt/fwd.hpp>

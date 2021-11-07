@@ -5,7 +5,7 @@
 #include <entt/entt.hpp>
 #include <GL/gl.h>
 
-#include "fwd.hpp"
+#include "fwd.h"
 
 #include "runner_context.h"
 
