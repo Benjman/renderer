@@ -8,7 +8,6 @@ inline constexpr size_t VERT_COUNT = 16;
 inline constexpr size_t IDX_COUNT = 6;
 
 void internal::TextMeshGenerator::calc_buf_sizes(Text& text, size_t* vert_size, size_t* idx_size) {
-    // TODO make vector not reference
     std::vector<Line> lines;
     generate_structure(text, &lines);
 
