@@ -5,6 +5,17 @@
 #include <cstdlib>
 #include <vector>
 
+inline constexpr size_t KILOBYTE = 1024;
+inline constexpr size_t MEGABYTE = KILOBYTE * 1024;
+
+inline size_t KILOBYTES(size_t n) {
+    return 1024 * n;
+}
+
+inline size_t MEGABYTES(size_t n) {
+    return 1024 * KILOBYTES(n);
+}
+
 template<typename T>
 class MemoryZone {
 	public:
