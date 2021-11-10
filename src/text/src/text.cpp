@@ -1,4 +1,4 @@
-#include <text/internal/generator.h>
+#include "generator.h"
 #include <text.h>
 
 #include <utility>
