@@ -77,7 +77,7 @@ class PongRunner : public Runner {
 
 			m_registry.emplace<Sprite>(ball, 8, glm::vec3(1.));
 			m_registry.emplace<Position2D>(ball, (width / 2.) - 16., (height / 2.) - 16.);
-			m_registry.emplace<Ball>(ball, BALL_SPEED, BALL_SPEED);
+			m_registry.emplace<Ball>(ball, MoveSystem::BALL_SPEED, MoveSystem::BALL_SPEED);
 
 			// Assign events to systems.
 			m_dispatcher.sink<KeyDown>().connect<&MoveSystem::on_key_down>(move_system);

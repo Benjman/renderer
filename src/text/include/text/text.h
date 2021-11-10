@@ -13,7 +13,7 @@ namespace internal {
 }
 
 // TODO more aligns lol
-#define TEXT_ALIGN_LEFT 1
+inline constexpr size_t TEXT_ALIGN_LEFT = 1;
 
 class Text {
     friend class TextBuilder;

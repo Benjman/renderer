@@ -24,7 +24,7 @@ class TextRunner : public Runner {
 
 			load_font(font, RES_PATH(fonts/DejaVuSans.ttf));
 
-			Texture texture(GL_TEXTURE_2D, 0, GL_RED, ATLAS_WIDTH, ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE);
+			Texture texture(GL_TEXTURE_2D, 0, GL_RED, Font::ATLAS_WIDTH, Font::ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE);
             texture.bind();
             texture.upload(font.atlas_data);
 			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
