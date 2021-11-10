@@ -21,3 +21,7 @@ void Text::generate_mesh(float_t* vert_buf, uint32_t* idx_buf, float_t display_h
 void Text::reset() {
     renderable_char_count = 0;
 }
+
+float_t Text::get_font_scale() {
+    return m_line_height / Font::LINE_HEIGHT;
+}

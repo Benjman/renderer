@@ -65,7 +65,7 @@ class TextRunner : public Runner {
 	private:
 		// TODO fixme pointer hell below
         Font font;
-        Text text = Text::create("Oh this is a test with a longer value to see if the line wrapping works.", &font)
+        Text text = Text::create("Oh this is a test with a longer value to see if the line wrapping works as intended. Oh shit there is an error...", &font)
             .line_height(32)
             .max_width(window::width())
             .max_height(window::height())

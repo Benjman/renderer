@@ -41,6 +41,8 @@ class Text {
 
         void generate_mesh(float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio);
 
+        float_t get_font_scale();
+
         size_t renderable_char_count = 0;
 };
 

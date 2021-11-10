@@ -25,7 +25,7 @@ void internal::TextMeshGenerator::generate(Text &root, float_t* vert_buf, uint32
 }
 
 internal::TextMeshGenerator::TextMeshGenerator(Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio) :
-    scale(root.m_line_height / Font::LINE_HEIGHT) {
+    scale(root.get_font_scale()) {
         std::vector<Line> lines;
         generate_structure(root, &lines);
 
@@ -47,7 +47,7 @@ internal::TextMeshGenerator::TextMeshGenerator(Text& root, float_t* vert_buf, ui
 void internal::TextMeshGenerator::generate_structure(Text& root, std::vector<Line>* lines) {
     root.reset();
 
-    float_t scale = root.m_line_height / Font::LINE_HEIGHT;
+    float_t scale = root.get_font_scale();
 
     Line line(root.m_max_width);
     Word word;
