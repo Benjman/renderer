@@ -7,10 +7,10 @@
 inline constexpr size_t VERT_COUNT = 16;
 inline constexpr size_t IDX_COUNT = 6;
 
-void internal::TextMeshGenerator::calc_buf_sizes(Text* text, size_t* vert_size, size_t* idx_size) {
+void internal::TextMeshGenerator::calc_buf_sizes(Text& text, size_t* vert_size, size_t* idx_size) {
     // TODO make vector not reference
     std::vector<Line> lines;
-    generate_structure(*text, &lines);
+    generate_structure(text, &lines);
 
     for (Line& line : lines) {
         for (Word& word : line.words) {
@@ -24,8 +24,8 @@ void internal::TextMeshGenerator::generate(Text &root, float_t* vert_buf, uint32
     TextMeshGenerator(root, vert_buf, idx_buf, display_height, aspect_ratio);
 }
 
-internal::TextMeshGenerator::TextMeshGenerator(Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio) :
-    scale(root.get_font_scale()) {
+internal::TextMeshGenerator::TextMeshGenerator(Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio)
+    : scale(root.get_font_scale()) {
         std::vector<Line> lines;
         generate_structure(root, &lines);
 
@@ -42,7 +42,6 @@ internal::TextMeshGenerator::TextMeshGenerator(Text& root, float_t* vert_buf, ui
             cursor_x = root.m_pos_x;
         }
     }
-
 
 void internal::TextMeshGenerator::generate_structure(Text& root, std::vector<Line>* lines) {
     root.reset();
@@ -86,10 +85,11 @@ void internal::TextMeshGenerator::generate_structure(Text& root, std::vector<Lin
 void internal::TextMeshGenerator::process_line(Line& line, Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t* cursor_x, float_t* cursor_y, size_t* pointer, float_t display_height, float_t aspect_ratio) const {
     for (auto word : line.words) {
         for (size_t i = 0, len = word.value.size(); i < len; i++) {
-
             stbtt_aligned_quad quad = root.m_font->get_char(word.value.at(i), cursor_x, cursor_y, scale);
-            process_quad(&quad, display_height, aspect_ratio);
+
+            process_quad(quad, display_height, aspect_ratio);
             store_quad(quad, *pointer * 4, &vert_buf[*pointer * VERT_COUNT], &idx_buf[*pointer * IDX_COUNT]);
+
             (*pointer)++;
 
             // adjust for kerning
@@ -102,27 +102,27 @@ void internal::TextMeshGenerator::process_line(Line& line, Text& root, float_t* 
     }
 }
 
-void internal::TextMeshGenerator::process_quad(stbtt_aligned_quad* quad, float_t display_height, float_t aspect_ratio) {
+void internal::TextMeshGenerator::process_quad(stbtt_aligned_quad& quad, float_t display_height, float_t aspect_ratio) {
     // normalize to screen space
-    quad->x0 /= display_height;
-    quad->x1 /= display_height;
-    quad->y0 /= display_height;
-    quad->y1 /= display_height;
+    quad.x0 /= display_height;
+    quad.x1 /= display_height;
+    quad.y0 /= display_height;
+    quad.y1 /= display_height;
 
     // scale for aspect ratio
     if (aspect_ratio > 1) {
-        quad->y0 *= aspect_ratio;
-        quad->y1 *= aspect_ratio;
+        quad.y0 *= aspect_ratio;
+        quad.y1 *= aspect_ratio;
     } else {
-        quad->x0 *= aspect_ratio;
-        quad->x1 *= aspect_ratio;
+        quad.x0 *= aspect_ratio;
+        quad.x1 *= aspect_ratio;
     }
 
     // map from [0,1] to [-1,1]
-    quad->x0 =  2 * quad->x0 - 1;
-    quad->x1 =  2 * quad->x1 - 1;
-    quad->y0 = -2 * quad->y0 + 1;
-    quad->y1 = -2 * quad->y1 + 1;
+    quad.x0 =  2 * quad.x0 - 1;
+    quad.x1 =  2 * quad.x1 - 1;
+    quad.y0 = -2 * quad.y0 + 1;
+    quad.y1 = -2 * quad.y1 + 1;
 }
 
 void internal::TextMeshGenerator::store_quad(stbtt_aligned_quad quad, size_t idx_offset, float_t* vert_buf, uint32_t* idx_buf) {
