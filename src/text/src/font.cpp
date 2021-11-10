@@ -22,7 +22,7 @@ void load_font(Font& font, const char* path) {
         // TODO error handling
         throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
-    stbtt_PackFontRange(&font.context, font.font_data, 0, font.line_height, 32, 95, font.chardata);
+    stbtt_PackFontRange(&font.context, font.font_data, 0, font.LINE_HEIGHT, 32, 95, font.chardata);
     stbtt_PackEnd(&font.context);
 
     // get metrics using old pai
@@ -30,7 +30,7 @@ void load_font(Font& font, const char* path) {
     stbtt_InitFont(&info, font.font_data, 0);
     int32_t ascent, descent, line_gap;
     stbtt_GetFontVMetrics(&info, &ascent, &descent, &line_gap);
-    float_t scale = stbtt_ScaleForPixelHeight(&info, font.line_height);
+    float_t scale = stbtt_ScaleForPixelHeight(&info, font.LINE_HEIGHT);
     font.ascent = (float_t) ascent * scale;
     font.descent = (float_t) descent * scale;
     font.line_gap = (float_t) line_gap * scale;

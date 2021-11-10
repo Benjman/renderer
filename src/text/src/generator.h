@@ -22,37 +22,34 @@ namespace internal {
                 float_t width = 0;
 
                 void add_char(const Font* font, float_t scale, char c, float_t kern);
+
             };
 
             struct Line {
-                std::vector<Word*> words;
+                std::vector<Word> words;
                 float_t width = 0;
                 float_t max_width;
 
-                Line(float_t max_width) : max_width(max_width) {}
+                explicit Line(float_t max_width) : max_width(max_width) {}
 
-                ~Line() {
-                    for (auto word : words) {
-                        delete word;
-                    }
-                }
+                bool try_add_word(Word& word);
 
-                bool try_add_word(Word* word);
             };
 
 
-            static void generate_structure(Text& root, std::vector<Line*>* lines);
+            static void generate_structure(Text& root, std::vector<Line>* lines);
 
 
             float_t scale = 1.0;
 
             TextMeshGenerator(Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio);
 
-            void process_line(Line* line, Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t* cursor_x, float_t* cursor_y, size_t* pointer, float_t display_height, float_t aspect_ratio);
+            void process_line(Line& line, Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t* cursor_x, float_t* cursor_y, size_t* pointer, float_t display_height, float_t aspect_ratio) const;
 
-            void process_quad(stbtt_aligned_quad* quad, float_t display_height, float_t aspect_ratio);
+            static void process_quad(stbtt_aligned_quad* quad, float_t display_height, float_t aspect_ratio);
 
-            void store_quad(stbtt_aligned_quad quad, size_t idx_offset, float* vert_buf, uint32_t* idx_buf);
+            static void store_quad(stbtt_aligned_quad quad, size_t idx_offset, float* vert_buf, uint32_t* idx_buf);
+
     };
 };
 
