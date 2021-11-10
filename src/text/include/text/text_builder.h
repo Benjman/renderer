@@ -6,11 +6,9 @@
 struct TextBuilder {
     Text m_root;
 
-    TextBuilder(std::string value, Font* font, float_t display_height, float_t aspect_ratio) {
+    TextBuilder(std::string value, Font* font) {
         m_root.m_value = value;
         m_root.m_font = font;
-        m_root.m_display_height = display_height;
-        m_root.m_aspect_ratio = aspect_ratio;
     }
 
     operator Text() const {

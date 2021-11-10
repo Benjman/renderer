@@ -14,11 +14,12 @@ class TextMeshFixture : public ::testing::Test {
 		}
 
 		static Font font;
+
+        static float_t vert_buf[1024 * 1024 * 2];
+        static uint32_t idx_buf[1024 * 1024];
 };
 
 Font TextMeshFixture::font = Font();
-
-using namespace internal::text;
 
 TEST_F(TextMeshFixture, word_count) {
 	Text text("This is a test", &font, glm::vec2(), 0);

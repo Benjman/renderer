@@ -1,9 +1,11 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
+#include "core/memory/memory_zone.h"
 #include "core/window.h"
 #include <core/file.h>
 #include <core/runner.h>
+#include <core/memory.h>
 #include <shader.h>
 #include <text.h>
 
@@ -28,9 +30,15 @@ class TextRunner : public Runner {
 			texture.parameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			texture.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-            text.generate_mesh();
-            vbo.storeData(text.m_vert_buf, text.m_vert_buf_size);
-			ebo.storeData(text.m_idx_buf, text.m_idx_buf_size);
+            size_t v_size = 0,
+                   idx_size = 0;
+
+            text.calc_sizes(&v_size, &idx_size);
+
+            text.generate_mesh(vert_memory.ptr, idx_memory.ptr, window::height(), window::aspect_ratio());
+
+            vbo.storeData(vert_memory.ptr, v_size);
+			ebo.storeData(idx_memory.ptr, idx_size);
 
             vao.createAttribute(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) 0);
             vao.createAttribute(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
@@ -48,7 +56,7 @@ class TextRunner : public Runner {
 
 		void render() override {
             glClear(GL_COLOR_BUFFER_BIT);
-			glDrawElements(GL_TRIANGLES, 6 * text.m_char_count, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, 6 * text.renderable_char_count, GL_UNSIGNED_INT, 0);
 		}
 
 		void windowSizeChanged(int width, int height) override {
@@ -57,7 +65,7 @@ class TextRunner : public Runner {
 	private:
 		// TODO fixme pointer hell below
         Font font;
-        Text text = Text::create("Oh this is a test with a longer value to see if the line wrapping works.", &font, window::height(), window::aspect_ratio())
+        Text text = Text::create("Oh this is a test with a longer value to see if the line wrapping works.", &font)
             .line_height(32)
             .max_width(window::width())
             .max_height(window::height())
@@ -66,6 +74,10 @@ class TextRunner : public Runner {
 		Vao vao = Vao();
 		Vbo vbo = Vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
         Vbo ebo = Vbo(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+
+        MemoryZone<float_t> vert_memory = MemoryZone<float_t>(nullptr, MEGABYTES(2));
+        MemoryZone<uint32_t> idx_memory = MemoryZone<uint32_t>(nullptr, MEGABYTES(2));
+
 };
 
 #endif // SIMULATION_HPP

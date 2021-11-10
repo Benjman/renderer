@@ -10,49 +10,47 @@ class Text;
 struct Font;
 
 namespace internal {
-    struct TextMeshGenerator {
-		struct Word {
-			std::string value;
-			float_t width = 0;
+    class TextMeshGenerator {
+        public:
+            static void generate(Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio);
 
-			void add_char(TextMeshGenerator& generator, char c, float_t kern);
-		};
+            static void calc_buf_sizes(Text* text, size_t* vert_size, size_t* idx_size);
 
-		struct Line {
-			std::vector<Word*> words;
-			float_t width = 0;
-			float_t max_width;
+        private:
+            struct Word {
+                std::string value;
+                float_t width = 0;
 
-			Line(float_t max_width) : max_width(max_width) {}
+                void add_char(const Font* font, float_t scale, char c, float_t kern);
+            };
 
-			~Line() {
-				for (auto word : words) {
-					delete word;
-				}
-			}
+            struct Line {
+                std::vector<Word*> words;
+                float_t width = 0;
+                float_t max_width;
 
-			bool try_add_word(Word* word);
-		};
+                Line(float_t max_width) : max_width(max_width) {}
 
-		Text& root;
-        float_t scale = 1.0;
-		std::vector<Line*> lines;
+                ~Line() {
+                    for (auto word : words) {
+                        delete word;
+                    }
+                }
 
-		TextMeshGenerator(Text& root) : root(root) {}
+                bool try_add_word(Word* word);
+            };
 
-        ~TextMeshGenerator() {
-            for (Line* line : lines) {
-                delete line;
-            }
-        }
 
-		void generate_mesh();
+            static void generate_structure(Text& root, std::vector<Line*>* lines);
 
-		void generate_structure();
 
-		void process_line(Line* line, float_t* cursor_x, float_t* cursor_y, size_t* buffer_pointer);
+            float_t scale = 1.0;
 
-		void process_quad(stbtt_aligned_quad quad, size_t* buffer_pointer);
+            TextMeshGenerator(Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio);
+
+            void process_line(Line* line, Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t* cursor_x, float_t* cursor_y, size_t* pointer, float_t display_height, float_t aspect_ratio);
+
+            void process_quad(stbtt_aligned_quad quad, float_t *vert_buf, uint32_t *idx_buf, size_t idx_offset, float_t display_height, float_t aspect_ratio);
     };
 };
 

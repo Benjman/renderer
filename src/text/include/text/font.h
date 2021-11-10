@@ -26,7 +26,7 @@ struct Font {
 
 	stbtt_packedchar chardata[TEXT_CHAR_COUNT];
 
-	stbtt_aligned_quad get_char(u_char c, float_t* cursor_x, float_t* cursor_y) const;
+	stbtt_aligned_quad get_char(u_char c, float_t* cursor_x, float_t* cursor_y, float_t scale = 1) const;
 
 	stbtt_pack_context context;
 };

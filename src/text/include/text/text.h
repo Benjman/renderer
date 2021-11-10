@@ -29,22 +29,17 @@ class Text {
         uint16_t m_pos_y = 0;
         float_t m_line_gap = 0.0;
         float_t m_line_height = 32.0;
-        float_t m_display_height = 480.0;
-        float_t m_aspect_ratio = 1.0;
 
-    Text() = default;
+        Text() = default;
 
 	public:
-        static TextBuilder create(std::string value, Font* font, float_t display_height, float_t aspect_ratio);
+        static TextBuilder create(std::string value, Font* font);
 
-		void generate_mesh();
+        void calc_sizes(size_t* vert_buf_size, size_t* idx_buf_size);
 
-        uint32_t* m_idx_buf{};
-        size_t m_idx_buf_size = 0;
-        float_t* m_vert_buf{};
-        size_t m_vert_buf_size = 0;
+		void generate_mesh(float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio);
 
-        size_t m_char_count = 0; // non-whitespace chars
+        size_t renderable_char_count = 0;
 };
 
 #endif // TEXT_TEXT_H
