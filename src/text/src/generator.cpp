@@ -94,7 +94,8 @@ void internal::TextMeshGenerator::process_line(Line* line, Text& root, float_t* 
         for (size_t i = 0, len = word->value.size(); i < len; i++) {
 
             stbtt_aligned_quad quad = root.m_font->get_char(word->value.at(i), cursor_x, cursor_y, scale);
-            process_quad(quad, &vert_buf[(*pointer * VERT_COUNT)], &idx_buf[*pointer * IDX_COUNT], *pointer * 4, display_height, aspect_ratio);
+            process_quad(&quad, display_height, aspect_ratio);
+            store_quad(quad, *pointer * 4, &vert_buf[*pointer * VERT_COUNT], &idx_buf[*pointer * IDX_COUNT]);
             (*pointer)++;
 
             // adjust for kerning
@@ -107,29 +108,30 @@ void internal::TextMeshGenerator::process_line(Line* line, Text& root, float_t* 
     }
 }
 
-void internal::TextMeshGenerator::process_quad(stbtt_aligned_quad quad, float_t *vert_buf, uint32_t *idx_buf, size_t idx_offset, float_t display_height, float_t aspect_ratio) {
+void internal::TextMeshGenerator::process_quad(stbtt_aligned_quad* quad, float_t display_height, float_t aspect_ratio) {
     // normalize to screen space
-    quad.x0 /= display_height;
-    quad.x1 /= display_height;
-    quad.y0 /= display_height;
-    quad.y1 /= display_height;
+    quad->x0 /= display_height;
+    quad->x1 /= display_height;
+    quad->y0 /= display_height;
+    quad->y1 /= display_height;
 
     // scale for aspect ratio
     if (aspect_ratio > 1) {
-        quad.y0 *= aspect_ratio;
-        quad.y1 *= aspect_ratio;
+        quad->y0 *= aspect_ratio;
+        quad->y1 *= aspect_ratio;
     } else {
-        quad.x0 *= aspect_ratio;
-        quad.x1 *= aspect_ratio;
+        quad->x0 *= aspect_ratio;
+        quad->x1 *= aspect_ratio;
     }
 
     // map from [0,1] to [-1,1]
-    quad.x0 =  2 * quad.x0 - 1;
-    quad.x1 =  2 * quad.x1 - 1;
-    quad.y0 = -2 * quad.y0 + 1;
-    quad.y1 = -2 * quad.y1 + 1;
+    quad->x0 =  2 * quad->x0 - 1;
+    quad->x1 =  2 * quad->x1 - 1;
+    quad->y0 = -2 * quad->y0 + 1;
+    quad->y1 = -2 * quad->y1 + 1;
+}
 
-    // vertices
+void internal::TextMeshGenerator::store_quad(stbtt_aligned_quad quad, size_t idx_offset, float_t* vert_buf, uint32_t* idx_buf) {
     // vert_0
     vert_buf[0] = quad.x0;   vert_buf[1] = quad.y0;     // pos
     vert_buf[2] = quad.s0;   vert_buf[3] = -quad.t0;    // uv
@@ -137,12 +139,11 @@ void internal::TextMeshGenerator::process_quad(stbtt_aligned_quad quad, float_t 
     vert_buf[4] = quad.x0;   vert_buf[5] = quad.y1;     // pos
     vert_buf[6] = quad.s0;   vert_buf[7] = -quad.t1;    // uv
     // vert_2
-    vert_buf[8] = quad.x1;   vert_buf[9] = quad.y1;    // pos
+    vert_buf[8] = quad.x1;   vert_buf[9] = quad.y1;     // pos
     vert_buf[10] = quad.s1;   vert_buf[11] = -quad.t1;  // uv
     // vert_3
     vert_buf[12] = quad.x1;   vert_buf[13] = quad.y0;   // pos
     vert_buf[14] = quad.s1;   vert_buf[15] = -quad.t0;  // uv
-
 
     // indices
     idx_buf[0] = 0 + idx_offset;

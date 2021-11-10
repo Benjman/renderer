@@ -50,7 +50,9 @@ namespace internal {
 
             void process_line(Line* line, Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t* cursor_x, float_t* cursor_y, size_t* pointer, float_t display_height, float_t aspect_ratio);
 
-            void process_quad(stbtt_aligned_quad quad, float_t *vert_buf, uint32_t *idx_buf, size_t idx_offset, float_t display_height, float_t aspect_ratio);
+            void process_quad(stbtt_aligned_quad* quad, float_t display_height, float_t aspect_ratio);
+
+            void store_quad(stbtt_aligned_quad quad, size_t idx_offset, float* vert_buf, uint32_t* idx_buf);
     };
 };
 
