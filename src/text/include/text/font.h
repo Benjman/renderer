@@ -8,10 +8,10 @@
 #include <limits>
 
 struct Font {
-    static constexpr size_t ATLAS_WIDTH = 1024;
-    static constexpr size_t ATLAS_HEIGHT = 1024;
-    static constexpr size_t TEXT_CHAR_COUNT = 95;
-    static constexpr float_t LINE_HEIGHT = 128;
+    static inline constexpr size_t ATLAS_WIDTH = 1024;
+    static inline constexpr size_t ATLAS_HEIGHT = 1024;
+    static inline constexpr size_t TEXT_CHAR_COUNT = 95;
+    static inline constexpr float_t LINE_HEIGHT = 128;
 
     float_t ascent = std::numeric_limits<float_t>::max();
     float_t descent = std::numeric_limits<float_t>::max();
