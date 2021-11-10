@@ -1,15 +1,15 @@
 find_package(Threads REQUIRED)
 
 include_directories(
-	../include
-	../src
-	)
+    ../include
+    ../src
+    )
 
 add_executable(tests_core
     ./src/utils/gl_fixture.cpp
     ./src/utils/glfw.cpp
 
-	./src/main.cpp
+    ./src/main.cpp
     ./src/input_test.cpp
     ./src/memory_test.cpp
     ./src/ui_test.cpp
@@ -17,12 +17,12 @@ add_executable(tests_core
     )
 
 target_link_libraries(tests_core
-	${GL_LIBS}
+    ${GL_LIBS}
 
-	GTest::GTest
-	GTest::Main
+    GTest::GTest
+    GTest::Main
 
-	core)
+    core)
 
 target_include_directories(tests_core PRIVATE ${GL_INCLUDES})
 

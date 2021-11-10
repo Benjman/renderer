@@ -12,7 +12,7 @@ struct GLFixture : public ::testing::Test {
 
 		static void TearDownTestSuite() {
 			std::atexit([]() {
-					destroyGlfw(m_window);
+                    destroyGlfw(m_window);
 			});
 		}
 

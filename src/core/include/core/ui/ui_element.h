@@ -39,7 +39,7 @@ class UiElement {
         bool has_background_color() {
             return glm::vec3(-1) != m_background_color;
         }
-        
+
         [[nodiscard]] Texture* texture() const noexcept {
             return m_texture;
         }

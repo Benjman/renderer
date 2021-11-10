@@ -17,19 +17,19 @@ static bool IS_HEADLESS = GLFW_HEADLESS;
 #undef SHADER_DEBUG
 
 struct ShaderTestFixture : public ::testing::Test {
-	protected:
-		static void SetUpTestSuite() {
-			m_window = initializeGlfw("Shader Tests", 1, 1, IS_HEADLESS);
-		}
+    protected:
+        static void SetUpTestSuite() {
+            m_window = initializeGlfw("Shader Tests", 1, 1, IS_HEADLESS);
+        }
 
-		static void TearDownTestSuite() {
-			std::atexit([]() {
-					destroyGlfw(m_window);
-			});
-		}
+        static void TearDownTestSuite() {
+            std::atexit([]() {
+                    destroyGlfw(m_window);
+            });
+        }
 
-	private:
-		static GLFWwindow *m_window;
+    private:
+        static GLFWwindow *m_window;
 };
 
 #endif //RENDERER_SHADERTESTFIXTURE_H

@@ -5,15 +5,15 @@
 #include <glm/vec2.hpp>
 
 class TextMeshFixture : public ::testing::Test {
-	protected:
-		static void SetUpTestSuite() {
-			load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
-		}
+    protected:
+        static void SetUpTestSuite() {
+            load_font(font, "/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
+        }
 
-		static void TearDownTestSuite() {
-		}
+        static void TearDownTestSuite() {
+        }
 
-		static Font font;
+        static Font font;
 
         static float_t vert_buf[1024 * 1024 * 2];
         static uint32_t idx_buf[1024 * 1024];
@@ -22,16 +22,16 @@ class TextMeshFixture : public ::testing::Test {
 Font TextMeshFixture::font = Font();
 
 TEST_F(TextMeshFixture, word_count) {
-	Text text("This is a test", &font, glm::vec2(), 0);
-	generate_mesh(&text);
+    Text text("This is a test", &font, glm::vec2(), 0);
+    generate_mesh(&text);
 }
 
 TEST_F(TextMeshFixture, multi_line) {
-	Text text("Testing a bit", &font, glm::vec2(), 0);
-	Context context;
-	generate_structure(&text, context);
+    Text text("Testing a bit", &font, glm::vec2(), 0);
+    Context context;
+    generate_structure(&text, context);
 
-	ASSERT_EQ(2, context.lines.size()) << "Line count inaccurate.";
-	ASSERT_EQ(11, context.text->char_count);
+    ASSERT_EQ(2, context.lines.size()) << "Line count inaccurate.";
+    ASSERT_EQ(11, context.text->char_count);
 }
 

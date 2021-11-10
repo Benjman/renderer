@@ -6,26 +6,26 @@
 class Vao;
 
 class Vbo {
-	private:
-		GLuint id = GL_ZERO;
-		GLenum target;
-		GLenum usage;
-		GLsizeiptr size;
+    private:
+        GLuint id = GL_ZERO;
+        GLenum target;
+        GLenum usage;
+        GLsizeiptr size;
 
-		void resize(GLsizeiptr size, const void *data, GLsizeiptr offset);
+        void resize(GLsizeiptr size, const void *data, GLsizeiptr offset);
 
-	public:
-		static void unbind(GLenum target);
-		static GLuint findBoundBuffer(GLenum target);
+    public:
+        static void unbind(GLenum target);
+        static GLuint findBoundBuffer(GLenum target);
 
-	public:
-		Vbo(GLenum target, GLenum usage, GLsizeiptr size = 0, const void *data = nullptr, Vao *vao = nullptr);
+    public:
+        Vbo(GLenum target, GLenum usage, GLsizeiptr size = 0, const void *data = nullptr, Vao *vao = nullptr);
 
-		~Vbo();
+        ~Vbo();
 
-		void bind() const;
-		void storeData(const void *data, GLsizeiptr size, GLsizeiptr offset = 0);
-		void unbind();
+        void bind() const;
+        void storeData(const void *data, GLsizeiptr size, GLsizeiptr offset = 0);
+        void unbind();
 };
 
 #endif // SHADER_VBO_H

@@ -5,15 +5,15 @@ Position2D::Position2D(const double_t x, const double_t y) noexcept
 }
 
 Position2D::Position2D(Position2D &&p) noexcept {
-	this->x = p.x;
-	this->y = p.y;
+    this->x = p.x;
+    this->y = p.y;
 }
 
 Position2D &Position2D::operator=(Position2D && p) noexcept {
-	if (this != &p) {
-		this->x = p.x;
-		this->y = p.y;
-	}
-	return *this;
+    if (this != &p) {
+        this->x = p.x;
+        this->y = p.y;
+    }
+    return *this;
 }
 

@@ -4,17 +4,17 @@
 #include <GL/gl.h>
 
 class VertexAttribute {
-	private:
-		friend class Vao;
+    private:
+        friend class Vao;
 
-		GLuint index;
-		bool enabled;
+        GLuint index;
+        bool enabled;
 
-	public:
-		VertexAttribute(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *offset, bool enabled = true);
+    public:
+        VertexAttribute(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *offset, bool enabled = true);
 
-		void enable(bool force = false);
-		void disable(bool force = false);
+        void enable(bool force = false);
+        void disable(bool force = false);
 
 };
 

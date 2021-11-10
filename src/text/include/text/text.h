@@ -9,7 +9,7 @@ class Font;
 struct TextBuilder;
 
 namespace internal {
-	struct TextMeshGenerator;
+    struct TextMeshGenerator;
 }
 
 // TODO more aligns lol
@@ -20,26 +20,26 @@ class Text {
     friend class internal::TextMeshGenerator;
 
     private:
-        std::string m_value = "";
-        const Font* m_font = nullptr;
-        uint16_t m_alignment = TEXT_ALIGN_LEFT;
-        uint16_t m_max_width = std::numeric_limits<int16_t>::max();
-        uint16_t m_max_height = std::numeric_limits<int16_t>::max();
-        uint16_t m_pos_x = 0;
-        uint16_t m_pos_y = 0;
-        float_t m_line_gap = 0.0;
-        float_t m_line_height = 32.0;
+    std::string m_value = "";
+    const Font* m_font = nullptr;
+    uint16_t m_alignment = TEXT_ALIGN_LEFT;
+    uint16_t m_max_width = std::numeric_limits<int16_t>::max();
+    uint16_t m_max_height = std::numeric_limits<int16_t>::max();
+    uint16_t m_pos_x = 0;
+    uint16_t m_pos_y = 0;
+    float_t m_line_gap = 0.0;
+    float_t m_line_height = 32.0;
 
-        Text() = default;
+    Text() = default;
 
-	public:
-        static TextBuilder create(std::string value, Font* font);
+    public:
+    static TextBuilder create(std::string value, Font* font);
 
-        void calc_sizes(size_t* vert_buf_size, size_t* idx_buf_size);
+    void calc_sizes(size_t* vert_buf_size, size_t* idx_buf_size);
 
-		void generate_mesh(float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio);
+    void generate_mesh(float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio);
 
-        size_t renderable_char_count = 0;
+    size_t renderable_char_count = 0;
 };
 
 #endif // TEXT_TEXT_H

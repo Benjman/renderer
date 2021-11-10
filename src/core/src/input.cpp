@@ -45,7 +45,7 @@ bool input::any_key_pressed() {
 }
 
 bool input::any_key_released() {
-	return false;
+    return false;
 }
 
 void input::reset() {

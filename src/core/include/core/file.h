@@ -5,10 +5,10 @@
 #include <cmath>
 
 struct File {
-	char* buffer;
-	size_t size;
+    char* buffer;
+    size_t size;
 
-	File(char* buffer, size_t size) : buffer(buffer), size(size) {}
+    File(char* buffer, size_t size) : buffer(buffer), size(size) {}
 };
 
 File load_file(const char* path);

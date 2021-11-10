@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.18)
 project(Renderer)
 
 if (NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Debug)
-	enable_testing() # TODO should this be in its own if block?
+    set(CMAKE_BUILD_TYPE Debug)
+    enable_testing() # TODO should this be in its own if block?
 endif()
 
 set(CMAKE_CXX_STANDARD 17)

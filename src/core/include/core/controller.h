@@ -7,10 +7,10 @@
 #include <entt/fwd.hpp>
 
 class Controller {
-	public:
-		virtual void init(const RunnerContext& context) = 0;
-		virtual void update(const RunnerContext& context) = 0;
-		virtual void input(const RunnerContext& context) = 0;
+    public:
+        virtual void init(const RunnerContext& context) = 0;
+        virtual void update(const RunnerContext& context) = 0;
+        virtual void input(const RunnerContext& context) = 0;
 };
 
 #endif // CORE_CONTROLLER_H

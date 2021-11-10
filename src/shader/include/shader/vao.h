@@ -7,22 +7,22 @@
 class VertexAttribute;
 
 class Vao {
-	private:
-		std::vector<VertexAttribute *> attributes;
-		GLuint id = GL_ZERO;
+    private:
+        std::vector<VertexAttribute *> attributes;
+        GLuint id = GL_ZERO;
 
-	public:
-		static void unbind();
-		static GLuint findBoundVertexArray();
+    public:
+        static void unbind();
+        static GLuint findBoundVertexArray();
 
-	public:
-		// TODO create copy constructor and equals operator (like camera does)
-		Vao();
+    public:
+        // TODO create copy constructor and equals operator (like camera does)
+        Vao();
 
-		~Vao();
+        ~Vao();
 
-		void bind();
-		VertexAttribute *createAttribute(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *offset);
+        void bind();
+        VertexAttribute *createAttribute(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *offset);
 
 };
 

@@ -7,26 +7,26 @@
 class Vao;
 
 struct Shader {
-	public:
-		friend class ShaderLoader;
+    public:
+        friend class ShaderLoader;
 
-		Shader() = default;
+        Shader() = default;
 
-		void load(const char* vert, size_t vert_size, const char* frag, size_t frag_size, bool force = false);
+        void load(const char* vert, size_t vert_size, const char* frag, size_t frag_size, bool force = false);
 
-		void use() const;
+        void use() const;
 
-		void initialize() {
-			use();
-			loadUniforms();
-		}
+        void initialize() {
+            use();
+            loadUniforms();
+        }
 
-		GLuint getId() const { return id; }
+        GLuint getId() const { return id; }
 
-	protected:
-		GLuint id = GL_ZERO;
+    protected:
+        GLuint id = GL_ZERO;
 
-		virtual void loadUniforms() {}
+        virtual void loadUniforms() {}
 };
 
 #endif // SHADER_SHADER_H

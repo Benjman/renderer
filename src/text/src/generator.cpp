@@ -49,85 +49,85 @@ internal::TextMeshGenerator::TextMeshGenerator(Text& root, float_t* vert_buf, ui
 
 
 void internal::TextMeshGenerator::generate_structure(Text& root, std::vector<Line*>* lines) {
-	float_t scale = root.m_line_height / root.m_font->line_height;
+    float_t scale = root.m_line_height / root.m_font->line_height;
 
-	Word* word = new Word;
-	Line* line = new Line(root.m_max_width);
+    Word* word = new Word;
+    Line* line = new Line(root.m_max_width);
 
-	lines->push_back(line);
+    lines->push_back(line);
 
     root.renderable_char_count = 0;
 
-	for (size_t i = 0, len = root.m_value.size(); i < len; i++) {
-		char c = root.m_value.at(i);
-		if (c == ' ') {
-			if (!line->try_add_word(word)) {
-				line = new Line(root.m_max_width);
-				lines->push_back(line);
-				line->try_add_word(word);
-			}
-			word = new Word;
-			float_t tmp_x = 0, tmp_y = 0;
-			root.m_font->get_char(' ', &tmp_x, &tmp_y, scale);
-			line->width += tmp_x;
-			continue;
-		}
+    for (size_t i = 0, len = root.m_value.size(); i < len; i++) {
+        char c = root.m_value.at(i);
+        if (c == ' ') {
+            if (!line->try_add_word(word)) {
+                line = new Line(root.m_max_width);
+                lines->push_back(line);
+                line->try_add_word(word);
+            }
+            word = new Word;
+            float_t tmp_x = 0, tmp_y = 0;
+            root.m_font->get_char(' ', &tmp_x, &tmp_y, scale);
+            line->width += tmp_x;
+            continue;
+        }
 
-		float_t kern = 0;
-		if (i + 1 != len) {
-			// kern = (float_t) stbtt_GetCodepointKernAdvance(&root.m_font->fontinfo, c, root.m_value.at(i + 1)) * context.scale;
-		}
+        float_t kern = 0;
+        if (i + 1 != len) {
+            // kern = (float_t) stbtt_GetCodepointKernAdvance(&root.m_font->fontinfo, c, root.m_value.at(i + 1)) * context.scale;
+        }
 
-		word->add_char(root.m_font, scale, c, kern);
+        word->add_char(root.m_font, scale, c, kern);
         root.renderable_char_count++;
-	}
+    }
 
-	if (!line->try_add_word(word)) {
-		line = new Line(root.m_max_width);
-		lines->push_back(line);
-		line->try_add_word(word);
-	}
+    if (!line->try_add_word(word)) {
+        line = new Line(root.m_max_width);
+        lines->push_back(line);
+        line->try_add_word(word);
+    }
 }
 
 void internal::TextMeshGenerator::process_line(Line* line, Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t* cursor_x, float_t* cursor_y, size_t* pointer, float_t display_height, float_t aspect_ratio) {
-	for (auto word : line->words) {
-		for (size_t i = 0, len = word->value.size(); i < len; i++) {
+    for (auto word : line->words) {
+        for (size_t i = 0, len = word->value.size(); i < len; i++) {
 
-			stbtt_aligned_quad quad = root.m_font->get_char(word->value.at(i), cursor_x, cursor_y, scale);
+            stbtt_aligned_quad quad = root.m_font->get_char(word->value.at(i), cursor_x, cursor_y, scale);
             process_quad(quad, &vert_buf[(*pointer * VERT_COUNT)], &idx_buf[*pointer * IDX_COUNT], *pointer * 4, display_height, aspect_ratio);
             (*pointer)++;
 
-			// adjust for kerning
+            // adjust for kerning
             if (len >= i + 1) {
-				// *cursor_x += (float_t) stbtt_GetCodepointKernAdvance(&context.text->font->fontinfo, context.text->m_value.at(i), context.text->m_value.at(i + 1)) * context.scale;
-			}
-		}
+                // *cursor_x += (float_t) stbtt_GetCodepointKernAdvance(&context.text->font->fontinfo, context.text->m_value.at(i), context.text->m_value.at(i + 1)) * context.scale;
+            }
+        }
 
         root.m_font->get_char(' ', cursor_x, cursor_y, scale);
-	}
+    }
 }
 
 void internal::TextMeshGenerator::process_quad(stbtt_aligned_quad quad, float_t *vert_buf, uint32_t *idx_buf, size_t idx_offset, float_t display_height, float_t aspect_ratio) {
-	// normalize to screen space
-	quad.x0 /= display_height;
-	quad.x1 /= display_height;
-	quad.y0 /= display_height;
-	quad.y1 /= display_height;
+    // normalize to screen space
+    quad.x0 /= display_height;
+    quad.x1 /= display_height;
+    quad.y0 /= display_height;
+    quad.y1 /= display_height;
 
-	// scale for aspect ratio
-	if (aspect_ratio > 1) {
-		quad.y0 *= aspect_ratio;
-		quad.y1 *= aspect_ratio;
-	} else {
-		quad.x0 *= aspect_ratio;
-		quad.x1 *= aspect_ratio;
-	}
+    // scale for aspect ratio
+    if (aspect_ratio > 1) {
+        quad.y0 *= aspect_ratio;
+        quad.y1 *= aspect_ratio;
+    } else {
+        quad.x0 *= aspect_ratio;
+        quad.x1 *= aspect_ratio;
+    }
 
-	// map from [0,1] to [-1,1]
-	quad.x0 =  2 * quad.x0 - 1;
-	quad.x1 =  2 * quad.x1 - 1;
-	quad.y0 = -2 * quad.y0 + 1;
-	quad.y1 = -2 * quad.y1 + 1;
+    // map from [0,1] to [-1,1]
+    quad.x0 =  2 * quad.x0 - 1;
+    quad.x1 =  2 * quad.x1 - 1;
+    quad.y0 = -2 * quad.y0 + 1;
+    quad.y1 = -2 * quad.y1 + 1;
 
     // vertices
     // vert_0
@@ -154,16 +154,16 @@ void internal::TextMeshGenerator::process_quad(stbtt_aligned_quad quad, float_t 
 }
 
 bool internal::TextMeshGenerator::Line::try_add_word(Word* word) {
-	if (max_width < width + word->width)
-		return false;
-	words.emplace_back(word);
-	width += word->width;
-	return true;
+    if (max_width < width + word->width)
+        return false;
+    words.emplace_back(word);
+    width += word->width;
+    return true;
 }
 
 void internal::TextMeshGenerator::Word::add_char(const Font* font, float_t scale, char c, float_t kern) {
-	float_t tmp_x = 0, tmp_y = 0;
+    float_t tmp_x = 0, tmp_y = 0;
     font->get_char(c, &tmp_x, &tmp_y, scale);
-	width += tmp_x * scale + kern;
-	value += c;
+    width += tmp_x * scale + kern;
+    value += c;
 }

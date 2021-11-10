@@ -3,9 +3,9 @@
 #include <shader/vbo.h>
 
 void testBoundVertexArray(GLuint id) {
-	ASSERT_EQ(Vao::findBoundVertexArray(), id);
+    ASSERT_EQ(Vao::findBoundVertexArray(), id);
 }
 
 void testBoundVertexBuffer(GLenum target, GLuint id) {
-	ASSERT_EQ(Vbo::findBoundBuffer(target), id);
+    ASSERT_EQ(Vbo::findBoundBuffer(target), id);
 }
