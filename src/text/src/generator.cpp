@@ -43,12 +43,11 @@ internal::TextMeshGenerator::TextMeshGenerator(Text& root, float_t* vert_buf, ui
     }
 
 void internal::TextMeshGenerator::generate_structure(Text& root, std::vector<Line>* lines) {
-    root.reset();
-
     float_t scale = root.get_font_scale();
-
     Line line(root.m_max_width);
     Word word;
+
+    root.reset();
 
     for (size_t i = 0, len = root.m_value.size(); i < len; i++) {
         char c = root.m_value.at(i);
@@ -79,6 +78,8 @@ void internal::TextMeshGenerator::generate_structure(Text& root, std::vector<Lin
         line = Line(root.m_max_width);
         line.try_add_word(word);
     }
+
+    lines->emplace_back(line);
 }
 
 void internal::TextMeshGenerator::process_line(Line& line, Text& root, float_t* vert_buf, uint32_t* idx_buf, float_t* cursor_x, float_t* cursor_y, size_t* pointer, float_t display_height, float_t aspect_ratio) const {
