@@ -9,11 +9,11 @@ inline constexpr size_t KILOBYTE = 1024;
 inline constexpr size_t MEGABYTE = KILOBYTE * 1024;
 
 inline size_t KILOBYTES(size_t n) {
-    return 1024 * n;
+    return KILOBYTE * n;
 }
 
 inline size_t MEGABYTES(size_t n) {
-    return 1024 * KILOBYTES(n);
+    return MEGABYTE * n;
 }
 
 template<typename T>
