@@ -38,11 +38,17 @@ void load_font(Font& font, const char* path) {
 
 stbtt_aligned_quad Font::get_char(u_char c, float_t* cursor_x, float_t* cursor_y, float_t scale) const {
     stbtt_aligned_quad quad;
-    stbtt_GetPackedQuad(chardata, width, height, c - 32, cursor_x, cursor_y, &quad, 0);
-    quad.x0 *= scale;
+    float_t tmp_x = 0;
+    stbtt_GetPackedQuad(chardata, width, height, c - 32, &tmp_x, cursor_y, &quad, 0);
+
+    quad.x0 = quad.x0 * scale + *cursor_x;
+    quad.x1 = quad.x1 * scale + *cursor_x;
+
     quad.y0 *= scale;
-    quad.x1 *= scale;
     quad.y1 *= scale;
+
+    *cursor_x += tmp_x * scale;
+
     return quad;
 }
 

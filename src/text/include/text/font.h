@@ -7,6 +7,9 @@
 #include <cmath>
 #include <limits>
 
+inline constexpr size_t VERT_COUNT = 16;
+inline constexpr size_t IDX_COUNT = 6;
+
 struct Font {
     static inline constexpr size_t ATLAS_WIDTH = 1024;
     static inline constexpr size_t ATLAS_HEIGHT = 1024;

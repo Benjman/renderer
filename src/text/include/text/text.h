@@ -39,7 +39,7 @@ class Text {
 
         void calc_sizes(size_t* vert_buf_size, size_t* idx_buf_size);
 
-        void generate_mesh(float_t* vert_buf, uint32_t* idx_buf, float_t display_height, float_t aspect_ratio);
+        void generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height);
 
         float_t get_font_scale();
 
