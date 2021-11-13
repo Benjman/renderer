@@ -2,7 +2,9 @@
 
 #include <core/components/position2d.h>
 #include <core/file.h>
+#include <core/input.h>
 #include <core/runner.h>
+
 #include <shader.h>
 
 #include "./components/ball.h"
@@ -13,7 +15,6 @@
 #include "./systems/collision_system.h"
 #include "./systems/move_system.h"
 #include "./systems/render_system.h"
-#include "core/input.h"
 
 const GLfloat vertices[] = {
     // positions
@@ -37,8 +38,8 @@ class BreakoutRunner : public Runner {
   Texture texture = Texture(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT);
 
 public:
-  BreakoutRunner(GLFWwindow *window, const int width, const int height)
-      : Runner(window, width, height) {
+  BreakoutRunner(GLFWwindow *window, display_profile_t display_profile)
+      : Runner(window, display_profile) {
     File vert = load_file(RES_PATH(shaders/basic.vert));
     File frag = load_file(RES_PATH(shaders/basic.frag));
     Shader shader;
@@ -67,8 +68,8 @@ public:
 
     for (auto row = 0, rows = 8; row < rows; row++) {
       for (auto col = 0, cols = 15; col < cols; col++) {
-        const auto x = (col + 1.) / cols * width;
-        const auto y = ((row + 1.) / rows * height) + 50;
+        const auto x = (col + 1.) / cols * m_width;
+        const auto y = ((row + 1.) / rows * m_height) + 50;
 
         const auto brick = m_registry.create();
         m_registry.emplace<Block>(brick, 1);
@@ -84,7 +85,7 @@ public:
     // m_dispatcher.sink<ViewportSizeChange>().connect<&RenderSystem::set_viewport>(render_system);
 
     render_system.init(m_dispatcher);
-    ViewportSizeChange v(width, height);
+    ViewportSizeChange v(m_width, m_height);
     render_system.set_viewport(v);
 
     collideables.ball = ball;

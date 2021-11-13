@@ -3,6 +3,7 @@ project(core)
 
 add_library(core STATIC
     ./src/file.cpp
+    ./src/glfw.cpp
     ./src/input.cpp
     ./src/runner.cpp
     ./src/window.cpp
@@ -11,7 +12,6 @@ add_library(core STATIC
     ./src/components/position2d.cpp
     ./src/components/position3d.cpp
     ./src/ui/ui_element.cpp
-    ./src/utils/glfw.cpp
     )
 
 find_package(GLFW REQUIRED)

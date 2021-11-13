@@ -1,16 +1,17 @@
-#include "../../utils/glfw.h"
+#include <core/glfw.h>
+#include <core/window.h>
+
 #include "src/breakout_runner.hpp"
 
 #include <iostream>
 
 int main(int argc, char **argv) {
-	const int width = 640;
-	const int height = 480;
+    display_profile_t display_profile = DISPLAY_PROFILE_640_480;
 	try {
-		GLFWwindow *window = initializeGlfw("Breakout", width, height);
-		BreakoutRunner runner(window, width, height);
+		GLFWwindow *window = initializeGlfw("Breakout", display_profile);
+		BreakoutRunner runner(window, display_profile);
 		return runner.run();
-	} catch (const std::exception &ex) {
+	} catch (const std::exception&) {
 		std::cin.get();
 		return EXIT_FAILURE;
 	} catch (...) {

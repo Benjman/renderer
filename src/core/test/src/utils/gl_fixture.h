@@ -2,7 +2,7 @@
 #define CORE_TEST_GL_FIXTURE
 
 #include <gtest/gtest.h>
-#include "utils/glfw.h"
+#include <core/glfw.h>
 
 struct GLFixture : public ::testing::Test {
 	protected:

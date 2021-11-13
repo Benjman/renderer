@@ -22,8 +22,8 @@ class SandboxRunner : public Runner {
     CameraController cameraController;
 
     public:
-        SandboxRunner(GLFWwindow *window, const uint32_t width, const uint32_t height) : Runner(window, width, height) {
-            float_t aspect = (float_t) width / (float_t) height ;
+        SandboxRunner(GLFWwindow *window, display_profile_t display_profile) : Runner(window, display_profile) {
+            float_t aspect = (float_t) m_width / (float_t) m_height ;
             float vertices[] = {
                 -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
                  0.5f, -0.5f, -0.5f,  1.0f, 0.0f,

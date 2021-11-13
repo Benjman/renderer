@@ -14,7 +14,7 @@
 
 class TextRunner : public Runner {
 	public:
-		TextRunner(GLFWwindow *window, const uint32_t width, const uint32_t height) : Runner(window, width, height) {
+		TextRunner(GLFWwindow *window, display_profile_t display_profile) : Runner(window, display_profile) {
 			File vert = load_file(RES_PATH(shaders/text.vert));
 			File frag = load_file(RES_PATH(shaders/text.frag));
 

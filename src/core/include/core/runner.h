@@ -8,12 +8,13 @@
 #include "fwd.h"
 
 #include "runner_context.h"
+#include "window.h"
 
 class GLFWwindow;
 
 class Runner {
     public:
-        Runner(GLFWwindow *glfw_window, const int width, const int height);
+        Runner(GLFWwindow *glfw_window, display_profile_t display_profile);
 
         ~Runner() noexcept;
 

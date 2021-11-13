@@ -8,8 +8,6 @@ add_executable(app
 	# ./main_test.cpp
 	${GLAD_C}
 
-	./utils/glfw.cpp
-
 	./SimplexNoise.h
 	./SimplexNoise.cpp
 	)

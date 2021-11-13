@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
 
-#include "utils/glfw.h"
+#include <core/glfw.h>
+#include <core/file.h>
+
 #include "logging.h"
 #include "SimplexNoise.h"
 
-#include <core/file.h>
 #include <shader.h>
 
 const GLfloat vertices[] = {
@@ -36,7 +37,7 @@ struct Color {
 	Color(float_t r, float_t g, float_t b) : r(r), g(g), b(b) {}
 };
 
-GLFWwindow *window = nullptr;
+GLFWwindow *glfw_window = nullptr;
 
 float_t scale     = 100.f;
 float_t lacunarity    = 1.99f;
@@ -84,7 +85,7 @@ void fillBuffer(std::vector<GLfloat> *texData, float_t time) {
 
 int main(const int argc, const char *argv[]) {
 	spdlog::set_level(spdlog::level::trace);
-	window = initializeGlfw("Testing", 800, 800);
+	glfw_window = initializeGlfw("Testing", 800, 800, false);
 
 	File vert = load_file(RES_PATH(shaders/basic.vert));
 	File frag = load_file(RES_PATH(shaders/basic.frag));
@@ -117,7 +118,7 @@ int main(const int argc, const char *argv[]) {
 	double_t updateInterval = 1.f / 30,
 			 nextUpdate = 0.f;
 
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(glfw_window)) {
 		double_t time = glfwGetTime();
 
 		if (time > nextRender) {
@@ -133,7 +134,7 @@ int main(const int argc, const char *argv[]) {
 			glClear(GL_COLOR_BUFFER_BIT);
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(glfw_window);
 			glfwPollEvents();
 
 			// std::cout << std::endl;
@@ -141,7 +142,7 @@ int main(const int argc, const char *argv[]) {
 	}
 
 	std::atexit([]() {
-			destroyGlfw(window);
+			destroyGlfw(glfw_window);
 	});
 
 	return 0;
