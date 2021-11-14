@@ -1,6 +1,7 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
+#include "core/memory/element_buffer.h"
 #include <core/memory/memory_zone.h>
 #include <core/window.h>
 #include <text/font.h>
@@ -36,10 +37,10 @@ class TextRunner : public Runner {
 
             text.calc_sizes(&v_size, &idx_size);
 
-            text.generate_mesh(vert_memory.ptr, idx_memory.ptr, window::width(), window::height());
+            text.generate_mesh(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, window::width(), window::height());
 
-            vbo.storeData(vert_memory.ptr, v_size);
-			ebo.storeData(idx_memory.ptr, idx_size);
+            vbo.storeData(buffer.vert_buffer.ptr, v_size);
+			ebo.storeData(buffer.idx_buffer.ptr, idx_size);
 
             vao.createAttribute(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) 0);
             vao.createAttribute(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
@@ -76,8 +77,7 @@ class TextRunner : public Runner {
 		Vbo vbo = Vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW);
         Vbo ebo = Vbo(GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 
-        MemoryZone<float_t> vert_memory = MemoryZone<float_t>(nullptr, MEGABYTES(2));
-        MemoryZone<uint32_t> idx_memory = MemoryZone<uint32_t>(nullptr, MEGABYTES(2));
+        ElementBuffer buffer = ElementBuffer(MEGABYTES(2), MEGABYTES(1));
 
 };
 
