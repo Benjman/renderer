@@ -19,6 +19,11 @@ namespace window {
     float_t width();
     float_t height();
 
+    void display_profile(display_profile_t display_profile);
+    display_profile_t display_profile();
+    display_profile_t find_display_profile(size_t width, size_t height);
+
+    void set_size(display_profile_t display_profile);
     void set_size(float_t width, float_t height);
 
     size_t find_display_profile_width(display_profile_t display_profile);

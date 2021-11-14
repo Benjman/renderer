@@ -35,3 +35,14 @@ TEST(WindowTests_display_profile, height) {
     ASSERT_EQ(4320, window::find_display_profile_height(DISPLAY_PROFILE_7680_4320));
     ASSERT_EQ(0, window::find_display_profile_height(std::numeric_limits<size_t>::max())) << "Unrecognized display profile should return 0";
 }
+
+TEST(WindowTests_display_profile, find_display_profile) {
+    ASSERT_EQ(DISPLAY_PROFILE_640_480, window::find_display_profile(640, 480));
+    ASSERT_EQ(DISPLAY_PROFILE_1280_720, window::find_display_profile(1280, 720));
+    ASSERT_EQ(DISPLAY_PROFILE_1920_1080, window::find_display_profile(1920, 1080));
+    ASSERT_EQ(DISPLAY_PROFILE_2560_1440, window::find_display_profile(2560, 1440));
+    ASSERT_EQ(DISPLAY_PROFILE_2048_1080, window::find_display_profile(2048, 1080));
+    ASSERT_EQ(DISPLAY_PROFILE_3840_2160, window::find_display_profile(3840, 2160));
+    ASSERT_EQ(DISPLAY_PROFILE_7680_4320, window::find_display_profile(7680, 4320));
+    ASSERT_EQ(0, window::find_display_profile(1, 1));
+}
