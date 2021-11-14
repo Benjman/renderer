@@ -10,6 +10,7 @@ add_executable(tests_core
 
     ./src/main.cpp
     ./src/input_test.cpp
+    ./src/math_test.cpp
     ./src/memory_test.cpp
     ./src/ui_test.cpp
     ./src/window.cpp
