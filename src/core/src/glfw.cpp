@@ -10,14 +10,6 @@ extern GLFWwindow* initializeGlfw(const char* title, display_profile_t display_p
 
 extern GLFWwindow* initializeGlfw(const char* title, int width, int height, bool headless) {
 	if (!glfwInit())
-		return nullptr;
-
-	GLFWwindow* glfw_window;
-
-	if (glfw_window != nullptr)
-		return nullptr;
-
-	if (!glfwInit())
 		throw std::runtime_error("Failed to initialize GLFW");
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -26,7 +18,8 @@ extern GLFWwindow* initializeGlfw(const char* title, int width, int height, bool
 	if (headless)
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-	glfw_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+	GLFWwindow* glfw_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+
 	if (!glfw_window)
 		throw std::runtime_error("Failed to create GLFW window");
 
@@ -35,7 +28,7 @@ extern GLFWwindow* initializeGlfw(const char* title, int width, int height, bool
 	if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
 		throw std::runtime_error("Failed to initialize glad");
 
-	return std::move(glfw_window);
+	return glfw_window;
 }
 
 extern void destroyGlfw(GLFWwindow* glfw_window) {
