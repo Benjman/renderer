@@ -4,3 +4,4 @@
 
 class Runner;
 class RunnerContext;
+class Strategy;
