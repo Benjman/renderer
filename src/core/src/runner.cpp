@@ -36,7 +36,7 @@ Runner::~Runner() noexcept {
 const int32_t Runner::run() {
     const constexpr double_t dt = 1.0 / 60.0;
 
-    RunnerContext context(m_registry, m_dispatcher);
+    RunnerContext context;
     init(context);
 
     double_t time = 0.0;
