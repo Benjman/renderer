@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 project(core)
 
 add_library(core STATIC
+    ./src/controller.cpp
     ./src/file.cpp
     ./src/glfw.cpp
     ./src/input.cpp

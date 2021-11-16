@@ -30,10 +30,11 @@ class CameraController : public Controller {
         int TRANSLATE_KEY_UP = KEY_A;
         int TRANSLATE_KEY_DOWN = KEY_Z;
 
+        void input(const RunnerContext& context);
+
     public:
-		void init(const RunnerContext& context) override;
-		void update(const RunnerContext& context) override;
-        void input(const RunnerContext& context) override;
+		void do_init(const RunnerContext& context) override;
+		void do_update(const RunnerContext& context) override;
 
         const glm::mat4 view() const noexcept;
         const glm::mat4 proj_ortho() const noexcept;

@@ -8,6 +8,7 @@ include_directories(
 add_executable(tests_core
     ./src/utils/gl_fixture.cpp
 
+    ./src/controller_test.cpp
     ./src/main.cpp
     ./src/input_test.cpp
     ./src/math_test.cpp

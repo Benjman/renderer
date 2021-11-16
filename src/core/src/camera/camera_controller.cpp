@@ -5,11 +5,11 @@
 #include <iostream>
 #include <string>
 
-void CameraController::init(const RunnerContext& context) {
+void CameraController::do_init(const RunnerContext& context) {
     m_camera.position = glm::vec3(0.0, 0.0, -3.0);
 }
 
-void CameraController::update(const RunnerContext &context) {
+void CameraController::do_update(const RunnerContext &context) {
     input(context);
 }
 
