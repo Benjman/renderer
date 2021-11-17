@@ -6,11 +6,11 @@
 #include <GL/gl.h>
 
 class RenderSystem final {
-	public:
-		RenderSystem() = default;
-		~RenderSystem() = default;
+    public:
+        RenderSystem() = default;
+        ~RenderSystem() = default;
 
-		void render(entt::registry &registry, int width, int height, std::vector<GLfloat> &texture);
+        void render(entt::registry &registry, int width, int height, std::vector<GLfloat> &texture);
 };
 
 #endif // PONG_RENDERSYSTEM_H

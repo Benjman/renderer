@@ -2,12 +2,12 @@
 #define BREAKOUT_BRICK_H
 
 struct Block final {
-	int hit_count;
+    int hit_count;
 
-	Block(const int hit_count) noexcept;
-	Block(Block&&) noexcept;
-	~Block() noexcept = default;
-	Block &operator=(Block&&) noexcept;
+    Block(const int hit_count) noexcept;
+    Block(Block&&) noexcept;
+    ~Block() noexcept = default;
+    Block &operator=(Block&&) noexcept;
 
 };
 

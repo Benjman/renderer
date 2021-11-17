@@ -8,13 +8,6 @@
 #include <glm/vec3.hpp>
 
 class UiElement {
-    private:
-        UiElement* m_parent;
-
-        glm::vec2 m_pos = glm::vec2(0);
-        glm::vec3 m_background_color = glm::vec3(-1); // -1 represents no bg
-        Texture* m_texture = nullptr;
-
     public:
         // TODO copy and move constructors
 
@@ -78,6 +71,13 @@ class UiElement {
             }
             return glm::vec2(pos());
         }
+
+    private:
+        UiElement* m_parent;
+
+        glm::vec2 m_pos = glm::vec2(0);
+        glm::vec3 m_background_color = glm::vec3(-1); // -1 represents no bg
+        Texture* m_texture = nullptr;
 
 };
 

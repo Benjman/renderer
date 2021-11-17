@@ -16,6 +16,17 @@ namespace internal {
 inline constexpr size_t TEXT_ALIGN_LEFT = 1;
 
 class Text {
+    public:
+        static TextBuilder create(std::string value, Font* font);
+
+        void calc_sizes(size_t* vert_buf_size, size_t* idx_buf_size);
+
+        void generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height);
+
+        float_t get_font_scale();
+
+        size_t renderable_char_count = 0;
+
     private:
         friend class TextBuilder;
         friend class internal::TextMeshGenerator;
@@ -34,16 +45,6 @@ class Text {
 
         void reset();
 
-    public:
-        static TextBuilder create(std::string value, Font* font);
-
-        void calc_sizes(size_t* vert_buf_size, size_t* idx_buf_size);
-
-        void generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height);
-
-        float_t get_font_scale();
-
-        size_t renderable_char_count = 0;
 };
 
 #endif // TEXT_TEXT_H

@@ -5,19 +5,19 @@
 #include <core/glfw.h>
 
 struct GLFixture : public ::testing::Test {
-	protected:
-		static void SetUpTestSuite() {
-			m_window = initializeGlfw("Shader Tests", 1, 1, true);
-		}
+    protected:
+        static void SetUpTestSuite() {
+            m_window = initializeGlfw("Shader Tests", 1, 1, true);
+        }
 
-		static void TearDownTestSuite() {
-			std::atexit([]() {
+        static void TearDownTestSuite() {
+            std::atexit([]() {
                     destroyGlfw(m_window);
-			});
-		}
+                    });
+        }
 
-	private:
-		static GLFWwindow *m_window;
+    private:
+        static GLFWwindow *m_window;
 };
 
 

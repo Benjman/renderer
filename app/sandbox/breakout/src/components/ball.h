@@ -4,16 +4,16 @@
 #include <glm/vec3.hpp>
 
 struct Ball final {
-	double vel_x;
-	double vel_y;
-	double initial_x_vel;
+    double vel_x;
+    double vel_y;
+    double initial_x_vel;
 
-	int bounce_immune_ticks = 0;
+    int bounce_immune_ticks = 0;
 
-	Ball(const double vel_x, const double vel_y) noexcept;
-	Ball(Ball&&) noexcept;
-	~Ball() noexcept = default;
-	Ball &operator=(Ball&&) noexcept;
+    Ball(const double vel_x, const double vel_y) noexcept;
+    Ball(Ball&&) noexcept;
+    ~Ball() noexcept = default;
+    Ball &operator=(Ball&&) noexcept;
 
 };
 

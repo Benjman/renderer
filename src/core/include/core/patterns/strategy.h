@@ -5,15 +5,16 @@
 #include <functional>
 
 class Strategy {
-    private:
-        std::function<void()> strat;
-
     public:
         Strategy(std::function<void()> strat) : strat(strat) {}
 
         void execute() {
             return strat();
         }
+
+    private:
+        std::function<void()> strat;
+
 };
 
 class EmptyStrategy : public Strategy {

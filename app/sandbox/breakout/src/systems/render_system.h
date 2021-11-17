@@ -8,17 +8,17 @@
 #include <core/events.h>
 
 class RenderSystem final {
-	public:
-		RenderSystem() = default;
+    public:
+        RenderSystem() = default;
 
-		void init(entt::dispatcher& dispatcher);
+        void init(entt::dispatcher& dispatcher);
 
-		void render(entt::registry &registry, int width, int height);
+        void render(entt::registry &registry, int width, int height);
 
-		void set_viewport(const ViewportSizeChange &data);
+        void set_viewport(const ViewportSizeChange &data);
 
-	private:
-		std::vector<GLfloat> m_texture;
+    private:
+        std::vector<GLfloat> m_texture;
 
 };
 

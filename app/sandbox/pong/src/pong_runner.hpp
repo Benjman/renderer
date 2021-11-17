@@ -18,22 +18,22 @@
 #include <iostream>
 
 const GLfloat vertices[] = {
-		// positions
-		 1.f,  1.f, 0.f,
-		 1.f, -1.f, 0.f,
-		-1.f, -1.f, 0.f,
-		-1.f,  1.f, 0.f,
+    // positions
+     1.f,  1.f, 0.f,
+     1.f, -1.f, 0.f,
+    -1.f, -1.f, 0.f,
+    -1.f,  1.f, 0.f,
 
-		// tex coords
-		1.0f, 1.0f,
-		1.0f, 0.0f,
-		0.0f, 0.0f,
-		0.0f, 1.0f,
+    // tex coords
+    1.0f, 1.0f,
+    1.0f, 0.0f,
+    0.0f, 0.0f,
+    0.0f, 1.0f,
 };
 
 const GLuint indices[] = {
-		1, 2, 3,
-		0, 1, 3,
+    1, 2, 3,
+    0, 1, 3,
 };
 
 class PongRunner : public Runner {

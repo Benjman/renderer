@@ -5,17 +5,17 @@
 #include <vector>
 
 struct CollisionHolder {
-	entt::entity player;
-	entt::entity ball;
-	std::vector<entt::entity> blocks;
-	entt::registry *registry;
+    entt::entity player;
+    entt::entity ball;
+    std::vector<entt::entity> blocks;
+    entt::registry *registry;
 };
 
 class CollisionSystem final {
-	public:
-		CollisionSystem() = default;
+    public:
+        CollisionSystem() = default;
 
-		void update(double time, CollisionHolder& holder);
+        void update(double time, CollisionHolder& holder);
 
 };
 

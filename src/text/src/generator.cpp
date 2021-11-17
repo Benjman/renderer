@@ -22,8 +22,8 @@ void internal::TextMeshGenerator::generate(Text &root, float_t *vert_buf, uint32
 
 internal::TextMeshGenerator::TextMeshGenerator(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height)
     : scale(root.get_font_scale()) {
-    std::vector<Line> lines;
-    generate_structure(root, &lines);
+        std::vector<Line> lines;
+        generate_structure(root, &lines);
 
         size_t pointer = 0;
         float_t cursor_x = (float_t) root.m_pos_x,

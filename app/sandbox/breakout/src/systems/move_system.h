@@ -7,16 +7,16 @@
 #include "../components/player.h"
 
 class MoveSystem final {
-		Player::MoveDirection player_movement;
+    public:
+        MoveSystem() = default;
 
-	public:
-		MoveSystem() = default;
+        void on_key_down(const KeyDown &key_down) noexcept;
+        void on_key_up(const KeyUp &key_up) noexcept;
 
-		void on_key_down(const KeyDown &key_down) noexcept;
-		void on_key_up(const KeyUp &key_up) noexcept;
+        void update(const double time, entt::registry &registry, int width, int height);
 
-		void update(const double time, entt::registry &registry, int width, int height);
-
+    private:
+        Player::MoveDirection player_movement;
 };
 
 #endif // BREAKOUT_MOVESYSTEM_H

@@ -9,20 +9,20 @@ Sprite::Sprite(const int radius, glm::vec3 col) noexcept
 }
 
 Sprite::Sprite(Sprite&& s) noexcept {
-	this->color = s.color;
-	this->height = s.height;
-	this->radius = s.radius;
-	this->width  = s.width;
+    this->color = s.color;
+    this->height = s.height;
+    this->radius = s.radius;
+    this->width  = s.width;
 }
 
 Sprite& Sprite::operator=(Sprite&& s) noexcept {
-	if (this != &s) {
-		this->color = s.color;
-		this->height = s.height;
-		this->radius = s.radius;
-		this->width  = s.width;
-	}
+    if (this != &s) {
+        this->color = s.color;
+        this->height = s.height;
+        this->radius = s.radius;
+        this->width  = s.width;
+    }
 
-	return *this;
+    return *this;
 }
 

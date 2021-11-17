@@ -4,11 +4,11 @@
 #include <entt/fwd.hpp>
 
 class AISystem final {
-	public:
-		AISystem() = default;
-		~AISystem() = default;
+    public:
+        AISystem() = default;
+        ~AISystem() = default;
 
-		void update(const double time, entt::registry &registry);
+        void update(const double time, entt::registry &registry);
 };
 
 #endif // PONG_AISYSTEM_H
