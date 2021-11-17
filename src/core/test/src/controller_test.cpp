@@ -179,7 +179,7 @@ TEST(Controller, remove_child) {
 
 TEST(Controller, children_removed_after_post_update) {
     Controller parent(nullptr, true);
-    Controller child(&parent);
+    TestController child(&parent);
     parent.pre_update(context);
 
     ASSERT_EQ(1, parent.children.size());
@@ -191,6 +191,8 @@ TEST(Controller, children_removed_after_post_update) {
     ASSERT_EQ(&child, parent.children.at(0)) << "Child should not have been removed until post_update is called.";
 
     parent.post_update(context);
+    ASSERT_EQ(0, parent.children_to_remove.size()) << "Remove queue expected to be cleared after update.";
     ASSERT_EQ(0, parent.children.size()) << "Child was expected to be removed from collection.";
+    ASSERT_TRUE(child.cleaned_up) << "Child cleanup() should have been called when it was being removed.";
 }
 

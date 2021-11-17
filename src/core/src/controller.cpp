@@ -54,7 +54,7 @@ void Controller::post_update(const RunnerContext& context) {
     if (status != Active)
         return;
 
-    if (children_to_remove.empty()) {
+    if (!children_to_remove.empty()) {
         std::vector<Controller*>::iterator it;
         for (auto* child : children_to_remove) {
             child->cleanup();
