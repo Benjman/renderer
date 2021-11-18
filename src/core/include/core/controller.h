@@ -3,7 +3,6 @@
 
 #include <core/fwd.h>
 
-#include <cmath> // double_t
 #include <vector>
 #include <entt/fwd.hpp>
 
@@ -43,6 +42,10 @@ class Controller {
         std::vector<Controller*> children_to_remove;
 
         Status status = Status::Dormant;
+
+        void add_queued_children(const RunnerContext& context);
+        void remove_queued_children(const RunnerContext& context);
+
 };
 
 #endif // CORE_CONTROLLER_H

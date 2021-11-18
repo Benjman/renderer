@@ -1,5 +1,4 @@
 #include <core/controller.h>
-#include <algorithm> // std::find
 
 Controller::Controller(Controller* parent, bool active) : parent(parent), status(active ? Active : Dormant) {
     if (active)
@@ -21,16 +20,8 @@ void Controller::pre_update(const RunnerContext& context) {
     if (status != Active)
         return;
 
+    add_queued_children(context);
     do_pre_update(context);
-
-    // TODO check performance of checking if children_to_add is empty, versus just going into an iterator
-    // whichever wins, also implement it in post_update
-    for (auto* child : children_to_add) {
-        child->parent = this;
-        children.emplace_back(child);
-        child->init(context);
-    }
-    children_to_add.clear();
 
     for (auto* child : children) {
         if (child->status == Active)
@@ -54,21 +45,7 @@ void Controller::post_update(const RunnerContext& context) {
     if (status != Active)
         return;
 
-    if (!children_to_remove.empty()) {
-        std::vector<Controller*>::iterator it;
-        for (auto* child : children_to_remove) {
-            child->cleanup();
-            child->parent = nullptr;
-
-            it = std::find(children.begin(), children.end(), child);
-            if (it == children.end())
-                // TODO warning log
-                return;
-
-            children.erase(it);
-        }
-        children_to_remove.clear();
-    }
+    remove_queued_children(context);
 
     for (auto* child : children) {
         if (child->status == Active)
@@ -84,4 +61,33 @@ void Controller::add_child(Controller* child) {
 
 void Controller::remove_child(Controller* child) {
     children_to_remove.emplace_back(child);
+}
+
+void Controller::remove_queued_children(const RunnerContext& context) {
+    if (!children_to_remove.empty()) {
+        std::vector<Controller*>::iterator it;
+        for (auto* child : children_to_remove) {
+            child->cleanup();
+            child->parent = nullptr;
+
+            it = std::find(children.begin(), children.end(), child);
+            if (it == children.end())
+                // TODO warning log
+                return;
+
+            children.erase(it);
+        }
+        children_to_remove.clear();
+    }
+}
+
+void Controller::add_queued_children(const RunnerContext& context) {
+    // TODO check performance of checking if children_to_add is empty, versus just going into an iterator
+    // whichever wins, also implement it in post_update
+    for (auto* child : children_to_add) {
+        child->parent = this;
+        children.emplace_back(child);
+        child->init(context);
+    }
+    children_to_add.clear();
 }
