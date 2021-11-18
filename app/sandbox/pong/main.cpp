@@ -5,10 +5,9 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
-    display_profile_t display_profile = DISPLAY_PROFILE_640_480;
     try {
-        GLFWwindow *window = initializeGlfw("Pong", display_profile);
-        PongRunner pong(window, display_profile);
+        GLFWwindow *window = initializeGlfw("Pong", DISPLAY_PROFILE_640_480);
+        PongRunner pong(window);
         return pong.run();
     } catch (const std::exception &ex) {
         std::cin.get();

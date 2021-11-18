@@ -39,7 +39,7 @@ class BreakoutRunner : public Runner {
     Texture texture = Texture(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT);
 
     public:
-    BreakoutRunner(GLFWwindow *window, display_profile_t display_profile) : Runner(window, display_profile) {
+    BreakoutRunner(GLFWwindow *window) : Runner(window) {
         File vert = load_file(RES_PATH(shaders/basic.vert));
         File frag = load_file(RES_PATH(shaders/basic.frag));
         Shader shader;

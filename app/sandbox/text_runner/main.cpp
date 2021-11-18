@@ -5,10 +5,9 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
-    display_profile_t display_profile = DISPLAY_PROFILE_640_480;
     try {
-        GLFWwindow *window = initializeGlfw("Text Runner", display_profile);
-        TextRunner runner(window, display_profile);
+        GLFWwindow *window = initializeGlfw("Text Runner", DISPLAY_PROFILE_640_480);
+        TextRunner runner(window);
         return runner.run();
     } catch (const std::exception &ex) {
         std::cin.get();

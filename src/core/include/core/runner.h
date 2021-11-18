@@ -5,23 +5,19 @@
 #include <entt/entt.hpp>
 #include <GL/gl.h>
 
-#include "fwd.h"
-
 #include "runner_context.h"
-#include "window.h"
 
 class GLFWwindow;
 
 class Runner {
     public:
-        Runner(GLFWwindow *glfw_window, display_profile_t display_profile);
+        Runner(GLFWwindow *glfw_window);
 
         ~Runner() noexcept;
 
         const int run();
 
-
-        virtual void windowSizeChanged(int width, int height) = 0;
+        virtual void windowSizeChanged(int width, int height) {}
 
     protected:
         int m_width;

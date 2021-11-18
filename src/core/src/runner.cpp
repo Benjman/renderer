@@ -14,17 +14,15 @@ inline void windowSizeChangeHandler(GLFWwindow*,int32_t,int32_t);
 
 inline static Runner *INSTANCE; // TODO refactor so there is a global map of GLFWwindows and Runners
 
-Runner::Runner(GLFWwindow *glfw_window, display_profile_t display_profile)
-    : m_glfw_window(glfw_window),
-    m_width(window::find_display_profile_width(display_profile)),
-    m_height(window::find_display_profile_height(display_profile)) {
+Runner::Runner(GLFWwindow *glfw_window) : m_glfw_window(glfw_window) {
         INSTANCE = this;
+        glfwGetWindowSize(glfw_window, &m_width, &m_height);
         glfwSetKeyCallback(m_glfw_window, keyHandler);
         glfwSetWindowSizeCallback(m_glfw_window, windowSizeChangeHandler);
         glfwSetCursorPosCallback(m_glfw_window, [](GLFWwindow*, double_t x, double_t y) { input::mouse_move_event(x, y); });
         glfwSetMouseButtonCallback(glfw_window, [](GLFWwindow*, int32_t button, int32_t action, int32_t mods) { input::mouse_button_event(button, action, mods); });
 
-        window::display_profile(display_profile);
+        window::display_profile(window::find_display_profile(m_width, m_height));
 
         spdlog::set_level(spdlog::level::info);
     }

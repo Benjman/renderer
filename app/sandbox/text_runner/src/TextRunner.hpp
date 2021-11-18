@@ -15,7 +15,7 @@
 
 class TextRunner : public Runner {
     public:
-        TextRunner(GLFWwindow *window, display_profile_t display_profile) : Runner(window, display_profile) {
+        TextRunner(GLFWwindow *window) : Runner(window) {
             File vert = load_file(RES_PATH(shaders/text.vert));
             File frag = load_file(RES_PATH(shaders/text.frag));
 
@@ -59,9 +59,6 @@ class TextRunner : public Runner {
         void render() override {
             glClear(GL_COLOR_BUFFER_BIT);
             glDrawElements(GL_TRIANGLES, IDX_COUNT * text.renderable_char_count, GL_UNSIGNED_INT, 0);
-        }
-
-        void windowSizeChanged(int width, int height) override {
         }
 
     private:

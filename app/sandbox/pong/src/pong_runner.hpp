@@ -38,8 +38,7 @@ const GLuint indices[] = {
 
 class PongRunner : public Runner {
     public:
-        PongRunner(GLFWwindow *window, display_profile_t display_profile)
-            : Runner(window, display_profile),
+        PongRunner(GLFWwindow *window) : Runner(window),
             texture(Texture(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_FLOAT)),
             m_texture(std::vector<GLfloat>(m_width * m_height * 3)) {
                 File vert = load_file(RES_PATH(shaders/basic.vert));
@@ -113,10 +112,6 @@ class PongRunner : public Runner {
             texture.upload(&m_texture.at(0));
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
-
-        void windowSizeChanged(int width, int height) override {
-        }
-
 
     private:
         AISystem ai_system;
