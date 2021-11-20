@@ -73,7 +73,7 @@ void Controller::remove_queued_children(const RunnerContext& context) {
             it = std::find(children.begin(), children.end(), child);
             if (it == children.end())
                 // TODO warning log
-                return;
+                continue;
 
             children.erase(it);
         }
