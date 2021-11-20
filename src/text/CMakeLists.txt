@@ -13,6 +13,7 @@ endif()
 
 find_package(GTest REQUIRED)
 find_package(stb REQUIRED)
+find_package(spdlog REQUIRED)
 
 
 add_library(text
@@ -23,6 +24,7 @@ add_library(text
     ./src/text.cpp
     )
 
+target_compile_options(text PRIVATE -Wall -Wextra)
 target_link_libraries(text PRIVATE spdlog::spdlog)
 
 target_include_directories(text

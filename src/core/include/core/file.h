@@ -2,13 +2,16 @@
 #define CORE_FILE_H
 
 #include "config.h"
-#include <cmath>
 
 struct File {
     char* buffer;
-    size_t size;
+    int size;
 
-    File(char* buffer, size_t size) : buffer(buffer), size(size) {}
+    File(char* buffer, int size) : buffer(buffer), size(size) {}
+
+    ~File() {
+        delete[] buffer;
+    }
 };
 
 File load_file(const char* path);

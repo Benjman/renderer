@@ -18,11 +18,12 @@ Vao::~Vao() {
     if (Vao::findBoundVertexArray() == id)
         unbind();
 
-    glDeleteVertexArrays(1, &id);
     for (auto attribute : attributes) {
         attribute->disable();
         delete attribute;
     }
+
+    glDeleteVertexArrays(1, &id);
 }
 
 void Vao::bind() {

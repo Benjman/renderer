@@ -28,8 +28,8 @@ class Text {
         size_t renderable_char_count = 0;
 
     private:
-        friend class TextBuilder;
-        friend class internal::TextMeshGenerator;
+        friend struct TextBuilder;
+        friend struct internal::TextMeshGenerator;
 
         std::string m_value = "";
         const Font* m_font = nullptr;

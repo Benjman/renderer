@@ -1,39 +1,63 @@
+#include <cstdlib>
 #define STB_RECT_PACK_IMPLEMENTATION
 #define STB_TRUETYPE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+
+// stb has a bunch of Wall errors, disabling them for the make process
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 #include <stb_rect_pack.h>
 #include <stb_truetype.h>
 #include <stb_image_write.h>
+
+#pragma GCC diagnostic pop
+
 #undef STB_TRUETYPE_IMPLEMENTATION
 #undef STB_RECT_PACK_IMPLEMENTATION
 #undef STB_IMAGE_WRITE_IMPLEMENTATION
 
 #include <text/font.h>
 #include <iostream> // ghetto logging
+#include <fstream>
+#include <sstream>
 
-namespace internal {
-    FILE* get_file(const char *path, u_char* buffer);
-}
+Font Font::load_font(const char *path) {
+    Font font;
 
-void load_font(Font& font, const char* path) {
-    internal::get_file(path, font.font_data);
+    auto ss = std::ostringstream{};
+    std::ifstream ifile(path);
+    if (!ifile.is_open()) {
+        std::cerr << "Couldn't open truetype file\n";
+        exit(EXIT_FAILURE);
+    }
+    ss << ifile.rdbuf();
+    auto buf = ss.str();
 
     if (!stbtt_PackBegin(&font.context, font.atlas_data, font.width, font.height, 0, 1, nullptr))
         // TODO error handling
         throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
-    stbtt_PackFontRange(&font.context, font.font_data, 0, font.LINE_HEIGHT, 32, 95, font.chardata);
+    stbtt_PackFontRange(&font.context, (u_char*)&buf[0], 0, font.LINE_HEIGHT, 32, 95, font.chardata);
     stbtt_PackEnd(&font.context);
 
     // get metrics using old pai
     stbtt_fontinfo info;
-    stbtt_InitFont(&info, font.font_data, 0);
+    stbtt_InitFont(&info, (u_char*)&buf[0], 0);
     int32_t ascent, descent, line_gap;
     stbtt_GetFontVMetrics(&info, &ascent, &descent, &line_gap);
     float_t scale = stbtt_ScaleForPixelHeight(&info, font.LINE_HEIGHT);
     font.ascent = (float_t) ascent * scale;
     font.descent = (float_t) descent * scale;
     font.line_gap = (float_t) line_gap * scale;
+
+    return font;
+}
+
+Font::~Font() {
+    //delete[] this->atlas_data;
+    //delete[] font_data; // 1mb
+    //delete[] chardata;
 }
 
 stbtt_aligned_quad Font::get_char(u_char c, float_t* cursor_x, float_t* cursor_y, float_t scale) const {
@@ -50,14 +74,4 @@ stbtt_aligned_quad Font::get_char(u_char c, float_t* cursor_x, float_t* cursor_y
     *cursor_x += tmp_x * scale;
 
     return quad;
-}
-
-FILE* internal::get_file(const char *path, u_char* buffer) {
-    FILE* file = fopen(path, "rb");
-    if (!file) {
-        throw std::runtime_error(std::string(std::string("TrueType file not found: ") + path).c_str());
-    }
-    fread(buffer, 1, 1024 * 1024 * 5, file);
-    fclose(file);
-    return file;
 }

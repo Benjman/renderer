@@ -24,7 +24,7 @@ class TextRunner : public Runner {
             shader.use();
             vao.bind();
 
-            load_font(font, RES_PATH(fonts/DejaVuSans.ttf));
+            font = Font::load_font(RES_PATH(fonts/DejaVuSans.ttf));
 
             Texture texture(GL_TEXTURE_2D, 0, GL_RED, Font::ATLAS_WIDTH, Font::ATLAS_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE);
             texture.bind();

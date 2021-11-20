@@ -11,6 +11,7 @@ File load_file(const char *path) {
     auto* buffer = new char[size + 1];
     stream.read(buffer, size);
     buffer[size] = '\0';
+    stream.close();
 
     File file(buffer, size);
     return file;

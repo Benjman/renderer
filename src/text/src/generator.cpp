@@ -60,11 +60,6 @@ void internal::TextMeshGenerator::generate_structure(Text &root, std::vector<Lin
             continue;
         }
 
-        float_t kern = 0;
-        if (i + 1 != len) {
-            // kern = (float_t) stbtt_GetCodepointKernAdvance(&root.m_font->fontinfo, c, root.m_value.at(i + 1)) * context.scale;
-        }
-
         float_t tmp_x = 0, tmp_y = 0;
         root.m_font->get_char(root.m_value.at(i), &tmp_x, &tmp_y, scale);
         word.add_char(root.m_value.at(i), tmp_x);

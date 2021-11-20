@@ -11,6 +11,7 @@ endif ()
 
 find_package(GTest REQUIRED)
 find_package(GLFW REQUIRED)
+find_package(spdlog REQUIRED)
 
 add_library(shader
     STATIC
@@ -27,6 +28,7 @@ target_include_directories(shader
     PUBLIC ./include
     PRIVATE ${GL_INCLUDES})
 
+target_compile_options(shader PRIVATE -Wall -Wextra)
 target_link_libraries(shader PRIVATE ${GL_LIBS} spdlog::spdlog)
 
 add_subdirectory(test)
