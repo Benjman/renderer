@@ -81,6 +81,6 @@ inline void keyHandler(GLFWwindow*, int32_t key, int32_t scancode, int32_t actio
 
 // TODO this needs to be removed because we have static display sizes
 inline void windowSizeChangeHandler(GLFWwindow*, int32_t w, int32_t h) {
-    INSTANCE->windowSizeChanged(w, h);
     window::set_size(w, h);
+    INSTANCE->windowSizeChanged(w, h);
 }
