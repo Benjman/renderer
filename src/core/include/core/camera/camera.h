@@ -26,7 +26,7 @@ class Camera {
 
         Camera() = default;
         Camera(const Camera& camera);
-        Camera operator=(const Camera& camera);
+        Camera& operator=(const Camera& camera);
 
         const glm::mat4 view() const noexcept;
         const glm::mat4 proj_ortho() const noexcept;

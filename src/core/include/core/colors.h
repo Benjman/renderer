@@ -268,28 +268,28 @@ static constexpr glm::vec3 Brown800 = glm::vec3(0.305882, 0.203922, 0.180392);  
 static constexpr glm::vec3 Brown900 = glm::vec3(0.243137, 0.152941, 0.137255);                 // #3e2724
                                                                                            
                                                                                            
-static constexpr glm::vec3 Grey50 = glm::vec3(0.980392, 0.980392, 0.980392);                   // #fafafa
-static constexpr glm::vec3 Grey100 = glm::vec3(0.960784, 0.960784, 0.960784);                  // #f5f5f5
-static constexpr glm::vec3 Grey200 = glm::vec3(0.933333, 0.933333, 0.933333);                  // #eeeeee
-static constexpr glm::vec3 Grey300 = glm::vec3(0.878431, 0.878431, 0.878431);                  // #e0e0e0
-static constexpr glm::vec3 Grey400 = glm::vec3(0.741176, 0.741176, 0.741176);                  // #bdbdbd
-static constexpr glm::vec3 Grey500 = glm::vec3(0.619608, 0.619608, 0.619608);                  // #9f9f9f
-static constexpr glm::vec3 Grey600 = glm::vec3(0.458824, 0.458824, 0.458824);                  // #767676
-static constexpr glm::vec3 Grey700 = glm::vec3(0.380392, 0.380392, 0.380392);                  // #616161
-static constexpr glm::vec3 Grey800 = glm::vec3(0.258824, 0.258824, 0.258824);                  // #434343
-static constexpr glm::vec3 Grey900 = glm::vec3(0.129412, 0.129412, 0.129412);                  // #222222
+static constexpr glm::vec3 Gray50 = glm::vec3(0.980392, 0.980392, 0.980392);                   // #fafafa
+static constexpr glm::vec3 Gray100 = glm::vec3(0.960784, 0.960784, 0.960784);                  // #f5f5f5
+static constexpr glm::vec3 Gray200 = glm::vec3(0.933333, 0.933333, 0.933333);                  // #eeeeee
+static constexpr glm::vec3 Gray300 = glm::vec3(0.878431, 0.878431, 0.878431);                  // #e0e0e0
+static constexpr glm::vec3 Gray400 = glm::vec3(0.741176, 0.741176, 0.741176);                  // #bdbdbd
+static constexpr glm::vec3 Gray500 = glm::vec3(0.619608, 0.619608, 0.619608);                  // #9f9f9f
+static constexpr glm::vec3 Gray600 = glm::vec3(0.458824, 0.458824, 0.458824);                  // #767676
+static constexpr glm::vec3 Gray700 = glm::vec3(0.380392, 0.380392, 0.380392);                  // #616161
+static constexpr glm::vec3 Gray800 = glm::vec3(0.258824, 0.258824, 0.258824);                  // #434343
+static constexpr glm::vec3 Gray900 = glm::vec3(0.129412, 0.129412, 0.129412);                  // #222222
                                                                                            
                                                                                            
-static constexpr glm::vec3 BlueGrey50 = glm::vec3(0.92549, 0.937255, 0.945098);                // #ecf0f1
-static constexpr glm::vec3 BlueGrey100 = glm::vec3(0.811765, 0.847059, 0.862745);              // #d0d9dc
-static constexpr glm::vec3 BlueGrey200 = glm::vec3(0.690196, 0.745098, 0.772549);              // #b0bec5
-static constexpr glm::vec3 BlueGrey300 = glm::vec3(0.564706, 0.643137, 0.682353);              // #91a4af
-static constexpr glm::vec3 BlueGrey400 = glm::vec3(0.470588, 0.564706, 0.611765);              // #78919d
-static constexpr glm::vec3 BlueGrey500 = glm::vec3(0.376471, 0.490196, 0.545098);              // #617d8b
-static constexpr glm::vec3 BlueGrey600 = glm::vec3(0.329412, 0.431373, 0.478431);              // #556f7a
-static constexpr glm::vec3 BlueGrey700 = glm::vec3(0.270588, 0.352941, 0.392157);              // #455a65
-static constexpr glm::vec3 BlueGrey800 = glm::vec3(0.215686, 0.278431, 0.309804);              // #374750
-static constexpr glm::vec3 BlueGrey900 = glm::vec3(0.14902, 0.196078, 0.219608);               // #273239
+static constexpr glm::vec3 BlueGray50 = glm::vec3(0.92549, 0.937255, 0.945098);                // #ecf0f1
+static constexpr glm::vec3 BlueGray100 = glm::vec3(0.811765, 0.847059, 0.862745);              // #d0d9dc
+static constexpr glm::vec3 BlueGray200 = glm::vec3(0.690196, 0.745098, 0.772549);              // #b0bec5
+static constexpr glm::vec3 BlueGray300 = glm::vec3(0.564706, 0.643137, 0.682353);              // #91a4af
+static constexpr glm::vec3 BlueGray400 = glm::vec3(0.470588, 0.564706, 0.611765);              // #78919d
+static constexpr glm::vec3 BlueGray500 = glm::vec3(0.376471, 0.490196, 0.545098);              // #617d8b
+static constexpr glm::vec3 BlueGray600 = glm::vec3(0.329412, 0.431373, 0.478431);              // #556f7a
+static constexpr glm::vec3 BlueGray700 = glm::vec3(0.270588, 0.352941, 0.392157);              // #455a65
+static constexpr glm::vec3 BlueGray800 = glm::vec3(0.215686, 0.278431, 0.309804);              // #374750
+static constexpr glm::vec3 BlueGray900 = glm::vec3(0.14902, 0.196078, 0.219608);               // #273239
                                                                                            
 static constexpr glm::vec3 Black = glm::vec3(0);                                               // #000
 static constexpr glm::vec3 White = glm::vec3(1);                                               // #fff

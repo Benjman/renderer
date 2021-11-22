@@ -1,54 +1,57 @@
 #include <core/controller.h>
 
-Controller::Controller(Controller* parent, bool active) : parent(parent), status(active ? Active : Dormant) {
+Controller::Controller(Controller* parent, bool active) : m_parent(parent), m_status(active ? Active : Dormant) {
     if (active)
-        status = Active;
+        m_status = Active;
 
     if (parent)
         parent->add_child(this);
 }
 
 void Controller::init(const RunnerContext& context) {
+    add_queued_children(context);
+    remove_queued_children(context);
+
     do_init(context);
 
-    for (auto* child : children) {
+    for (auto* child : m_children) {
         child->init(context);
     }
 }
 
 void Controller::pre_update(const RunnerContext& context) {
-    if (status != Active)
+    if (m_status != Active)
         return;
 
     add_queued_children(context);
     do_pre_update(context);
 
-    for (auto* child : children) {
-        if (child->status == Active)
+    for (auto* child : m_children) {
+        if (child->m_status == Active)
             child->pre_update(context);
     }
 }
 
 void Controller::update(const RunnerContext& context) {
-    if (status != Active)
+    if (m_status != Active)
         return;
 
     do_update(context);
 
-    for (auto* child : children) {
-        if (child->status == Active)
+    for (auto* child : m_children) {
+        if (child->m_status == Active)
             child->update(context);
     }
 }
 
 void Controller::post_update(const RunnerContext& context) {
-    if (status != Active)
+    if (m_status != Active)
         return;
 
     remove_queued_children(context);
 
-    for (auto* child : children) {
-        if (child->status == Active)
+    for (auto* child : m_children) {
+        if (child->m_status == Active)
             child->post_update(context);
     }
 
@@ -56,38 +59,40 @@ void Controller::post_update(const RunnerContext& context) {
 }
 
 void Controller::add_child(Controller* child) {
-    children_to_add.emplace_back(child);
+    m_children_to_add.emplace_back(child);
 }
 
 void Controller::remove_child(Controller* child) {
-    children_to_remove.emplace_back(child);
+    m_children_to_remove.emplace_back(child);
 }
 
 void Controller::remove_queued_children(const RunnerContext& context) {
-    if (!children_to_remove.empty()) {
+    if (!m_children_to_remove.empty()) {
         std::vector<Controller*>::iterator it;
-        for (auto* child : children_to_remove) {
+        for (auto* child : m_children_to_remove) {
             child->cleanup();
-            child->parent = nullptr;
+            child_removed(child);
+            child->m_parent = nullptr;
 
-            it = std::find(children.begin(), children.end(), child);
-            if (it == children.end())
+            it = std::find(m_children.begin(), m_children.end(), child);
+            if (it == m_children.end())
                 // TODO warning log
                 continue;
 
-            children.erase(it);
+            m_children.erase(it);
         }
-        children_to_remove.clear();
+        m_children_to_remove.clear();
     }
 }
 
 void Controller::add_queued_children(const RunnerContext& context) {
-    // TODO check performance of checking if children_to_add is empty, versus just going into an iterator
-    // whichever wins, also implement it in post_update
-    for (auto* child : children_to_add) {
-        child->parent = this;
-        children.emplace_back(child);
-        child->init(context);
+    if (!m_children_to_add.empty()) {
+        for (auto *child: m_children_to_add) {
+            child->m_parent = this;
+            m_children.emplace_back(child);
+            child->init(context);
+            child_added(child);
+        }
+        m_children_to_add.clear();
     }
-    children_to_add.clear();
 }

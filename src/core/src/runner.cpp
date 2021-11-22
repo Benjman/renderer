@@ -9,32 +9,35 @@
 #include <spdlog/spdlog.h>
 #include <unistd.h>
 
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+
 inline void keyHandler(GLFWwindow*,int32_t,int32_t,int32_t,int32_t);
 inline void windowSizeChangeHandler(GLFWwindow*,int32_t,int32_t);
 
 inline static Runner *INSTANCE; // TODO refactor so there is a global map of GLFWwindows and Runners
 
-Runner::Runner(GLFWwindow *glfw_window) : m_glfw_window(glfw_window) {
-        INSTANCE = this;
-        glfwGetWindowSize(glfw_window, &m_width, &m_height);
-        glfwSetKeyCallback(m_glfw_window, keyHandler);
-        glfwSetWindowSizeCallback(m_glfw_window, windowSizeChangeHandler);
-        glfwSetCursorPosCallback(m_glfw_window, [](GLFWwindow*, double_t x, double_t y) { input::mouse_move_event(x, y); });
-        glfwSetMouseButtonCallback(glfw_window, [](GLFWwindow*, int32_t button, int32_t action, int32_t mods) { input::mouse_button_event(button, action, mods); });
+Runner::Runner(GLFWwindow *glfw_window) : m_glfw_window(glfw_window), m_clear_color(glm::vec4(0.2, 0.3, 0.3, 1.0)) {
+    INSTANCE = this;
+    glfwGetWindowSize(glfw_window, &m_width, &m_height);
+    glfwSetKeyCallback(m_glfw_window, keyHandler);
+    glfwSetWindowSizeCallback(m_glfw_window, windowSizeChangeHandler);
+    glfwSetCursorPosCallback(m_glfw_window, [](GLFWwindow*, double_t x, double_t y) { input::mouse_move_event(x, y); });
+    glfwSetMouseButtonCallback(glfw_window, [](GLFWwindow*, int32_t button, int32_t action, int32_t mods) { input::mouse_button_event(button, action, mods); });
 
-        window::display_profile(window::find_display_profile(m_width, m_height));
+    window::display_profile(window::find_display_profile(m_width, m_height));
 
-        spdlog::set_level(spdlog::level::info);
-    }
+    spdlog::set_level(spdlog::level::info);
+}
 
 Runner::~Runner() noexcept {
     glfwTerminate();
 }
 
-const int32_t Runner::run() {
+int Runner::run() {
     const constexpr double_t dt = 1.0 / 60.0;
 
-    RunnerContext context;
+    RunnerContext context{};
     init(context);
 
     double_t time = 0.0;
@@ -44,6 +47,7 @@ const int32_t Runner::run() {
     double_t frame_time = 0.0;
 
     while (!glfwWindowShouldClose(m_glfw_window)) {
+        input::reset();
         glfwPollEvents();
 
         new_time = getRuntimeSeconds();
@@ -62,14 +66,13 @@ const int32_t Runner::run() {
         }
 
         doRender();
-        input::reset();
     }
 
     return EXIT_SUCCESS;
 }
 
 void Runner::doRender() {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(m_clear_color.r, m_clear_color.g, m_clear_color.b, m_clear_color.a);
     render();
     glfwSwapBuffers(m_glfw_window);
 }
@@ -83,4 +86,12 @@ inline void keyHandler(GLFWwindow*, int32_t key, int32_t scancode, int32_t actio
 inline void windowSizeChangeHandler(GLFWwindow*, int32_t w, int32_t h) {
     window::set_size(w, h);
     INSTANCE->windowSizeChanged(w, h);
+}
+
+void Runner::clear_color(glm::vec3 color) {
+    clear_color(glm::vec4(color, 1.0));
+}
+
+void Runner::clear_color(glm::vec4 color) {
+    m_clear_color = color;
 }

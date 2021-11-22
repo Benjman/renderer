@@ -27,6 +27,10 @@ class Text {
 
         size_t renderable_char_count = 0;
 
+        std::string value() {
+            return m_value;
+        }
+
     private:
         friend struct TextBuilder;
         friend struct internal::TextMeshGenerator;

@@ -4,6 +4,8 @@
 #include <cmath>
 #include <entt/entt.hpp>
 #include <GL/gl.h>
+#include <glm/fwd.hpp>
+#include <glm/vec4.hpp>
 
 #include "runner_context.h"
 
@@ -15,7 +17,7 @@ class Runner {
 
         ~Runner() noexcept;
 
-        const int run();
+        int run();
 
         virtual void windowSizeChanged(int width, int height) {}
 
@@ -32,12 +34,23 @@ class Runner {
 
         virtual void init(const RunnerContext& context) = 0;
 
+        virtual void pre_update(const RunnerContext& context) {}
+
         virtual void update(const RunnerContext& context) = 0;
+
+        virtual void post_update(const RunnerContext& context) {}
 
         virtual void render() = 0;
 
+        void clear_color(glm::vec3 color);
+
+        void clear_color(glm::vec4 color);
+
     private:
+        glm::vec4 m_clear_color;
+
         void doRender();
+
 };
 
 #endif //CORE_GAME_H

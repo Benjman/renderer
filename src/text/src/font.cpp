@@ -54,12 +54,6 @@ Font Font::load_font(const char *path) {
     return font;
 }
 
-Font::~Font() {
-    //delete[] this->atlas_data;
-    //delete[] font_data; // 1mb
-    //delete[] chardata;
-}
-
 stbtt_aligned_quad Font::get_char(u_char c, float_t* cursor_x, float_t* cursor_y, float_t scale) const {
     stbtt_aligned_quad quad;
     float_t tmp_x = 0;

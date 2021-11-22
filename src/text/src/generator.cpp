@@ -5,6 +5,9 @@
 #include <cstring>
 
 void internal::TextMeshGenerator::calc_buf_sizes(Text& text, size_t* vert_size, size_t* idx_size) {
+    *vert_size = 0;
+    *idx_size = 0;
+
     std::vector<Line> lines;
     generate_structure(text, &lines);
 

@@ -13,7 +13,7 @@ struct TestController : public Controller {
          post_updated = false;
 
     explicit TestController(Controller* parent = nullptr, bool active = false) : Controller(parent) {
-        if (active) status = Active;
+        if (active) m_status = Active;
     }
 
     void do_init(const RunnerContext &context) override {
@@ -41,30 +41,30 @@ RunnerContext context;
 
 TEST(Controller, constructor_null_parent_default) {
     TestController controller;
-    ASSERT_EQ(nullptr, controller.parent);
+    ASSERT_EQ(nullptr, controller.m_parent);
 }
 
 TEST(Controller, constructor_sets_parent) {
     Controller parent;
     TestController child(&parent);
-    ASSERT_EQ(&parent, child.parent);
+    ASSERT_EQ(&parent, child.m_parent);
 }
 
 TEST(Controller, dormant_by_default) {
     TestController controller;
-    ASSERT_EQ(Controller::Status::Dormant, controller.status);
+    ASSERT_EQ(Controller::Status::Dormant, controller.m_status);
 }
 
 TEST(Controller, is_active) {
     TestController controller(nullptr, true);
-    ASSERT_EQ(Controller::Status::Active, controller.status);
+    ASSERT_EQ(Controller::Status::Active, controller.m_status);
 }
 
 TEST(Controller, constructor_queues_child) {
     Controller parent;
     TestController child(&parent);
-    ASSERT_EQ(1, parent.children_to_add.size());
-    ASSERT_EQ(&child, parent.children_to_add.at(0));
+    ASSERT_EQ(1, parent.m_children_to_add.size());
+    ASSERT_EQ(&child, parent.m_children_to_add.at(0));
 }
 
 TEST(Controller, initiates_self) {
@@ -88,12 +88,12 @@ TEST(Controller, queued_children_added) {
     TestController child(&parent, true);
     RunnerContext context;
 
-    ASSERT_EQ(0, parent.children.size());
-    ASSERT_EQ(1, parent.children_to_add.size());
+    ASSERT_EQ(0, parent.m_children.size());
+    ASSERT_EQ(1, parent.m_children_to_add.size());
     parent.pre_update(context);
-    ASSERT_EQ(1, parent.children.size());
-    ASSERT_EQ(0, parent.children_to_add.size());
-    ASSERT_EQ(&child, parent.children.at(0));
+    ASSERT_EQ(1, parent.m_children.size());
+    ASSERT_EQ(0, parent.m_children_to_add.size());
+    ASSERT_EQ(&child, parent.m_children.at(0));
 }
 
 TEST(Controller, parent_pre_updates) {
@@ -103,7 +103,7 @@ TEST(Controller, parent_pre_updates) {
 
     parent.pre_update(context);
     ASSERT_FALSE(parent.pre_updated) << "Dormant controllers should not pre_update.";
-    parent.status = Controller::Active;
+    parent.m_status = Controller::Active;
     parent.pre_update(context);
     ASSERT_TRUE(parent.pre_updated) << "Active controllers should pre_update.";
 }
@@ -116,7 +116,7 @@ TEST(Controller, child_pre_updated) {
     ASSERT_FALSE(child.pre_updated);
     parent.pre_update(context);
     ASSERT_FALSE(child.pre_updated) << "Dormant controllers should not pre_update.";
-    child.status = Controller::Active;
+    child.m_status = Controller::Active;
     parent.pre_update(context);
     ASSERT_TRUE(child.pre_updated) << "Active controllers should pre_update.";
 }
@@ -126,7 +126,7 @@ TEST(Controller, children_added_dormant) {
     TestController child(&parent);
     parent.pre_update(context);
 
-    ASSERT_EQ(Controller::Status::Dormant, child.status);
+    ASSERT_EQ(Controller::Status::Dormant, child.m_status);
     parent.update(context);
     ASSERT_FALSE(child.updated) << "Dormant controllers should not update.";
 }
@@ -138,7 +138,7 @@ TEST(Controller, active_children_update) {
 
     parent.update(context);
     ASSERT_FALSE(child.updated) << "Dormant controllers should not update.";
-    child.status = Controller::Active;
+    child.m_status = Controller::Active;
     parent.update(context);
     ASSERT_TRUE(child.updated) << "Active controllers should update.";
 }
@@ -161,20 +161,20 @@ TEST(Controller, add_child) {
     Controller parent;
     Controller child;
 
-    ASSERT_EQ(0, parent.children_to_add.size());
+    ASSERT_EQ(0, parent.m_children_to_add.size());
     parent.add_child(&child);
-    ASSERT_EQ(1, parent.children_to_add.size());
-    ASSERT_EQ(&child, parent.children_to_add.at(0));
+    ASSERT_EQ(1, parent.m_children_to_add.size());
+    ASSERT_EQ(&child, parent.m_children_to_add.at(0));
 }
 
 TEST(Controller, remove_child) {
     Controller parent;
     Controller child;
 
-    ASSERT_EQ(0, parent.children_to_remove.size());
+    ASSERT_EQ(0, parent.m_children_to_remove.size());
     parent.remove_child(&child);
-    ASSERT_EQ(1, parent.children_to_remove.size());
-    ASSERT_EQ(&child, parent.children_to_remove.at(0));
+    ASSERT_EQ(1, parent.m_children_to_remove.size());
+    ASSERT_EQ(&child, parent.m_children_to_remove.at(0));
 }
 
 TEST(Controller, children_removed_after_post_update) {
@@ -182,17 +182,17 @@ TEST(Controller, children_removed_after_post_update) {
     TestController child(&parent);
     parent.pre_update(context);
 
-    ASSERT_EQ(1, parent.children.size());
-    ASSERT_EQ(&child, parent.children.at(0));
+    ASSERT_EQ(1, parent.m_children.size());
+    ASSERT_EQ(&child, parent.m_children.at(0));
 
     parent.remove_child(&child);
-    ASSERT_EQ(1, parent.children_to_remove.size());
-    ASSERT_EQ(1, parent.children.size()) << "Child should not have been removed until post_update is called.";
-    ASSERT_EQ(&child, parent.children.at(0)) << "Child should not have been removed until post_update is called.";
+    ASSERT_EQ(1, parent.m_children_to_remove.size());
+    ASSERT_EQ(1, parent.m_children.size()) << "Child should not have been removed until post_update is called.";
+    ASSERT_EQ(&child, parent.m_children.at(0)) << "Child should not have been removed until post_update is called.";
 
     parent.post_update(context);
-    ASSERT_EQ(0, parent.children_to_remove.size()) << "Remove queue expected to be cleared after update.";
-    ASSERT_EQ(0, parent.children.size()) << "Child was expected to be removed from collection.";
+    ASSERT_EQ(0, parent.m_children_to_remove.size()) << "Remove queue expected to be cleared after update.";
+    ASSERT_EQ(0, parent.m_children.size()) << "Child was expected to be removed from collection.";
     ASSERT_TRUE(child.cleaned_up) << "Child cleanup() should have been called when it was being removed.";
 }
 

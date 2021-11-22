@@ -17,8 +17,6 @@ class Font {
 
         static Font load_font(const char* path);
 
-        ~Font();
-
         float_t ascent = std::numeric_limits<float_t>::max();
         float_t descent = std::numeric_limits<float_t>::max();
         float_t line_gap = std::numeric_limits<float_t>::max();

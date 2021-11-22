@@ -21,27 +21,39 @@ class Controller {
         void update(const RunnerContext& context);
         void post_update(const RunnerContext& context);
 
-    protected:
         void add_child(Controller* child);
-
         void remove_child(Controller* child);
 
+        [[nodiscard]] const std::vector<Controller*> children() const noexcept {
+            return m_children;
+        }
+
+        void status(Status s) {
+            m_status = s;
+        }
+
+    protected:
         virtual void do_init(const RunnerContext& context) {}
 
         virtual void do_pre_update(const RunnerContext& context) {}
         virtual void do_update(const RunnerContext& context) {}
         virtual void do_post_update(const RunnerContext& context) {}
 
+        virtual void render(const RunnerContext& context) {}
+
         virtual void cleanup() {}
 
+        virtual void child_added(Controller* child) {}
+        virtual void child_removed(Controller* child) {}
+
     private:
-        Controller* parent = nullptr;
+        Controller* m_parent = nullptr;
 
-        std::vector<Controller*> children;
-        std::vector<Controller*> children_to_add;
-        std::vector<Controller*> children_to_remove;
+        std::vector<Controller*> m_children;
+        std::vector<Controller*> m_children_to_add;
+        std::vector<Controller*> m_children_to_remove;
 
-        Status status = Status::Dormant;
+        Status m_status = Status::Dormant;
 
         void add_queued_children(const RunnerContext& context);
         void remove_queued_children(const RunnerContext& context);

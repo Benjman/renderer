@@ -13,6 +13,10 @@ add_library(core STATIC
     ./src/components/position2d.cpp
     ./src/components/position3d.cpp
     ./src/ui/ui_element.cpp
+    ./src/ui/text_element.cpp
+    ./src/ui/ui_controller.cpp
+    ./src/ui/ui_element.cpp
+    ./src/ui/text_element.cpp
     )
 
 find_package(GLFW REQUIRED)

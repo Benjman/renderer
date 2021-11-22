@@ -10,7 +10,7 @@ Camera::Camera(const Camera& camera) {
     *this = camera;
 }
 
-Camera Camera::operator=(const Camera &camera) {
+Camera& Camera::operator=(const Camera &camera) {
     dist = camera.dist;
     pitch = camera.pitch;
     position = camera.position;
