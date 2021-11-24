@@ -1,4 +1,3 @@
-// TODO calculated widths and max-widths not correct (try wrapping a line with 128 size text)
 #include "generator.h"
 #include <text.h>
 
