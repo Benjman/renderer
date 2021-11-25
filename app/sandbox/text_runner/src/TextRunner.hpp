@@ -33,11 +33,29 @@ class TextRunner : public Runner {
             texture.parameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
             size_t v_size = 0,
-                   idx_size = 0;
+                   idx_size = 0,
+                   pointer = 0;
 
-            text.calc_sizes(&v_size, &idx_size);
+            size_t v_pos,
+                   idx_pos;
 
-            text.generate_mesh(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, window::width(), window::height());
+            float_t  vert_buf[1024 * 3] = {0};
+            uint32_t idx_buf[1024]      = {0};
+
+            top_left.calc_sizes(&v_size, &idx_size);
+            top_left.generate_mesh(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, window::width(), window::height(), &pointer);
+
+            v_pos = v_size / sizeof(float_t);
+            idx_pos = idx_size / sizeof(uint32_t);
+
+            top_center.calc_sizes(&v_size, &idx_size);
+            top_center.generate_mesh(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, window::width(), window::height(), &pointer);
+
+            v_pos = v_size / sizeof(float_t);
+            idx_pos = idx_size / sizeof(uint32_t);
+
+            top_right.calc_sizes(&v_size, &idx_size);
+            top_right.generate_mesh(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, window::width(), window::height(), &pointer);
 
             vbo.storeData(buffer.vert_buffer.ptr, v_size);
             ebo.storeData(buffer.idx_buffer.ptr, idx_size);
@@ -58,17 +76,29 @@ class TextRunner : public Runner {
 
         void render() override {
             glClear(GL_COLOR_BUFFER_BIT);
-            glDrawElements(GL_TRIANGLES, IDX_COUNT * text.renderable_char_count, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, IDX_COUNT * top_left.renderable_char_count, GL_UNSIGNED_INT, (void*) 0);
+            glDrawElements(GL_TRIANGLES, IDX_COUNT * top_center.renderable_char_count, GL_UNSIGNED_INT, (void*) (top_left.renderable_char_count * IDX_COUNT * sizeof(uint32_t)));
+            glDrawElements(GL_TRIANGLES, IDX_COUNT * top_right.renderable_char_count, GL_UNSIGNED_INT, (void*) (top_left.renderable_char_count * IDX_COUNT  * sizeof(uint32_t) + top_center.renderable_char_count * IDX_COUNT * sizeof(uint32_t)));
         }
 
     private:
         // TODO fixme pointer hell below
         Font font;
-        Text text = Text::create("rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse in est ante in nibh mauris cursus mattis molestie a iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus", &font)
+        Text top_left = Text::create("left aligned", &font)
             .line_height(32)
             .max_width(window::width())
             .max_height(window::height())
-            .alignment(TEXT_ALIGN_LEFT);
+            .alignment(Text::TEXT_ALIGN_LEFT);
+        Text top_center = Text::create("center aligned", &font)
+            .line_height(32)
+            .max_width(window::width())
+            .max_height(window::height())
+            .alignment(Text::TEXT_ALIGN_CENTER);
+        Text top_right = Text::create("right aligned", &font)
+            .line_height(32)
+            .max_width(window::width())
+            .max_height(window::height())
+            .alignment(Text::TEXT_ALIGN_RIGHT);
 
         Vao vao = Vao();
         Vbo vbo = Vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW);

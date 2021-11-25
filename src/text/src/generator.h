@@ -12,7 +12,7 @@ struct Font;
 namespace internal {
     class TextMeshGenerator {
         public:
-            static void generate(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height);
+            static void generate(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *idx_pointer);
 
             static void calc_buf_sizes(Text& text, size_t* vert_size, size_t* idx_size);
 
@@ -46,9 +46,9 @@ namespace internal {
 
             float_t scale = 1.0;
 
-            TextMeshGenerator(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height);
+            TextMeshGenerator(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *idx_pointer);
 
-            void process_line(Line &line, Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t *cursor_x, float_t *cursor_y, size_t *pointer, float_t display_width, float_t display_height) const;
+            void process_line(const Line &line, Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t *cursor_x, float_t *cursor_y, size_t *pointer, float_t display_width, float_t display_height) const;
 
     };
 };

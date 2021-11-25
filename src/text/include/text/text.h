@@ -12,16 +12,24 @@ namespace internal {
     struct TextMeshGenerator;
 }
 
-// TODO more aligns lol
-inline constexpr size_t TEXT_ALIGN_LEFT = 1;
-
 class Text {
     public:
+
+        static inline constexpr size_t TEXT_ALIGN_HORIZONTAL_MASK = 0x3;
+        static inline constexpr size_t TEXT_ALIGN_LEFT = 0x1;
+        static inline constexpr size_t TEXT_ALIGN_CENTER = 0x2;
+        static inline constexpr size_t TEXT_ALIGN_RIGHT = 0x3;
+
+        static inline constexpr size_t TEXT_ALIGN_VERTICAL_MASK = 0xc;
+        static inline constexpr size_t TEXT_ALIGN_TOP = 0x1 << 2;
+        static inline constexpr size_t TEXT_ALIGN_MIDDLE = 0x2 << 2;
+        static inline constexpr size_t TEXT_ALIGN_BOTTOM = 0x3 << 2;
+
         static TextBuilder create(std::string value, Font* font);
 
         void calc_sizes(size_t* vert_buf_size, size_t* idx_buf_size);
 
-        void generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height);
+        void generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *idx_cursor);
 
         float_t get_font_scale();
 

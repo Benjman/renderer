@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv) {
     try {
-        GLFWwindow *window = initializeGlfw("Text Runner", DISPLAY_PROFILE_640_480);
+        GLFWwindow *window = initializeGlfw("Text Runner", DISPLAY_PROFILE_1280_720);
         TextRunner runner(window);
         return runner.run();
     } catch (const std::exception &ex) {

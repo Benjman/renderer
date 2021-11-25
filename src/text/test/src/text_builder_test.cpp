@@ -13,8 +13,8 @@ TEST_F(TextTestFixture, initial_state) {
 
 TEST_F(TextTestFixture, alignment) {
     TextBuilder builder("Testing", &font);
-    builder.alignment(TEXT_ALIGN_LEFT);
-    ASSERT_EQ(TEXT_ALIGN_LEFT, builder.m_root.m_alignment);
+    builder.alignment(Text::TEXT_ALIGN_LEFT);
+    ASSERT_EQ(Text::TEXT_ALIGN_LEFT, builder.m_root.m_alignment);
 }
 
 TEST_F(TextTestFixture, pos) {

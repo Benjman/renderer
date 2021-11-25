@@ -4,9 +4,6 @@
 #include <cstring>
 
 void internal::TextMeshGenerator::calc_buf_sizes(Text& text, size_t* vert_size, size_t* idx_size) {
-    *vert_size = 0;
-    *idx_size = 0;
-
     std::vector<Line> lines;
     generate_structure(text, &lines);
 
@@ -18,26 +15,38 @@ void internal::TextMeshGenerator::calc_buf_sizes(Text& text, size_t* vert_size, 
     }
 }
 
-void internal::TextMeshGenerator::generate(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height) {
-    TextMeshGenerator(root, vert_buf, idx_buf, display_width, display_height);
+void internal::TextMeshGenerator::generate(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *idx_pointer) {
+    TextMeshGenerator(root, vert_buf, idx_buf, display_width, display_height, idx_pointer);
 }
 
-internal::TextMeshGenerator::TextMeshGenerator(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height)
+internal::TextMeshGenerator::TextMeshGenerator(Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *idx_pointer)
     : scale(root.get_font_scale()) {
         std::vector<Line> lines;
         generate_structure(root, &lines);
 
-        size_t pointer = 0;
-        float_t cursor_x = (float_t) root.m_pos_x,
+        float_t cursor_x,
                 cursor_y = (float_t) root.m_pos_y + root.m_font->ascent;
 
         if (!root.renderable_char_count)
             return;
 
-        for (auto line : lines) {
-            process_line(line, root, vert_buf, idx_buf, &cursor_x, &cursor_y, &pointer, display_width, display_height);
+        for (const auto &line : lines) {
+            switch (root.m_alignment & Text::TEXT_ALIGN_HORIZONTAL_MASK) {
+                case Text::TEXT_ALIGN_LEFT:
+                    cursor_x = (float_t) root.m_pos_x;
+                    break;
+
+                case Text::TEXT_ALIGN_CENTER:
+                    cursor_x = (float_t) root.m_pos_x + (float_t) (root.m_max_width * 0.5 - line.width * 0.5);
+                    break;
+
+                case Text::TEXT_ALIGN_RIGHT:
+                    cursor_x = (float_t)  root.m_pos_x + ((float_t) root.m_max_width - line.width);
+                    break;
+            }
+
+            process_line(line, root, vert_buf, idx_buf, &cursor_x, &cursor_y, idx_pointer, display_width, display_height);
             cursor_y += root.m_font->ascent;
-            cursor_x = root.m_pos_x;
         }
     }
 
@@ -48,21 +57,23 @@ void internal::TextMeshGenerator::generate_structure(Text &root, std::vector<Lin
 
     root.reset();
 
+    float_t space_width = 0, tmp_x = 0, tmp_y = 0;
+    root.m_font->get_char(' ', &space_width, &tmp_y, scale);
+
     for (size_t i = 0, len = root.m_value.size(); i < len; i++) {
         if (root.m_value.at(i) == ' ') {
             if (!line.try_add_word(word)) {
+                line.width -= space_width;
                 lines->emplace_back(line);
                 line = Line(root.m_max_width);
                 line.try_add_word(word);
             }
             word = Word();
-            float_t tmp_x = 0, tmp_y = 0;
-            root.m_font->get_char(' ', &tmp_x, &tmp_y, scale);
-            line.width += tmp_x;
+            line.width += space_width;
             continue;
         }
 
-        float_t tmp_x = 0, tmp_y = 0;
+        tmp_x = 0;
         root.m_font->get_char(root.m_value.at(i), &tmp_x, &tmp_y, scale);
         word.add_char(root.m_value.at(i), tmp_x);
         root.renderable_char_count++;
@@ -77,7 +88,7 @@ void internal::TextMeshGenerator::generate_structure(Text &root, std::vector<Lin
     lines->emplace_back(line);
 }
 
-void internal::TextMeshGenerator::process_line(Line &line, Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t *cursor_x, float_t *cursor_y, size_t *pointer, float_t display_width, float_t display_height) const {
+void internal::TextMeshGenerator::process_line(const Line &line, Text &root, float_t *vert_buf, uint32_t *idx_buf, float_t *cursor_x, float_t *cursor_y, size_t *pointer, float_t display_width, float_t display_height) const {
     for (auto word : line.words) {
         for (size_t i = 0, len = word.value.size(); i < len; i++) {
             stbtt_aligned_quad quad = root.m_font->get_char(word.value.at(i), cursor_x, cursor_y, scale);

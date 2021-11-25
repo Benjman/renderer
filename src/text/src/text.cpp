@@ -14,8 +14,8 @@ void Text::calc_sizes(size_t *vert_buf_size, size_t *idx_buf_size) {
     TextMeshGenerator::calc_buf_sizes(*this, vert_buf_size, idx_buf_size);
 }
 
-void Text::generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height) {
-    TextMeshGenerator::generate(*this, vert_buf, idx_buf, display_width, display_height);
+void Text::generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *idx_cursor) {
+    TextMeshGenerator::generate(*this, vert_buf, idx_buf, display_width, display_height, idx_cursor);
 }
 
 void Text::reset() {
