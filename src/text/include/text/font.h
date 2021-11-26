@@ -15,7 +15,7 @@ class Font {
         static inline constexpr size_t TEXT_CHAR_COUNT = 95;
         static inline constexpr float_t LINE_HEIGHT = 128;
 
-        static Font load_font(const char* path);
+        static void load_font(const char* path, Font* font);
 
         float_t ascent = std::numeric_limits<float_t>::max();
         float_t descent = std::numeric_limits<float_t>::max();

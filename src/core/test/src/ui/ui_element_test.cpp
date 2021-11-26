@@ -10,9 +10,6 @@
 #include <core/ui/ui_element.h>
 #include <core/ui/ui_element_builder.h>
 
-static Text EMPTY_TEXT = Text::create("", nullptr);
-static Font FONT_DEJAVU = Font::load_font(RES_PATH(fonts/DejaVuSans.ttf));
-
 TEST(TextUiElement, parent_initial) {
     UiElement el;
     ASSERT_EQ(nullptr, el.m_parent) << "Parent expected to be null if one is not passed.";

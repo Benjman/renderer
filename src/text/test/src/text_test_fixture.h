@@ -7,7 +7,7 @@
 class TextTestFixture : public ::testing::Test {
     protected:
         static void SetUpTestSuite() {
-            font = Font::load_font("/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
+            Font::load_font("/home/ben/src/renderer/res/fonts/DejaVuSans.ttf", &font);
         }
 
         static void TearDownTestSuite() {

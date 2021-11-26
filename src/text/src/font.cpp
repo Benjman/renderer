@@ -22,9 +22,7 @@
 #include <fstream>
 #include <sstream>
 
-Font Font::load_font(const char *path) {
-    Font font;
-
+void Font::load_font(const char *path, Font* font) {
     auto ss = std::ostringstream{};
     std::ifstream ifile(path);
     if (!ifile.is_open()) {
@@ -34,24 +32,22 @@ Font Font::load_font(const char *path) {
     ss << ifile.rdbuf();
     auto buf = ss.str();
 
-    if (!stbtt_PackBegin(&font.context, font.atlas_data, font.width, font.height, 0, 1, nullptr))
+    if (!stbtt_PackBegin(&font->context, font->atlas_data, font->width, font->height, 0, 1, nullptr))
         // TODO error handling
         throw std::runtime_error("oh shit couldn't initialize stb_truetype\n");
 
-    stbtt_PackFontRange(&font.context, (u_char*)&buf[0], 0, font.LINE_HEIGHT, 32, 95, font.chardata);
-    stbtt_PackEnd(&font.context);
+    stbtt_PackFontRange(&font->context, (u_char*)&buf[0], 0, Font::LINE_HEIGHT, 32, 95, font->chardata);
+    stbtt_PackEnd(&font->context);
 
     // get metrics using old pai
     stbtt_fontinfo info;
     stbtt_InitFont(&info, (u_char*)&buf[0], 0);
     int32_t ascent, descent, line_gap;
     stbtt_GetFontVMetrics(&info, &ascent, &descent, &line_gap);
-    float_t scale = stbtt_ScaleForPixelHeight(&info, font.LINE_HEIGHT);
-    font.ascent = (float_t) ascent * scale;
-    font.descent = (float_t) descent * scale;
-    font.line_gap = (float_t) line_gap * scale;
-
-    return font;
+    float_t scale = stbtt_ScaleForPixelHeight(&info, Font::LINE_HEIGHT);
+    font->ascent = (float_t) ascent * scale;
+    font->descent = (float_t) descent * scale;
+    font->line_gap = (float_t) line_gap * scale;
 }
 
 stbtt_aligned_quad Font::get_char(u_char c, float_t* cursor_x, float_t* cursor_y, float_t scale) const {

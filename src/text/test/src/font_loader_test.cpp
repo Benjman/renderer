@@ -20,7 +20,8 @@ class FontLoaderFixture : public ::testing::Test {
 GLFWwindow* FontLoaderFixture::window = nullptr;
 
 TEST_F(FontLoaderFixture, build_path) {
-    Font font = Font::load_font("/home/ben/src/renderer/res/fonts/DejaVuSans.ttf");
+    Font font;
+    Font::load_font("/home/ben/src/renderer/res/fonts/DejaVuSans.ttf", &font);
 
     // ASSERT_GT(font.fontinfo.numGlyphs, 0) << "Failed to initialize stb_truetype";
     ASSERT_LT(font.ascent, std::numeric_limits<int32_t>::max()) << "Failed to get stbtt_GetFontVMetrics";
