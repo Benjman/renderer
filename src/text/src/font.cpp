@@ -3,7 +3,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
-// stb has a bunch of Wall errors, disabling them for the make process
+// stb has a bunch of -Wall errors, disabling them for the make process
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 

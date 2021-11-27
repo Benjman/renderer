@@ -5,6 +5,9 @@
 #include <core/window.h>
 #include <core/math.h>
 
+#include <text/text.h>
+#include <text/generator.h>
+
 class UiElementMeshGenerator {
     public:
         /**
@@ -16,9 +19,32 @@ class UiElementMeshGenerator {
          */
         static const size_t ELEMENTS_PER_VERTEX = 7;
 
-        static bool generate(const UiElement* el, float_t* vert_buf, uint32_t* idx_buf, size_t* vert_count, size_t* idx_count, size_t idx_pointer) {
+        static bool generate(UiElement* el, float_t* vert_buf, uint32_t* idx_buf, size_t* vert_count, size_t* idx_count, size_t idx_pointer) {
             glm::vec2 pos = el->screen_pos();
             // TODO anchoring
+
+            if (!el->text().value().empty()) {
+                TextMeshContext context(&el->text());
+                context.display_height = window::height();
+                context.display_width = window::width();
+                context.idx_buffer = idx_buf;
+                context.char_count = &idx_pointer;
+                context.vertex_buffer = vert_buf;
+
+                context.add_attrib(TextAttribPosition, TextAttribute(7, 0));
+                context.add_attrib(TextAttribUV, TextAttribute(7, 5));
+
+                el->text().generate_mesh(context);
+                el->text().update_metadata();
+
+                size_t text_idx_count = el->text().renderable_char_count * Text::IDX_COUNT,
+                       text_vert_count = el->text().renderable_char_count * 4;
+
+                *idx_count += text_idx_count;
+                *vert_count += text_vert_count;
+                return true;
+            }
+
 
             float_t pos_x_min = pos.x;
             float_t pos_x_max = pos.x + el->size().x;

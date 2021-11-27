@@ -12,11 +12,11 @@ add_library(core STATIC
     ./src/camera/camera_controller.cpp
     ./src/components/position2d.cpp
     ./src/components/position3d.cpp
+    ./src/ui/label.cpp
     ./src/ui/ui_element.cpp
-    ./src/ui/text_element.cpp
     ./src/ui/ui_controller.cpp
     ./src/ui/ui_element.cpp
-    ./src/ui/text_element.cpp
+    ./src/ui/ui_fonts.cpp
     )
 
 find_package(GLFW REQUIRED)

@@ -83,6 +83,11 @@ class UiElementBuilder {
             return *this;
         }
 
+        UiElementBuilder& text(Text& text) {
+            root.text(text);
+            return *this;
+        }
+
         UiElementBuilder& status(UiElementStatus status) {
             root.status(status);
             return *this;

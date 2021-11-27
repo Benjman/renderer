@@ -14,5 +14,3 @@
 1. ~~Text rendering~~
 1. Labelled and colored grid representing one world chunk
 1. Procedurally generated world space of chunks
-
-

@@ -2,12 +2,13 @@
 #define CORE_UI_UI_CONTROLLER_H
 
 #include "ui_element.h"
+#include "label.h"
 
 #include <core/controller.h>
 
 class UiController : public Controller {
     public:
-        UiController(UiElement* element = nullptr, Controller* parent = nullptr, bool active = true) : Controller(parent, active), m_element(std::move(element)) {
+        explicit UiController(UiElement* element = nullptr, Controller* parent = nullptr, bool active = true) : Controller(parent, active), m_element(element) {
         }
 
         void render(const RunnerContext &context) override;
@@ -30,14 +31,14 @@ class UiController : public Controller {
 
     protected:
         void child_added(Controller *child) override {
-            if (UiController* ui_child = dynamic_cast<UiController*>(child)) {
+            if (auto* ui_child = dynamic_cast<UiController*>(child)) {
                 m_ui_children.emplace_back(ui_child);
             }
         }
 
         void child_removed(Controller *child) override {
-            if (UiController* ui_child = dynamic_cast<UiController*>(child)) {
-                std::vector<UiController*>::iterator it = std::find(m_ui_children.begin(), m_ui_children.end(), ui_child);
+            if (auto* ui_child = dynamic_cast<UiController*>(child)) {
+                auto it = std::find(m_ui_children.begin(), m_ui_children.end(), ui_child);
                 if (it == m_ui_children.end())
                     // TODO warning log
                     return;
@@ -50,6 +51,12 @@ class UiController : public Controller {
     private:
         UiElement* m_element = nullptr;
         std::vector<UiController*> m_ui_children;
+
+};
+
+class LabelController : public UiController {
+    public:
+        explicit LabelController(Label* label, Controller* parent = nullptr) : UiController(label, parent) {}
 
 };
 

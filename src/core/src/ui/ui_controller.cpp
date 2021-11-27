@@ -6,12 +6,7 @@ void UiController::render(const RunnerContext &context) {
 }
 
 void UiController::render() {
-    UiElement* el = element();
-
-    if (!el)
-        return;
-
-    if (el->renderable())
+    if (element() && element()->renderable())
         glDrawElements(GL_TRIANGLES, element()->idx_count(), GL_UNSIGNED_INT, (void*) (element()->buffer_offset() * sizeof(GLuint)));
 
     if (!m_ui_children.empty()) {

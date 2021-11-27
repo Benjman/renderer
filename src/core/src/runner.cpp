@@ -1,7 +1,9 @@
 #include <core/glfw.h>
-#include <core/window.h>
 
-#include <core.h>
+#include <core/input.h>
+#include <core/runner.h>
+#include <core/ui/ui_fonts.h>
+#include <core/window.h>
 
 #include <GLFW/glfw3.h>
 
@@ -31,6 +33,7 @@ Runner::Runner(GLFWwindow *glfw_window) : m_glfw_window(glfw_window), m_clear_co
 }
 
 Runner::~Runner() noexcept {
+    fonts::cleanup();
     glfwTerminate();
 }
 

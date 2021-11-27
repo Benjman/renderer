@@ -6,7 +6,7 @@
 class UiDemo : public Runner {
     public:
         UiDemo(GLFWwindow *window) : Runner(window) {
-            clear_color(glm::vec3(.93));
+            clear_color(glm::vec3(0.93));
         }
 
         void init(const RunnerContext& context) override {

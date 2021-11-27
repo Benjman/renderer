@@ -1,7 +1,8 @@
 #ifndef UI_DEMO_ELEMENTS_H
 #define UI_DEMO_ELEMENTS_H
 
-#include "core/colors.h"
+#include "core/ui/ui_fonts.h"
+#include <core/colors.h>
 #include <core/ui.h>
 
 struct UiDemoElements {
@@ -18,17 +19,17 @@ struct UiDemoElements {
     /*
      * Button
      */
-    static UiElement button_base;
-    static UiElement button_bg;
+    UiElement button_base = UiElement::create()
+        .pos(100, 100)
+        .renderable(false);
+
+    UiElement button_bg = UiElement::create(&button_base)
+        .size(120, 30)
+        .background_color(GreenA700);
+
+
+    Label label = Label("T", fonts::DejaVuSans());
 
 };
-
-UiElement UiDemoElements::button_base = UiElement::create()
-    .pos(100, 100)
-    .renderable(false);
-
-UiElement UiDemoElements::button_bg = UiElement::create(&button_base)
-    .size(120, 30)
-    .background_color(BlueGray500);
 
 #endif // UI_DEMO_ELEMENTS_H

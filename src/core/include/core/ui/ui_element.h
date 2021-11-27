@@ -7,16 +7,17 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
+#include <string>
+
+#include <text/text.h>
+
 class UiElementBuilder;
 
 class UiElement {
     public:
-        static UiElement BLANK;
         static constexpr glm::vec4 NO_BACKGROUND = glm::vec4(-1.0);
 
         static UiElementBuilder create(UiElement* parent = nullptr) noexcept;
-
-        static UiElement& blank() { return BLANK; }
 
         enum class Status {
             Active = 1, Dormant = 0
@@ -92,6 +93,14 @@ class UiElement {
             m_parent = parent;
         }
 
+        Text& text() {
+            return m_text;
+        }
+
+        void text(Text& text) {
+            m_text = Text(text);
+        }
+
         glm::vec2 screen_pos() const noexcept {
             if (parent()) {
                 return parent()->pos() + pos();
@@ -137,8 +146,9 @@ class UiElement {
             return m_buffer_offset;
         }
 
-    private:
+    protected:
          UiElement* m_parent = nullptr;
+         Text m_text;
          glm::vec4 m_background_color = glm::vec4(NO_BACKGROUND);
          glm::vec2 m_pos = glm::vec2(0);
          glm::vec2 m_size = glm::vec2(0);

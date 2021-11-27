@@ -5,9 +5,6 @@
 #include <cstdint>
 #include <stb_truetype.h>
 
-inline constexpr size_t VERT_COUNT = 16;
-inline constexpr size_t IDX_COUNT = 6;
-
 class Font {
     public:
         static inline constexpr size_t ATLAS_WIDTH = 1024;
@@ -16,6 +13,8 @@ class Font {
         static inline constexpr float_t LINE_HEIGHT = 128;
 
         static void load_font(const char* path, Font* font);
+
+        static Font* DejaVuSans();
 
         float_t ascent = std::numeric_limits<float_t>::max();
         float_t descent = std::numeric_limits<float_t>::max();

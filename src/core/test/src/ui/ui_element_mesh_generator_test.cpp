@@ -1,4 +1,4 @@
-#include "core/memory/memory_zone.h"
+#include "core/memory/memory_allocator.h"
 #include "core/ui/ui_element.h"
 #include <gtest/gtest.h>
 

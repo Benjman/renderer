@@ -1,18 +1,24 @@
 #ifndef TEXT_TEXT_BUILDER_H
 #define TEXT_TEXT_BUILDER_H
 
+#include <utility>
+
 #include "text.h"
 
 struct TextBuilder {
     Text m_root;
 
-    TextBuilder(std::string value, Font* font) {
-        m_root.m_value = value;
+    TextBuilder(std::string value, const Font* font) {
+        m_root.m_value = std::move(value);
         m_root.m_font = font;
     }
 
+    TextBuilder(Text& text) {
+        m_root = text;
+    }
+
     operator Text() const {
-        return std::move(m_root);
+        return m_root;
     }
 
     TextBuilder& alignment(uint16_t alignment) {
@@ -47,7 +53,7 @@ struct TextBuilder {
     }
 
     TextBuilder& value(std::string value) {
-        m_root.m_value = value;
+        m_root.m_value = std::move(value);
         return *this;
     }
 
