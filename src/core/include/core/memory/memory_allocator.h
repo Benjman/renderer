@@ -31,7 +31,7 @@ class MemoryAllocator {
             if (parent) {
                 ptr = parent->request(this);
             } else {
-                ptr = (T*) malloc(max_size);
+                ptr = new T[max_size / sizeof(T)];
             }
         }
 
