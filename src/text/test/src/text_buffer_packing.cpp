@@ -36,7 +36,7 @@ class TextMeshBufferPackingFixture : public ::testing::Test {
 };
 
 TEST_F(TextMeshBufferPackingFixture, store_quad_pos) {
-    TextAttribute tightly_packed_attrib(2, 0);
+    TextAttribute tightly_packed_attrib(2, 2, 0);
     context.add_attrib(TextAttribPosition, tightly_packed_attrib);
     gen.store_quad_pos(quad, tightly_packed_attrib, vert_buf);
 
@@ -55,7 +55,7 @@ TEST_F(TextMeshBufferPackingFixture, store_quad_pos) {
     // step packed
     reset_arrays();
     context.reset_attribs();
-    TextAttribute step_packed_attrib(4, 0);
+    TextAttribute step_packed_attrib(2, 4, 0);
     context.add_attrib(TextAttribPosition, step_packed_attrib);
     gen.store_quad_pos(quad, step_packed_attrib, vert_buf);
 
@@ -80,7 +80,7 @@ TEST_F(TextMeshBufferPackingFixture, store_quad_pos) {
     // offset
     reset_arrays();
     context.reset_attribs();
-    TextAttribute offset_attrib(2, 2);
+    TextAttribute offset_attrib(2, 2, 2);
     context.add_attrib(TextAttribPosition, offset_attrib);
     gen.store_quad_pos(quad, offset_attrib, vert_buf);
 
@@ -99,7 +99,7 @@ TEST_F(TextMeshBufferPackingFixture, store_quad_pos) {
     // stride with offset
     reset_arrays();
     context.reset_attribs();
-    TextAttribute stride_offset_attrib(4, 3);
+    TextAttribute stride_offset_attrib(2, 4, 3);
     context.add_attrib(TextAttribPosition, stride_offset_attrib);
     gen.store_quad_pos(quad, stride_offset_attrib, vert_buf);
 
@@ -125,7 +125,7 @@ TEST_F(TextMeshBufferPackingFixture, store_quad_pos) {
 }
 
 TEST_F(TextMeshBufferPackingFixture, store_quad_uv) {
-    TextAttribute tightly_packed_attrib(2, 0);
+    TextAttribute tightly_packed_attrib(2, 2, 0);
     context.add_attrib(TextAttribPosition, tightly_packed_attrib);
     gen.store_quad_uv(quad, tightly_packed_attrib, vert_buf);
 
@@ -144,7 +144,7 @@ TEST_F(TextMeshBufferPackingFixture, store_quad_uv) {
     // step packed
     reset_arrays();
     context.reset_attribs();
-    TextAttribute step_packed_attrib(4, 0);
+    TextAttribute step_packed_attrib(2, 4, 0);
     context.add_attrib(TextAttribPosition, step_packed_attrib);
     gen.store_quad_uv(quad, step_packed_attrib, vert_buf);
 
@@ -169,7 +169,7 @@ TEST_F(TextMeshBufferPackingFixture, store_quad_uv) {
     // offset
     reset_arrays();
     context.reset_attribs();
-    TextAttribute offset_attrib(2, 2);
+    TextAttribute offset_attrib(2, 2, 2);
     context.add_attrib(TextAttribPosition, offset_attrib);
     gen.store_quad_uv(quad, offset_attrib, vert_buf);
 
@@ -188,7 +188,7 @@ TEST_F(TextMeshBufferPackingFixture, store_quad_uv) {
     // stride with offset
     reset_arrays();
     context.reset_attribs();
-    TextAttribute stride_offset_attrib(4, 3);
+    TextAttribute stride_offset_attrib(2, 4, 3);
     context.add_attrib(TextAttribPosition, stride_offset_attrib);
     gen.store_quad_uv(quad, stride_offset_attrib, vert_buf);
 
@@ -213,10 +213,10 @@ TEST_F(TextMeshBufferPackingFixture, store_quad_uv) {
 }
 
 TEST_F(TextMeshBufferPackingFixture, store_quad) {
-    context.add_attrib(TextAttribPosition, TextAttribute(2, 0));
-    context.add_attrib(TextAttribUV, TextAttribute(4, 2));
+    context.add_attrib(TextAttribPosition, TextAttribute(2, 4, 0));
+    context.add_attrib(TextAttribUV, TextAttribute(2, 4, 2));
 
-    gen.store_quad(quad, context, vert_buf);
+    gen.store_quad(quad, context);
 
     ASSERT_EQ(quad.x0, vert_buf[0])     << "Interleaved packing with no step or offset had an unexpected result.";
     ASSERT_EQ(quad.y0, vert_buf[1])     << "Interleaved packing with no step or offset had an unexpected result.";

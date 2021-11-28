@@ -8,8 +8,8 @@
 struct UiDemoElements {
     UiElement top_bar = UiElement::create()
         .background_color(BlueGray300)
-        .pos(0, 0)
-        .size(window::width(), 30);
+        .pos(10, 10)
+        .size(window::width() - 20, 30);
 
     UiElement bottom_bar = UiElement::create()
         .background_color(BlueGray300)
@@ -28,7 +28,7 @@ struct UiDemoElements {
         .background_color(GreenA700);
 
 
-    Label label = Label("T", fonts::DejaVuSans());
+    Label label = Label("Text to check if labels render correctly.", fonts::DejaVuSans());
 
 };
 

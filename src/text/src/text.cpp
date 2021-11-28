@@ -26,27 +26,26 @@ Text& Text::operator=(const Text& text) {
     return *this;
 }
 
-void Text::calc_sizes(size_t *vert_buf_size, size_t *idx_buf_size) const {
-    TextMeshGenerator::calc_buf_sizes(this, vert_buf_size, idx_buf_size);
+void Text::calc_buffer_sizes(size_t *vert_buf_size, size_t *idx_buf_size) const {
+    TextMeshGenerator::calc_buffer_sizes(this, vert_buf_size, idx_buf_size);
 }
 
-void Text::generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *idx_cursor) const {
-    size_t tmp_cursor = 0;
-    TextMeshGenerator::generate(this, vert_buf, idx_buf, display_width, display_height, idx_cursor ? idx_cursor : &tmp_cursor);
+size_t Text::generate_mesh(float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t idx_cursor) const {
+    return TextMeshGenerator::generate(this, vert_buf, idx_buf, display_width, display_height, idx_cursor);
 }
 
-void Text::generate_mesh(TextMeshContext& context) const {
-    TextMeshGenerator::generate(context);
+size_t Text::generate_mesh(TextMeshContext& context) const {
+    return TextMeshGenerator::generate(context);
 }
 
 void Text::update_metadata() {
     // calculate renderable character count
     std::regex expression("[\\x21-\\x7f]"); // ascii range from characters 33 to 126, inclusive
-    renderable_char_count = std::ptrdiff_t(std::distance( std::sregex_iterator(m_value.begin(), m_value.end(), expression), std::sregex_iterator()));
+    renderable_quad_count = std::ptrdiff_t(std::distance( std::sregex_iterator(m_value.begin(), m_value.end(), expression), std::sregex_iterator()));
 }
 
 void Text::reset() {
-    renderable_char_count = 0;
+    renderable_quad_count = 0;
 }
 
 float_t Text::get_font_scale() const {

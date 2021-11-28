@@ -25,22 +25,15 @@ class DemoUiController : public UiController {
 
     protected:
         void do_init(const RunnerContext &context) override {
-            size_t vert_cursor = 0,
-                   idx_cursor = 0,
-                   idx_pointer = 0;
-
-            float_t v[2048 * 4]{0};
-            uint32_t i[2048 * 4]{0};
-
-            generate_meshes(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, &vert_cursor, &idx_cursor, &idx_pointer);
+            generate_meshes(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr);
 
             vao.bind();
             vbo.storeData(buffer.vert_buffer.ptr, buffer.vert_buffer.max_size);
             ebo.storeData(buffer.idx_buffer.ptr, buffer.idx_buffer.max_size);
 
             vao.createAttribute(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*) 0);
-            vao.createAttribute(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*) (3 * sizeof(GLfloat)));
-            vao.createAttribute(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*) (5 * sizeof(GLfloat)));
+            vao.createAttribute(1, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*) (2 * sizeof(GLfloat)));
+            vao.createAttribute(2, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*) (4 * sizeof(GLfloat)));
 
             load_shader();
             glEnable(GL_BLEND);
@@ -50,12 +43,12 @@ class DemoUiController : public UiController {
     private:
         UiDemoElements elements;
 
-        //UiController top_bar = UiController(&elements.top_bar, this);
-        //UiController bottom_bar = UiController(&elements.bottom_bar, this);
-        //UiController button = UiController(&elements.button_bg, this);
+        UiController top_bar = UiController(&elements.top_bar, this);
         LabelController label = LabelController(&elements.label, this);
+        UiController bottom_bar = UiController(&elements.bottom_bar, this);
+        UiController button = UiController(&elements.button_bg, this);
 
-        ElementBuffer buffer = ElementBuffer(KILOBYTES(5), KILOBYTES(5));
+        ElementBuffer buffer = ElementBuffer(KILOBYTES(50), KILOBYTES(10));
 
         Vao vao;
         Vbo vbo = Vbo(GL_ARRAY_BUFFER, GL_STATIC_DRAW);

@@ -21,5 +21,5 @@ TEST(UiElementMeshGenerator, generate) {
     size_t idx_cursor = 0;
     size_t idx_pointer = 0;
 
-    UiElementMeshGenerator::generate(&el, v_buf, i_buf, &vert_cursor, &idx_cursor, idx_pointer);
+    UiElementMeshGenerator::generate(&el, v_buf, i_buf, idx_pointer);
 }

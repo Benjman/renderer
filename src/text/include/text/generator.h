@@ -15,22 +15,24 @@ static constexpr text_attrib_t TextAttribUV = 0x2;
 static constexpr text_attrib_t TextAttribColor = 0x3;
 
 struct TextAttribute {
-    size_t stride;
+    size_t size = 0;
+    size_t stride = 0;
     size_t offset = 0;
 
-    TextAttribute(size_t stride, size_t offset) : stride(stride), offset(offset) {}
+    TextAttribute(size_t size, size_t stride, size_t offset) : size(size), stride(stride), offset(offset) {}
 
 };
 
 struct TextMeshContext {
     public:
-        const Text* root;
-        glm::vec3 color;
-        float_t* vertex_buffer;
-        uint32_t* idx_buffer;
-        size_t* char_count;
-        float_t display_width;
-        float_t display_height;
+        const Text* root = nullptr;
+        glm::vec3 color = glm::vec3(0.0);
+        float_t display_height = 0.0;
+        float_t display_width = 0.0;
+        uint32_t* idx_buffer{};
+        size_t idx_offset = 0;
+        size_t chars_processed = 0;
+        float_t* vertex_buffer{};
 
         explicit TextMeshContext(const Text* root);
 
@@ -44,19 +46,24 @@ struct TextMeshContext {
         friend class TextMeshGenerator;
 
         std::map<text_attrib_t, TextAttribute> attributes;
-        float_t cursor_x;
-        float_t cursor_y;
-        float_t scale;
+        float_t cursor_x = 0.0;
+        float_t cursor_y = 0.0;
+        float_t scale = 0.0;
+        size_t elements_per_vert;
+
+        void char_processed();
+
+        size_t find_elements_per_vert();
 
 };
 
 class TextMeshGenerator {
     public:
-        static void calc_buf_sizes(const Text* text, size_t* vert_size, size_t* idx_size);
+        static void calc_buffer_sizes(const Text* text, size_t* vert_size, size_t* idx_size);
 
-        static void generate(const Text* root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *offset);
+        static size_t generate(const Text* root, float_t *vertex_buffer, uint32_t *index_buffer, float_t display_width, float_t display_height, size_t index_offset);
 
-        static void generate(TextMeshContext& context);
+        static size_t generate(TextMeshContext& context);
 
     private:
         struct Word {
@@ -83,7 +90,7 @@ class TextMeshGenerator {
 
         static void quad_to_screen_space(stbtt_aligned_quad &quad, float_t display_width, float_t display_height);
 
-        static void store_quad(stbtt_aligned_quad quad, TextMeshContext& context, float* vert_buf);
+        static void store_quad(stbtt_aligned_quad quad, TextMeshContext& context);
 
         static void store_quad_pos(stbtt_aligned_quad quad, TextAttribute& attrib, float_t* vert_buf);
 
@@ -98,9 +105,9 @@ class TextMeshGenerator {
 
         explicit TextMeshGenerator(TextMeshContext& context);
 
-        void start();
+        size_t start();
 
-        void process_line(const Line &line) const;
+        size_t process_line(const Line &line, size_t idx_offset) const;
 
 };
 

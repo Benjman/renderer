@@ -25,30 +25,19 @@ class UiController : public Controller {
             return &m_ui_children;
         }
 
-        void generate_meshes(float_t *vert_buf, uint32_t *idx_buf, size_t *vert_cursor, size_t *idx_cursor, size_t* idx_pointer);
+        size_t generate_meshes(float_t *vert_buf, uint32_t *idx_bu, size_t quad_count = 0);
 
         void render();
 
     protected:
-        void child_added(Controller *child) override {
-            if (auto* ui_child = dynamic_cast<UiController*>(child)) {
-                m_ui_children.emplace_back(ui_child);
-            }
-        }
+        void child_added(Controller *child) override;
 
-        void child_removed(Controller *child) override {
-            if (auto* ui_child = dynamic_cast<UiController*>(child)) {
-                auto it = std::find(m_ui_children.begin(), m_ui_children.end(), ui_child);
-                if (it == m_ui_children.end())
-                    // TODO warning log
-                    return;
-
-                m_ui_children.erase(it);
-                m_ui_children.emplace_back(ui_child);
-            }
-        }
+        void child_removed(Controller *child) override;
 
     private:
+        static inline constexpr size_t UI_ELEMENTS_PER_VERT = 7;
+        static inline constexpr size_t UI_ELEMENTS_PER_INDEX = 6;
+
         UiElement* m_element = nullptr;
         std::vector<UiController*> m_ui_children;
 

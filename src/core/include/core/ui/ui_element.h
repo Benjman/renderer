@@ -17,14 +17,14 @@ class UiElement {
     public:
         static constexpr glm::vec4 NO_BACKGROUND = glm::vec4(-1.0);
 
-        static UiElementBuilder create(UiElement* parent = nullptr) noexcept;
+        static UiElementBuilder create(UiElement *parent = nullptr) noexcept;
 
         enum class Status {
             Active = 1, Dormant = 0
         };
 
     public:
-        explicit UiElement(UiElement* parent = nullptr) : m_parent(parent) {
+        explicit UiElement(UiElement *parent = nullptr) : m_parent(parent) {
         }
 
         UiElement(const UiElement& element) {
@@ -85,11 +85,11 @@ class UiElement {
             m_size = glm::vec2(size);
         }
 
-        [[nodiscard]] UiElement* parent() const noexcept {
+        [[nodiscard]] UiElement *parent() const noexcept {
             return m_parent;
         }
 
-        void parent(UiElement* parent) noexcept {
+        void parent(UiElement *parent) noexcept {
             m_parent = parent;
         }
 
@@ -140,14 +140,14 @@ class UiElement {
             return m_vert_count;
         }
 
-        void generate_mesh(float_t* vert_buf, uint32_t* idx_buf, size_t* vert_cursor, size_t* idx_cursor, size_t* idx_pointer);
-
         size_t buffer_offset() const noexcept {
             return m_buffer_offset;
         }
 
+        size_t generate_mesh(float_t *vert_buf, uint32_t *idx_buf, size_t idx_pointer);
+
     protected:
-         UiElement* m_parent = nullptr;
+         UiElement *m_parent = nullptr;
          Text m_text;
          glm::vec4 m_background_color = glm::vec4(NO_BACKGROUND);
          glm::vec2 m_pos = glm::vec2(0);

@@ -7,56 +7,61 @@
 static constexpr size_t TEXT_ALIGN_HORIZONTAL_MASK = 0x3;
 static constexpr size_t TEXT_ALIGN_VERTICAL_MASK = 0xc;
 
-void TextMeshGenerator::calc_buf_sizes(const Text* text, size_t* vert_size, size_t* idx_size) {
+void TextMeshGenerator::calc_buffer_sizes(const Text* text, size_t* vert_size, size_t* idx_size) {
     std::vector<Line> lines;
     generate_structure(text, &lines);
 
     for (Line& line : lines) {
         for (Word& word : line.words) {
-            *vert_size += word.value.size() * Text::VERT_COUNT * sizeof(float_t);
-            *idx_size += word.value.size() * Text::IDX_COUNT * sizeof(uint32_t);
+            *vert_size += word.value.size() * Text::ELEMENTS_PER_VERT * sizeof(float_t);
+            *idx_size += word.value.size() * Text::ELEMENTS_PER_INDEX * sizeof(uint32_t);
         }
     }
 }
 
 TextAttribute* find_attribute(std::vector<TextAttribute>* attributes, text_attrib_t type);
 
-void TextMeshGenerator::generate(const Text* root, float_t *vert_buf, uint32_t *idx_buf, float_t display_width, float_t display_height, size_t *offset) {
+size_t TextMeshGenerator::generate(const Text* root, float_t *vertex_buffer, uint32_t *index_buffer, float_t display_width, float_t display_height, size_t index_offset) {
     TextMeshContext context(root);
     context.display_height = display_height;
     context.display_width = display_width;
-    context.idx_buffer = idx_buf;
-    context.char_count = offset;
-    context.vertex_buffer = vert_buf;
+    context.idx_buffer = index_buffer;
+    context.idx_offset = index_offset;
+    context.vertex_buffer = vertex_buffer;
 
-    context.add_attrib(TextAttribPosition, TextAttribute(4, 0));
-    context.add_attrib(TextAttribUV, TextAttribute(4, 2));
+    context.add_attrib(TextAttribPosition, TextAttribute(2, 4, 0));
+    context.add_attrib(TextAttribUV, TextAttribute(2, 4, 2));
 
-    generate(context);
+    return generate(context);
 }
 
-void TextMeshGenerator::generate(TextMeshContext& context) {
+size_t TextMeshGenerator::generate(TextMeshContext& context) {
     TextMeshGenerator generator(context);
-    generator.start();
+    return generator.start();
 }
 
 TextMeshGenerator::TextMeshGenerator(TextMeshContext& context) : context(context) {
+    context.elements_per_vert = context.find_elements_per_vert();
 }
 
-void TextMeshGenerator::start() {
+size_t TextMeshGenerator::start() {
     std::vector<Line> lines;
     generate_structure(context.root, &lines);
 
     context.cursor_y = (float_t) context.root->m_pos_y + context.root->m_font->ascent;
 
     if (context.root->value().empty())
-        return;
+        return 0;
+
+    size_t idx_offset = context.idx_offset;
 
     for (const auto &line : lines) {
         context.cursor_x = find_horizontal_start(context.root, line.width);
-        process_line(line);
+        idx_offset = process_line(line, idx_offset);
         context.cursor_y += context.root->m_font->ascent;
     }
+
+    return context.chars_processed;
 }
 
 void TextMeshGenerator::generate_structure(const Text* root, std::vector<Line> *lines) {
@@ -94,26 +99,25 @@ void TextMeshGenerator::generate_structure(const Text* root, std::vector<Line> *
     lines->emplace_back(line);
 }
 
-void TextMeshGenerator::process_line(const Line &line) const {
+size_t TextMeshGenerator::process_line(const Line &line, size_t idx_offset) const {
     for (auto word : line.words) {
         for (size_t i = 0, len = word.value.size(); i < len; i++) {
-            uint32_t* indices = &context.idx_buffer[*context.char_count * Text::IDX_COUNT];
-            float_t* vertices = &context.vertex_buffer[*context.char_count * Text::VERT_COUNT];
-
             stbtt_aligned_quad quad = context.root->m_font->get_char(word.value.at(i), &context.cursor_x, &context.cursor_y, context.scale);
 
             quad_to_screen_space(quad, context.display_width, context.display_height);
-            store_quad(quad, context, vertices);
+            store_quad(quad, context);
 
             // indices
-            indices[0] = 0 + (*context.char_count * 4);
-            indices[1] = 1 + (*context.char_count * 4);
-            indices[2] = 3 + (*context.char_count * 4);
-            indices[3] = 1 + (*context.char_count * 4);
-            indices[4] = 2 + (*context.char_count * 4);
-            indices[5] = 3 + (*context.char_count * 4);
+            context.idx_buffer[0] = 0 + idx_offset;
+            context.idx_buffer[1] = 1 + idx_offset;
+            context.idx_buffer[2] = 3 + idx_offset;
+            context.idx_buffer[3] = 1 + idx_offset;
+            context.idx_buffer[4] = 2 + idx_offset;
+            context.idx_buffer[5] = 3 + idx_offset;
 
-            (*context.char_count)++;
+            context.char_processed();
+
+            idx_offset += 4;
 
             // adjust for kerning
             if (len >= i + 1) {
@@ -124,6 +128,8 @@ void TextMeshGenerator::process_line(const Line &line) const {
         // increase cursor_x one space width
         context.root->m_font->get_char(' ', &context.cursor_x, &context.cursor_y, context.scale);
     }
+
+    return idx_offset;
 }
 
 void TextMeshGenerator::quad_to_screen_space(stbtt_aligned_quad &quad, float_t display_width, float_t display_height) {
@@ -144,19 +150,18 @@ void TextMeshGenerator::quad_to_screen_space(stbtt_aligned_quad &quad, float_t d
     quad.t1 *= -1.0;
 }
 
-void TextMeshGenerator::store_quad(stbtt_aligned_quad quad, TextMeshContext& context, float* vert_buf) {
+void TextMeshGenerator::store_quad(stbtt_aligned_quad quad, TextMeshContext& context) {
     if (TextAttribute* attrib = context.find_attrib(TextAttribPosition))
-        store_quad_pos(quad, *attrib, vert_buf);
+        store_quad_pos(quad, *attrib, context.vertex_buffer);
 
     if (TextAttribute* attrib = context.find_attrib(TextAttribUV))
-        store_quad_uv(quad, *attrib, vert_buf);
+        store_quad_uv(quad, *attrib, context.vertex_buffer);
 
-    // TODO text color
-    //if (TextAttribute* attrib = context.find_attrib(TextAttribColor))
-        //store_quad_color(???, attrib, vert_buf);
+    if (TextAttribute* attrib = context.find_attrib(TextAttribColor))
+        store_quad_color(context.color, *attrib, context.vertex_buffer);
 }
 
-void TextMeshGenerator::store_quad_pos(stbtt_aligned_quad quad, TextAttribute& attrib, float_t* vert_buf){
+void TextMeshGenerator::store_quad_pos(stbtt_aligned_quad quad, TextAttribute& attrib, float_t* vert_buf) {
     vert_buf[attrib.offset + attrib.stride * 0 + 0] = quad.x0;
     vert_buf[attrib.offset + attrib.stride * 0 + 1] = quad.y0;
     vert_buf[attrib.offset + attrib.stride * 1 + 0] = quad.x0;
@@ -167,7 +172,7 @@ void TextMeshGenerator::store_quad_pos(stbtt_aligned_quad quad, TextAttribute& a
     vert_buf[attrib.offset + attrib.stride * 3 + 1] = quad.y0;
 }
 
-void TextMeshGenerator::store_quad_uv(stbtt_aligned_quad quad, TextAttribute& attrib, float_t* vert_buf){
+void TextMeshGenerator::store_quad_uv(stbtt_aligned_quad quad, TextAttribute& attrib, float_t* vert_buf) {
     vert_buf[attrib.offset + attrib.stride * 0 + 0] = quad.s0;
     vert_buf[attrib.offset + attrib.stride * 0 + 1] = quad.t0;
     vert_buf[attrib.offset + attrib.stride * 1 + 0] = quad.s0;
@@ -178,7 +183,7 @@ void TextMeshGenerator::store_quad_uv(stbtt_aligned_quad quad, TextAttribute& at
     vert_buf[attrib.offset + attrib.stride * 3 + 1] = quad.t0;
 }
 
-void TextMeshGenerator::store_quad_color(glm::vec3& color, TextAttribute& attrib, float_t* vert_buf){
+void TextMeshGenerator::store_quad_color(glm::vec3& color, TextAttribute& attrib, float_t* vert_buf) {
     vert_buf[attrib.offset + attrib.stride * 0 + 0] = color.r;
     vert_buf[attrib.offset + attrib.stride * 0 + 1] = color.g;
     vert_buf[attrib.offset + attrib.stride * 0 + 2] = color.b;
@@ -219,7 +224,11 @@ float_t TextMeshGenerator::find_horizontal_start(const Text* root, float_t max_l
     }
 }
 
-TextMeshContext::TextMeshContext(const Text* root) : root(root) {}
+TextMeshContext::TextMeshContext(const Text* root) : root(root) {
+    if (root) {
+        scale = root->get_font_scale();
+    }
+}
 
 void TextMeshContext::add_attrib(text_attrib_t type, TextAttribute attrib) {
     attributes.emplace(type, attrib);
@@ -227,6 +236,27 @@ void TextMeshContext::add_attrib(text_attrib_t type, TextAttribute attrib) {
 
 void TextMeshContext::reset_attribs() {
     attributes.clear();
+}
+
+void TextMeshContext::char_processed() {
+    vertex_buffer = &vertex_buffer[attributes.begin()->second.stride * 4];
+    idx_buffer = &idx_buffer[6];
+    chars_processed++;
+}
+
+size_t TextMeshContext::find_elements_per_vert() {
+    size_t elements = 0;
+
+    if (TextAttribute* attrib = find_attrib(TextAttribPosition))
+        elements += attrib->size;
+
+    if (TextAttribute* attrib = find_attrib(TextAttribUV))
+        elements += attrib->size;
+
+    if (TextAttribute* attrib = find_attrib(TextAttribColor))
+        elements += attrib->size;
+
+    return elements;
 }
 
 TextAttribute* TextMeshContext::find_attrib(text_attrib_t type) {

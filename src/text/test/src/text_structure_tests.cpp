@@ -4,7 +4,7 @@
 #include "text_test_fixture.h"
 
 #include <text.h>
-#include <text/internal/generator.h>
+#include <text/generator.h>
 
 using namespace internal;
 
@@ -15,7 +15,7 @@ TEST_F(TextTestFixture, word_count) {
 
     ASSERT_EQ(1, context.lines.size()) << "Line count inaccurate.";
     ASSERT_EQ(4, context.lines.at(0)->words.size()) << "Word count inaccurate.";
-    ASSERT_EQ(11, text.char_count);
+    ASSERT_EQ(11, text.quad_count);
 
     ASSERT_STREQ("This", context.lines.at(0)->words.at(0)->value.c_str());
     ASSERT_STREQ("is", context.lines.at(0)->words.at(1)->value.c_str());

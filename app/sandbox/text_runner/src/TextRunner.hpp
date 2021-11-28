@@ -17,25 +17,35 @@
 class TextRunner : public Runner {
     public:
         TextRunner(GLFWwindow *window) : Runner(window) {
-            size_t v_size = 0,
-                   idx_size = 0,
-                   pointer = 0;
+            size_t index_count = 0;
 
-            top_left.calc_sizes(&v_size, &idx_size);
-            top_left.generate_mesh(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, window::width(), window::height(), &pointer);
+            index_count += top_left.generate_mesh(buffer.vert_buffer.ptr,
+                    buffer.idx_buffer.ptr,
+                    window::width(),
+                    window::height(),
+                    index_count * 4);
             top_left.update_metadata();
 
-            top_center.calc_sizes(&v_size, &idx_size);
-            top_center.generate_mesh(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, window::width(), window::height(), &pointer);
+            index_count += top_center.generate_mesh(
+                    &buffer.vert_buffer.ptr[index_count * Text::ELEMENTS_PER_VERT],
+                    &buffer.idx_buffer.ptr[index_count * Text::ELEMENTS_PER_INDEX],
+                    window::width(),
+                    window::height(),
+                    index_count * 4);
             top_center.update_metadata();
 
-            top_right.calc_sizes(&v_size, &idx_size);
-            top_right.generate_mesh(buffer.vert_buffer.ptr, buffer.idx_buffer.ptr, window::width(), window::height(), &pointer);
+            index_count += top_right.generate_mesh(
+                    &buffer.vert_buffer.ptr[index_count * Text::ELEMENTS_PER_VERT],
+                    &buffer.idx_buffer.ptr[index_count * Text::ELEMENTS_PER_INDEX],
+                    window::width(),
+                    window::height(),
+                    index_count * 4);
             top_right.update_metadata();
 
             vao.bind();
-            vbo.storeData(buffer.vert_buffer.ptr, v_size);
-            ebo.storeData(buffer.idx_buffer.ptr, idx_size);
+            vbo.storeData(buffer.vert_buffer.ptr, buffer.vert_buffer.max_size);
+            ebo.storeData(buffer.idx_buffer.ptr, buffer.idx_buffer.max_size);
+
             vao.createAttribute(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) 0);
             vao.createAttribute(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
         }
@@ -50,9 +60,9 @@ class TextRunner : public Runner {
 
         void render() override {
             glClear(GL_COLOR_BUFFER_BIT);
-            glDrawElements(GL_TRIANGLES, Text::IDX_COUNT * top_left.renderable_char_count, GL_UNSIGNED_INT, (void*) 0);
-            glDrawElements(GL_TRIANGLES, Text::IDX_COUNT * top_center.renderable_char_count, GL_UNSIGNED_INT, (void*) (top_left.renderable_char_count * Text::IDX_COUNT * sizeof(uint32_t)));
-            glDrawElements(GL_TRIANGLES, Text::IDX_COUNT * top_right.renderable_char_count, GL_UNSIGNED_INT, (void*) (top_left.renderable_char_count * Text::IDX_COUNT  * sizeof(uint32_t) + top_center.renderable_char_count * Text::IDX_COUNT * sizeof(uint32_t)));
+            glDrawElements(GL_TRIANGLES, 6 * top_left.renderable_quad_count, GL_UNSIGNED_INT, (void*) 0);
+            glDrawElements(GL_TRIANGLES, 6 * top_center.renderable_quad_count, GL_UNSIGNED_INT, (void*) (top_left.renderable_quad_count * 6 * sizeof(uint32_t)));
+            glDrawElements(GL_TRIANGLES, 6 * top_right.renderable_quad_count, GL_UNSIGNED_INT, (void*) (top_left.renderable_quad_count * 6  * sizeof(uint32_t) + top_center.renderable_quad_count * 6 * sizeof(uint32_t)));
         }
 
     private:
