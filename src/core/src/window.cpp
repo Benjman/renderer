@@ -1,31 +1,31 @@
 #include <core/window.h>
 
 namespace window {
-    float_t m_aspect_ratio = 1.0;
-    float_t m_width = 1.0;
-    float_t m_height = 1.0;
+    float m_aspect_ratio = 1.0;
+    float m_width = 1.0;
+    float m_height = 1.0;
     display_profile_t m_display_profile;
 }
 
-float_t window::aspect_ratio() {
+float window::aspect_ratio() {
     return m_aspect_ratio;
 }
 
-float_t window::width() {
+float window::width() {
     return m_width;
 }
 
-float_t window::height() {
+float window::height() {
     return m_height;
 }
 
-void window::set_size(float_t width, float_t height) {
+void window::set_size(float width, float height) {
     m_width = width;
     m_height = height;
-    m_aspect_ratio = (float_t) width / (float_t) height;
+    m_aspect_ratio = (float) width / (float) height;
 }
 
-size_t window::find_display_profile_width(display_profile_t display_profile) {
+float window::find_display_profile_width(display_profile_t display_profile) {
     if (display_profile == DISPLAY_PROFILE_640_480)
         return 640;
     if (display_profile == DISPLAY_PROFILE_1280_720)
@@ -43,7 +43,7 @@ size_t window::find_display_profile_width(display_profile_t display_profile) {
     return 0;
 }
 
-size_t window::find_display_profile_height(display_profile_t display_profile) {
+float window::find_display_profile_height(display_profile_t display_profile) {
     if (display_profile == DISPLAY_PROFILE_640_480)
         return 480;
     if (display_profile == DISPLAY_PROFILE_1280_720)
@@ -61,7 +61,7 @@ size_t window::find_display_profile_height(display_profile_t display_profile) {
     return 0;
 }
 
-display_profile_t window::find_display_profile(size_t width, size_t height) {
+display_profile_t window::find_display_profile(float width, float height) {
     if (width == 640 && height == 480)
         return DISPLAY_PROFILE_640_480;
     if (width == 1280 && height == 720)

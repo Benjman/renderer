@@ -16,7 +16,7 @@ extern GLFWwindow *initializeGlfw(const char *title, int width, int height, bool
 
 extern void destroyGlfw(GLFWwindow *window);
 
-extern double_t getRuntimeSeconds();
+extern double getRuntimeSeconds();
 
 extern bool glfwShouldClose(GLFWwindow *window);
 

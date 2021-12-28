@@ -38,7 +38,7 @@ extern void destroyGlfw(GLFWwindow* glfw_window) {
     glfw_window = nullptr;
 }
 
-extern double_t getRuntimeSeconds() {
+extern double getRuntimeSeconds() {
     return glfwGetTime();
 }
 
